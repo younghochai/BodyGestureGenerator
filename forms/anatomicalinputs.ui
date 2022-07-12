@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>anatomicalInputs</class>
+ <widget class="QMainWindow" name="anatomicalInputs">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>486</width>
+    <height>375</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>486</width>
+    <height>375</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>486</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>9</pointsize>
+    <bold>true</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Anatomical Inputs</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(68, 68, 68);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>468</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>452</width>
+         <height>1407</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_13">
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="RUA_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>RUA</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="RUA_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="RUA_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="RUA_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="RUA_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="RUA_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="RUA_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="RUA_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="RUA_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="RUA_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="RUA_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="RUA_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QGroupBox" name="LLA_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>LLA</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="LLA_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="LLA_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="LLA_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="LLA_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="LLA_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="LLA_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="LLA_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="LLA_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="LLA_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="LLA_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="LLA_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QGroupBox" name="LUL_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>LUL</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_10">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="LUL_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="LUL_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="LUL_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="LUL_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="LUL_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="LUL_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="LUL_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="LUL_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="LUL_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="LUL_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="LUL_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QGroupBox" name="LUA_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>LUA</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="LUA_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="LUA_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="LUA_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="LUA_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="LUA_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="LUA_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="LUA_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="LUA_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="LUA_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="LUA_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="LUA_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="9" column="0">
+         <widget class="QGroupBox" name="groupBox_10">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>LLL</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_11">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="LLL_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="LLL_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="LLL_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="LLL_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="LLL_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="LLL_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="LLL_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="LLL_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="LLL_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="LLL_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="LLL_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <widget class="QGroupBox" name="groupBox_11">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_12">
+           <item row="0" column="5">
+            <widget class="QPushButton" name="euler_clear_Button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLineEdit" name="noOf_frames">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="fameCount_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>No. of 
+Frames</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
+            <widget class="QPushButton" name="euler_submit_Button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Submit</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QGroupBox" name="RUL_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>RUL</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="RUL_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="RUL_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="RUL_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="RUL_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="RUL_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="RUL_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="RUL_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="RUL_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="RUL_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="RUL_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="RUL_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="CH_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>Chest</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="CH_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="CH_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="CH_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="CH_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="CH_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="CH_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="CH_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="CH_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="CH_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="CH_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="CH_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QGroupBox" name="RLA_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>RLA</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="RLA_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="RLA_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="RLA_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="RLA_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="RLA_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="RLA_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="RLA_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="RLA_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="RLA_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="RLA_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="RLA_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QGroupBox" name="RLL_groupBox">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>RLL</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="RLL_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="RLL_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="RLL_SP_Button">
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="RLL_sp_x"/>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="RLL_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="RLL_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="RLL_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="RLL_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="RLL_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="RLL_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="RLL_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="PL_groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>10</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>Pelvis</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="1" colspan="2">
+            <widget class="QPushButton" name="PL_X_Button">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="3">
+            <widget class="QPushButton" name="PL_Y_Button">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="PL_SP_Button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>SP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QLineEdit" name="PL_sp_x">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3" colspan="3">
+            <widget class="QLineEdit" name="PL_sp_y"/>
+           </item>
+           <item row="1" column="6" colspan="2">
+            <widget class="QLineEdit" name="PL_sp_z"/>
+           </item>
+           <item row="0" column="6" colspan="2">
+            <widget class="QPushButton" name="PL_Z_Button">
+             <property name="text">
+              <string>Z</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="PL_EP_Button">
+             <property name="text">
+              <string>EP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLineEdit" name="PL_ep_x"/>
+           </item>
+           <item row="2" column="3" colspan="3">
+            <widget class="QLineEdit" name="PL_ep_y"/>
+           </item>
+           <item row="2" column="6" colspan="2">
+            <widget class="QLineEdit" name="PL_ep_z"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
