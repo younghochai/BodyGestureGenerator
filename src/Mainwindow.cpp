@@ -219,13 +219,6 @@ public:
 					rul(poses[currntIdx - 1].rul[2], 0, 0, -1);
 
 
-					//float X = cos(theta) * cos(phi) * radius;
-					//float Y = sin(theta) * cos(phi) * radius;
-					//float Z = sin(phi) * radius;
-
-
-
-
 					if (poses[currntIdx - 1].chest[0] > 0) {
 						currentMove.chest[0] = poses[currntIdx].chest[0] - poses[currntIdx - 1].chest[0];
 					}
