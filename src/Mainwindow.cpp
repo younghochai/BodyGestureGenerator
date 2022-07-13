@@ -12289,7 +12289,7 @@ void MainWindow::displayFixedFoots_Model()
 
 
 	// IK_rightFoot
-	IK_rightFoot_objFile = "RF.obj";
+	IK_rightFoot_objFile = "../BodyGestureGenerator/data/RF.obj";
 	IK_rightFoot_Reader->SetFileName(IK_rightFoot_objFile.c_str());
 	IK_rightFoot_Mapper->SetInputConnection(IK_rightFoot_Reader->GetOutputPort());
 	IK_rightFoot_Transform->Translate(-5.0, 7.1, 0);
@@ -12393,7 +12393,7 @@ void MainWindow::displayFixedFoots_Model()
 
 
 	// IK_leftFoot
-	IK_leftFoot_objFile = "LF.obj";
+	IK_leftFoot_objFile = "../BodyGestureGenerator/data/LF.obj";
 	IK_leftFoot_Reader->SetFileName(IK_leftFoot_objFile.c_str());
 	IK_leftFoot_Mapper->SetInputConnection(IK_leftFoot_Reader->GetOutputPort());
 	IK_leftFoot_Transform->Translate(5.0, 7.1, 0);
@@ -12533,8 +12533,8 @@ void MainWindow::displayFixedFoots_Model()
 
 
 	//IK_head
-	IK_head_objFile = "humanHead1.obj";
-	const char* IK_headTexture_filename = "headmap.jpg";
+	IK_head_objFile = "../BodyGestureGenerator/data/humanHead1.obj";
+	const char* IK_headTexture_filename = "../BodyGestureGenerator/data/headmap.jpg";
 	IK_head_Reader->SetFileName(IK_head_objFile.c_str());
 	IK_head_Mapper->SetInputConnection(IK_head_Reader->GetOutputPort());
 
@@ -12625,7 +12625,7 @@ void MainWindow::displayFixedFoots_Model()
 	IK_rightLowerArm_Actor->GetProperty()->SetColor(colors->GetColor3d("Gray").GetData());
 
 	//IK_rightHand
-	IK_rightHand_objFile = "RH_G.obj";
+	IK_rightHand_objFile = "../BodyGestureGenerator/data/RH_G.obj";
 	IK_rightHand_Reader->SetFileName(IK_rightHand_objFile.c_str());
 	IK_rightHand_Mapper->SetInputConnection(IK_rightHand_Reader->GetOutputPort());
 
@@ -12716,7 +12716,7 @@ void MainWindow::displayFixedFoots_Model()
 	IK_leftLowerArm_Actor->GetProperty()->SetColor(colors->GetColor3d("Gray").GetData());
 
 	//IK_leftHand
-	IK_leftHand_objFile = "LH_G.obj";
+	IK_leftHand_objFile = "../BodyGestureGenerator/data/LH_G.obj";
 	IK_leftHand_Reader->SetFileName(IK_leftHand_objFile.c_str());
 	IK_leftHand_Mapper->SetInputConnection(IK_leftHand_Reader->GetOutputPort());
 
@@ -12867,8 +12867,8 @@ void MainWindow::displayStick_Model()
 
 
 	//stickModel_head
-	stickModel_head_objFile = "humanHead1.obj";
-	const char* stickModel_headTexture_filename = "headmap.jpg";
+	stickModel_head_objFile = "../BodyGestureGenerator/data/humanHead1.obj";
+	const char* stickModel_headTexture_filename = "../BodyGestureGenerator/data/headmap.jpg";
 	stickModel_head_Reader->SetFileName(stickModel_head_objFile.c_str());
 	stickModel_head_Mapper->SetInputConnection(stickModel_head_Reader->GetOutputPort());
 
@@ -12962,7 +12962,7 @@ void MainWindow::displayStick_Model()
 
 
 	//stickModel_rightHand
-	stickModel_rightHand_objFile = "RH_G.obj";
+	stickModel_rightHand_objFile = "../BodyGestureGenerator/data/RH_G.obj";
 	stickModel_rightHand_Reader->SetFileName(stickModel_rightHand_objFile.c_str());
 	stickModel_rightHand_Mapper->SetInputConnection(stickModel_rightHand_Reader->GetOutputPort());
 	stickModel_rightHand_Transform->Translate(*(stickModel_rightLowerArm_Source->GetCenter()),
@@ -13037,7 +13037,7 @@ void MainWindow::displayStick_Model()
 
 
 	//stickModel_leftHand
-	stickModel_leftHand_objFile = "LH_G.obj";
+	stickModel_leftHand_objFile = "../BodyGestureGenerator/data/LH_G.obj";
 	stickModel_leftHand_Reader->SetFileName(stickModel_leftHand_objFile.c_str());
 	stickModel_leftHand_Mapper->SetInputConnection(stickModel_leftHand_Reader->GetOutputPort());
 	stickModel_leftHand_Transform->Translate(*(stickModel_leftLowerArm_Source->GetCenter()), *(stickModel_leftLowerArm_Source->GetCenter() + 1) - stickModel_leftLowerArm_Source->GetHeight() / 2 - 0.03, *(stickModel_leftLowerArm_Source->GetCenter() + 2) - 0.05);
@@ -13115,7 +13115,7 @@ void MainWindow::displayStick_Model()
 	
 
 	// stickModel_rightFoot
-	stickModel_rightFoot_objFile = "RF.obj";
+	stickModel_rightFoot_objFile = "../BodyGestureGenerator/data/RF.obj";
 	stickModel_rightFoot_Reader->SetFileName(stickModel_rightFoot_objFile.c_str());
 	stickModel_rightFoot_Mapper->SetInputConnection(stickModel_rightFoot_Reader->GetOutputPort());
 	stickModel_rightFoot_Transform->Translate(*(stickModel_rightLowerLeg_Source->GetCenter()),
@@ -13186,7 +13186,7 @@ void MainWindow::displayStick_Model()
 	stickModel_leftLowerLeg_Actor->GetProperty()->SetColor(colors->GetColor3d("Gray").GetData());
 
 	// stickModel_leftFoot
-	stickModel_leftFoot_objFile = "LF.obj";
+	stickModel_leftFoot_objFile = "../BodyGestureGenerator/data/LF.obj";
 	stickModel_leftFoot_Reader->SetFileName(stickModel_leftFoot_objFile.c_str());
 	stickModel_leftFoot_Mapper->SetInputConnection(stickModel_leftFoot_Reader->GetOutputPort());
 	stickModel_leftFoot_Transform->Translate(*(stickModel_leftLowerLeg_Source->GetCenter()),
@@ -13470,23 +13470,21 @@ void MainWindow::selectModel(int ID)
 		skeleton_biped = 0;
 		cout << "Male Biped Selected" << endl;
 
-		Pelvis_objFilename = "Pelvis.obj";
-		Chest_objFilename = "Chest.obj";
-		headNeck_objFilename = "humanHead1.obj";
-		LUA_objFilename = "LUA.obj";
-		LLA_objFilename = "LLA.obj";
-		/*LH_objFilename = "LH.obj";*/
-		LH_objFilename = "LH_G.obj";
-		RUA_objFilename = "RUA.obj";
-		RLA_objFilename = "RLA.obj";
-		//RH_objFilename = "RH.obj";
-		RH_objFilename = "RH_G.obj";
-		LUL_objFilename = "LUL.obj";
-		LLL_objFilename = "LLL.obj";
-		LF_objFilename = "LF.obj";
-		RUL_objFilename = "RUL.obj";
-		RLL_objFilename = "RLL.obj";
-		RF_objFilename = "RF.obj";
+		Pelvis_objFilename = "../BodyGestureGenerator/data/Pelvis.obj";
+		Chest_objFilename = "../BodyGestureGenerator/data/Chest.obj";
+		headNeck_objFilename = "../BodyGestureGenerator/data/humanHead1.obj";
+		LUA_objFilename = "../BodyGestureGenerator/data/LUA.obj";
+		LLA_objFilename = "../BodyGestureGenerator/data/LLA.obj";
+		LH_objFilename = "../BodyGestureGenerator/data/LH_G.obj";
+		RUA_objFilename = "../BodyGestureGenerator/data/RUA.obj";
+		RLA_objFilename = "../BodyGestureGenerator/data/RLA.obj";
+		RH_objFilename = "../BodyGestureGenerator/data/RH_G.obj";
+		LUL_objFilename = "../BodyGestureGenerator/data/LUL.obj";
+		LLL_objFilename = "../BodyGestureGenerator/data/LLL.obj";
+		LF_objFilename = "../BodyGestureGenerator/data/LF.obj";
+		RUL_objFilename = "../BodyGestureGenerator/data/RUL.obj";
+		RLL_objFilename = "../BodyGestureGenerator/data/RLL.obj";
+		RF_objFilename = "../BodyGestureGenerator/data/RF.obj";
 
 		PlconeTransform->Identity();
 		CUconeTransform->Identity();
@@ -14132,23 +14130,21 @@ void MainWindow::selectList()
 	skeleton_biped = 0;
 	cout << "Male Biped Selected" << endl;
 
-	Pelvis_objFilename = "Pelvis.obj";
-	Chest_objFilename = "Chest.obj";
-	headNeck_objFilename = "humanHead1.obj";
-	LUA_objFilename = "LUA.obj";
-	LLA_objFilename = "LLA.obj";
-	/*LH_objFilename = "LH.obj";*/
-	LH_objFilename = "LH_G.obj";
-	RUA_objFilename = "RUA.obj";
-	RLA_objFilename = "RLA.obj";
-	//RH_objFilename = "RH.obj";
-	RH_objFilename = "RH_G.obj";
-	LUL_objFilename = "LUL.obj";
-	LLL_objFilename = "LLL.obj";
-	LF_objFilename = "LF.obj";
-	RUL_objFilename = "RUL.obj";
-	RLL_objFilename = "RLL.obj";
-	RF_objFilename = "RF.obj";
+	Pelvis_objFilename = "../BodyGestureGenerator/data/Pelvis.obj";
+	Chest_objFilename = "../BodyGestureGenerator/data/Chest.obj";
+	headNeck_objFilename = "../BodyGestureGenerator/data/humanHead1.obj";
+	LUA_objFilename = "../BodyGestureGenerator/data/LUA.obj";
+	LLA_objFilename = "../BodyGestureGenerator/data/LLA.obj";
+	LH_objFilename = "../BodyGestureGenerator/data/LH_G.obj";
+	RUA_objFilename = "../BodyGestureGenerator/data/RUA.obj";
+	RLA_objFilename = "../BodyGestureGenerator/data/RLA.obj";
+	RH_objFilename = "../BodyGestureGenerator/data/RH_G.obj";
+	LUL_objFilename = "../BodyGestureGenerator/data/LUL.obj";
+	LLL_objFilename = "../BodyGestureGenerator/data/LLL.obj";
+	LF_objFilename = "../BodyGestureGenerator/data/LF.obj";
+	RUL_objFilename = "../BodyGestureGenerator/data/RUL.obj";
+	RLL_objFilename = "../BodyGestureGenerator/data/RLL.obj";
+	RF_objFilename = "../BodyGestureGenerator/data/RF.obj";
 
 	PlconeTransform->Identity();
 	CUconeTransform->Identity();
@@ -14537,23 +14533,21 @@ void MainWindow::onDrawSphereClick() {
 	skeleton_biped = 0;
 	cout << "Male Biped Selected" << endl;
 
-	Pelvis_objFilename = "Pelvis.obj";
-	Chest_objFilename = "Chest.obj";
-	headNeck_objFilename = "humanHead1.obj";
-	LUA_objFilename = "LUA.obj";
-	LLA_objFilename = "LLA.obj";
-	/*LH_objFilename = "LH.obj";*/
-	LH_objFilename = "LH_G.obj";
-	RUA_objFilename = "RUA.obj";
-	RLA_objFilename = "RLA.obj";
-	//RH_objFilename = "RH.obj";
-	RH_objFilename = "RH_G.obj";
-	LUL_objFilename = "LUL.obj";
-	LLL_objFilename = "LLL.obj";
-	LF_objFilename = "LF.obj";
-	RUL_objFilename = "RUL.obj";
-	RLL_objFilename = "RLL.obj";
-	RF_objFilename = "RF.obj";
+	Pelvis_objFilename = "../BodyGestureGenerator/data/Pelvis.obj";
+	Chest_objFilename = "../BodyGestureGenerator/data/Chest.obj";
+	headNeck_objFilename = "../BodyGestureGenerator/data/humanHead1.obj";
+	LUA_objFilename = "../BodyGestureGenerator/data/LUA.obj";
+	LLA_objFilename = "../BodyGestureGenerator/data/LLA.obj";
+	LH_objFilename = "../BodyGestureGenerator/data/LH_G.obj";
+	RUA_objFilename = "../BodyGestureGenerator/data/RUA.obj";
+	RLA_objFilename = "../BodyGestureGenerator/data/RLA.obj";
+	RH_objFilename = "../BodyGestureGenerator/data/RH_G.obj";
+	LUL_objFilename = "../BodyGestureGenerator/data/LUL.obj";
+	LLL_objFilename = "../BodyGestureGenerator/data/LLL.obj";
+	LF_objFilename = "../BodyGestureGenerator/data/LF.obj";
+	RUL_objFilename = "../BodyGestureGenerator/data/RUL.obj";
+	RLL_objFilename = "../BodyGestureGenerator/data/RLL.obj";
+	RF_objFilename = "../BodyGestureGenerator/data/RF.obj";
 
 	PlconeTransform->Identity();
 	CUconeTransform->Identity();

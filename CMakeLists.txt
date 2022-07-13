@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-project(MotionGenerator)
+project(BodyGestureGenerator)
 
 #======================= INCLUSION OF Qt =======================#
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -39,19 +39,19 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 
 # Add the executable
 if (WIN32) 
-    add_executable(MotionGenerator WIN32 ${SOURCES})
+    add_executable(BodyGestureGenerator WIN32 ${SOURCES})
 elseif(UNIX)
-    add_executable(MotionGenerator ${SOURCES})
+    add_executable(BodyGestureGenerator ${SOURCES})
 endif()
 
 # Add the target includes
-target_include_directories(MotionGenerator PRIVATE ${FORMS_DIR})
-target_include_directories(MotionGenerator PRIVATE ${INCLUDE_DIR})
-target_include_directories(MotionGenerator PRIVATE ${SOURCE_DIR})
+target_include_directories(BodyGestureGenerator PRIVATE ${FORMS_DIR})
+target_include_directories(BodyGestureGenerator PRIVATE ${INCLUDE_DIR})
+target_include_directories(BodyGestureGenerator PRIVATE ${SOURCE_DIR})
 
 #===================== LINKING LIBRARIES =======================#
-target_link_libraries( MotionGenerator Qt6::OpenGL)
-target_link_libraries( MotionGenerator Qt6::Xml)
-target_link_libraries( MotionGenerator Qt6::Widgets)
-target_link_libraries( MotionGenerator ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
-target_link_libraries( MotionGenerator ${VTK_LIBRARIES})
+target_link_libraries( BodyGestureGenerator Qt6::OpenGL)
+target_link_libraries( BodyGestureGenerator Qt6::Xml)
+target_link_libraries( BodyGestureGenerator Qt6::Widgets)
+target_link_libraries( BodyGestureGenerator ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries( BodyGestureGenerator ${VTK_LIBRARIES})
