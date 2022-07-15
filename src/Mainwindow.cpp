@@ -16,6 +16,14 @@ bool b_drawTrajectory = false;
 float global_theta = 0;
 float global_phi = 0;
 
+std::vector<vtkSmartPointer<vtkActor>> actors;
+
+
+int drawIdx = 1;
+bool b_leftHand = true;
+bool b_rightHand = true;
+bool b_rightFoot = true;
+
 
 string COLOR_PlconeActor = "Moccasin";
 string COLOR_CUconeActor = "DarkTurquoise";
@@ -154,7 +162,6 @@ public:
 			float phi = 88;
 			float radius = 40;
 
-
 			if (first)
 			{
 				if (currntIdx > 0)
@@ -219,60 +226,43 @@ public:
 					rul(poses[currntIdx - 1].rul[2], 0, 0, -1);
 
 
-					if (poses[currntIdx - 1].chest[0] > 0) {
-						currentMove.chest[0] = poses[currntIdx].chest[0] - poses[currntIdx - 1].chest[0];
-					}
-					else
-					{
-						currentMove.chest[0] = poses[currntIdx].chest[0] + poses[currntIdx - 1].chest[0];
-					}
+					//if (poses[currntIdx - 1].chest[0] > 0) {
+					//	currentMove.chest[0] = poses[currntIdx].chest[0] - poses[currntIdx - 1].chest[0];
+					//}
+					//else
+					//{
+					//	currentMove.chest[0] = poses[currntIdx].chest[0] + poses[currntIdx - 1].chest[0];
+					//}
 
+					currentMove.chest[0] = poses[currntIdx].chest[0] - poses[currntIdx - 1].chest[0];
 					currentMove.chest[1] = poses[currntIdx].chest[1] - poses[currntIdx - 1].chest[1];
 					currentMove.chest[2] = poses[currntIdx].chest[2] - poses[currntIdx - 1].chest[2];
 
 
-					std::cout << poses[currntIdx - 1].rua[0] << std::endl;
-					std::cout << poses[currntIdx - 1].rua[1] << std::endl;
-					std::cout << poses[currntIdx - 1].rua[2] << std::endl;
-
-
-					std::cout << poses[currntIdx].rua[0] << std::endl;
-					std::cout << poses[currntIdx].rua[1] << std::endl;
-					std::cout << poses[currntIdx].rua[2] << std::endl;
-
-
-					if (poses[currntIdx - 1].rua[0] != 0)
-					{
-						currentMove.rua[0] = poses[currntIdx].rua[0] - poses[currntIdx - 1].rua[0];
-					}
-					else
-					{
-						currentMove.rua[0] = poses[currntIdx].rua[0] + poses[currntIdx - 1].rua[0];
-					}
-
-					if (poses[currntIdx - 1].rua[1] != 0)
-					{
-						currentMove.rua[1] = poses[currntIdx].rua[1] - poses[currntIdx - 1].rua[1];
-					}
-					else
-					{
-						currentMove.rua[1] = poses[currntIdx].rua[1] + poses[currntIdx - 1].rua[1];
-					}
-
-					if (poses[currntIdx - 1].rua[2] != 0)
-					{
-						currentMove.rua[2] = poses[currntIdx].rua[2] - poses[currntIdx - 1].rua[2];
-					}
-					else
-					{
-						currentMove.rua[2] = poses[currntIdx].rua[2] + poses[currntIdx - 1].rua[2];
-					}
-
-
+					currentMove.rua[0] = poses[currntIdx].rua[0] - poses[currntIdx - 1].rua[0];
+					currentMove.rua[1] = poses[currntIdx].rua[1] - poses[currntIdx - 1].rua[1];
+					currentMove.rua[2] = poses[currntIdx].rua[2] - poses[currntIdx - 1].rua[2];
 
 					currentMove.rla[0] = poses[currntIdx].rla[0] - poses[currntIdx - 1].rla[0];
 					currentMove.rla[1] = poses[currntIdx].rla[1] - poses[currntIdx - 1].rla[1];
 					currentMove.rla[2] = poses[currntIdx].rla[2] - poses[currntIdx - 1].rla[2];
+
+
+					currentMove.lua[0] = poses[currntIdx].lua[0] - poses[currntIdx - 1].lua[0];
+					currentMove.lua[1] = poses[currntIdx].lua[1] - poses[currntIdx - 1].lua[1];
+					currentMove.lua[2] = poses[currntIdx].lua[2] - poses[currntIdx - 1].lua[2];
+
+					currentMove.lla[0] = poses[currntIdx].lla[0] - poses[currntIdx - 1].lla[0];
+					currentMove.lla[1] = poses[currntIdx].lla[1] - poses[currntIdx - 1].lla[1];
+					currentMove.lla[2] = poses[currntIdx].lla[2] - poses[currntIdx - 1].lla[2];
+
+					currentMove.rul[0] = poses[currntIdx].rul[0] - poses[currntIdx - 1].rul[0];
+					currentMove.rul[1] = poses[currntIdx].rul[1] - poses[currntIdx - 1].rul[1];
+					currentMove.rul[2] = poses[currntIdx].rul[2] - poses[currntIdx - 1].rul[2];
+
+					currentMove.rll[0] = poses[currntIdx].rll[0] - poses[currntIdx - 1].rll[0];
+					currentMove.rll[1] = poses[currntIdx].rll[1] - poses[currntIdx - 1].rll[1];
+					currentMove.rll[2] = poses[currntIdx].rll[2] - poses[currntIdx - 1].rll[2];
 
 
 				}
@@ -300,21 +290,18 @@ public:
 				if (currentMove.rua[0] != 0)
 				{
 					COLOR_RarmActor = "Yellow";
-					jointIncrease2.rua[0] = currentMove.rua[0] / frameCnt;
 					jointIncrease.rua[0] = currentMove.rua[0] / frameCnt;
 				}
 
 				if (currentMove.rua[1] != 0)
 				{
 					COLOR_RarmActor = "Yellow";
-					jointIncrease2.rua[1] = currentMove.rua[1] / frameCnt;
 					jointIncrease.rua[1] = currentMove.rua[1] / frameCnt;
 				}
 
 				if (currentMove.rua[2] != 0)
 				{
 					COLOR_RarmActor = "Yellow";
-					jointIncrease2.rua[2] = currentMove.rua[2] / frameCnt;
 					jointIncrease.rua[2] = currentMove.rua[2] / frameCnt;
 				}
 
@@ -322,19 +309,19 @@ public:
 				if (currentMove.rla[0] != 0)
 				{
 					COLOR_RforearmActor = "Yellow";
-					jointIncrease2.rla[0] = currentMove.rla[0] / frameCnt;
+					jointIncrease.rla[0] = currentMove.rla[0] / frameCnt;
 				}
 
 				if (currentMove.rla[1] != 0)
 				{
 					COLOR_RforearmActor = "Yellow";
-					jointIncrease2.rla[1] = currentMove.rla[1] / frameCnt;
+					jointIncrease.rla[1] = currentMove.rla[1] / frameCnt;
 				}
 
 				if (currentMove.rla[2] != 0)
 				{
 					COLOR_RforearmActor = "Yellow";
-					jointIncrease2.rla[2] = currentMove.rla[2] / frameCnt;
+					jointIncrease.rla[2] = currentMove.rla[2] / frameCnt;
 				}
 
 				//Left upper Arm
@@ -356,6 +343,7 @@ public:
 					jointIncrease.lua[2] = currentMove.lua[2] / frameCnt;
 				}
 
+				
 				//Left lower Arm
 				if (currentMove.lla[0] != 0)
 				{
@@ -475,51 +463,51 @@ public:
 				LllegActor->GetProperty()->SetColor(colors->GetColor3d(COLOR_LllegActor).GetData());
 
 				
-				if (currntIdx > 0)
-				{
-					if (poses[currntIdx - 1].rua[0] != 0)
-					{
-						theta += abs(poses[currntIdx - 1].rua[0]);
+				//if (currntIdx > 0)
+				//{
+				//	if (poses[currntIdx - 1].rua[0] != 0)
+				//	{
+				//		theta += abs(poses[currntIdx - 1].rua[0]);
 
-					}
+				//	}
 
-					if (poses[currntIdx - 1].rua[2] != 0)
-					{
-						phi += abs(poses[currntIdx - 1].rua[2]);
-					}
-				}
+				//	if (poses[currntIdx - 1].rua[2] != 0)
+				//	{
+				//		phi += abs(poses[currntIdx - 1].rua[2]);
+				//	}
+				//}
 
-				if(currntIdx ==3)
-				{
-					int tmp = -90 + (global_theta) * -1;
+				//if(currntIdx ==3)
+				//{
+				//	int tmp = -90 + (global_theta) * -1;
 
-					jointIncrease.rua[0] = tmp / (frameCnt+1);
+				//	jointIncrease.rua[0] = tmp / (frameCnt+1);
 
-					tmp = 88 + (global_phi) * -1;
+				//	tmp = 88 + (global_phi) * -1;
 
-					jointIncrease.rua[2] = tmp / (frameCnt+1);
+				//	jointIncrease.rua[2] = tmp / (frameCnt+1);
 
-				}
+				//}
 
 
 			}
 
 
-			std::cout <<"PHI "<< phi <<" , " << poses[currntIdx].rua[2] << std::endl;
+			//std::cout <<"PHI "<< phi <<" , " << poses[currntIdx].rua[2] << std::endl;
 
-			if (jointIncrease.rua[0] != 0)
-			{
-				theta += (abs(jointIncrease.rua[0]) * (TimerCount - 1));
-				
-			}
+			//if (jointIncrease.rua[0] != 0)
+			//{
+			//	theta += (abs(jointIncrease.rua[0]) * (TimerCount - 1));
+			//	
+			//}
+			//
+
 			
+			//if (currntIdx==1)
+			//{
+			//	phi = 88;
 
-			
-			if (currntIdx==1)
-			{
-				phi = 88;
-
-			}
+			//}
 			
 			//if (currntIdx==2)
 			//{
@@ -527,12 +515,9 @@ public:
 			//	theta -= (abs(jointIncrease.rua[0]) * (TimerCount - 1));
 			//	phi = 88;
 			//	phi -= (abs(jointIncrease.rua[2]) * (TimerCount - 1));
-
-
 			//	global_theta = theta;
 			//	global_phi = phi;
 			//}
-			
 			//std::cout << theta << "  ,  " << phi << std::endl;
 			//if (currntIdx == 3)
 			//{
@@ -541,38 +526,27 @@ public:
 			//	theta -= (abs(jointIncrease.rua[0]) * (TimerCount - 1));
 			//	phi += (abs(jointIncrease.rua[2]) * (TimerCount - 1));
 			//
-
-
 			//	phi *= (PI / 180);
 			//	theta *= (PI / 180);
 			//	vtkNew<vtkSphereSource> sphereSource1;
 			//	vtkNew<vtkPolyDataMapper> mapper1;
 			//	vtkNew<vtkActor> actor1;
-
 			//	float X = cos(theta) * cos(phi) * radius;
 			//	float Y = sin(theta) * radius;
 			//	float Z = cos(theta) * sin(phi) * radius;
-
 			//	float x_translate = -12.5;
 			//	float y_translate = 77;
 			//	float z_translate = -0.5;
-
-
 			//	sphereSource1->SetCenter(X + x_translate, Y + y_translate, Z + z_translate);
 			//	sphereSource1->SetRadius(1);
 			//	// Make the surface smooth.
 			//	sphereSource1->SetPhiResolution(18);
 			//	sphereSource1->SetThetaResolution(18);
-
-
 			//	mapper1->SetInputConnection(sphereSource1->GetOutputPort());
-
-
 			//	actor1->SetMapper(mapper1);
 			//	actor1->GetProperty()->SetColor(colors->GetColor3d("Firebrick").GetData());
 			//	actor1->GetProperty()->SetOpacity((double)((double)(100 / frameCnt * TimerCount) / 100));
 			//	mRenderer->AddActor(actor1);
-
 			//}
 			//
 
@@ -628,11 +602,12 @@ public:
 				}
 
 			}
+
 			////////////  Right Upper Arm
 			if (currentMove.rua[0] != 0)
 			{
-				increaseAngle = abs(jointIncrease2.rua[0]);
-				decreseAngle = abs(jointIncrease2.rua[0]) * -1;
+				increaseAngle = abs(jointIncrease.rua[0]);
+				decreseAngle = abs(jointIncrease.rua[0]) * -1;
 				if (currentMove.rua[0] > 0)
 				{
 					RarmTransform->RotateWXYZ(increaseAngle, -1, 0, 0);
@@ -646,9 +621,8 @@ public:
 			}
 			if (currentMove.rua[1] != 0)
 			{
-				std::cout << currentMove.rua[1] << std::endl;
-				increaseAngle = abs(jointIncrease2.rua[1]);
-				decreseAngle = abs(jointIncrease2.rua[1]) * -1;
+				increaseAngle = abs(jointIncrease.rua[1]);
+				decreseAngle = abs(jointIncrease.rua[1]) * -1;
 
 				if (currentMove.rua[1] > 0)
 				{
@@ -665,8 +639,8 @@ public:
 
 			if (currentMove.rua[2] != 0)
 			{
-				increaseAngle = abs(jointIncrease2.rua[2]);
-				decreseAngle = abs(jointIncrease2.rua[2]) * -1;
+				increaseAngle = abs(jointIncrease.rua[2]);
+				decreseAngle = abs(jointIncrease.rua[2]) * -1;
 
 				if (currentMove.rua[2] > 0)
 				{
@@ -683,6 +657,11 @@ public:
 			////////////  Right Lower Arm
 			if (currentMove.rla[0] != 0)
 			{
+
+				increaseAngle = abs(jointIncrease.rla[0]);
+				decreseAngle = abs(jointIncrease.rla[0]) * -1;
+
+
 				if (currentMove.rla[0] > 0)
 				{
 					RforearmTransform->RotateWXYZ(increaseAngle, -1, 0, 0);
@@ -696,6 +675,9 @@ public:
 			}
 			if (currentMove.rla[1] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rla[1]);
+				decreseAngle = abs(jointIncrease.rla[1]) * -1;
+
 				if (currentMove.rla[1] > 0)
 				{
 					RforearmTransform->RotateWXYZ(increaseAngle, 0, -1, 0);
@@ -710,6 +692,9 @@ public:
 			}
 			if (currentMove.rla[2] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rla[2]);
+				decreseAngle = abs(jointIncrease.rla[2]) * -1;
+
 				if (currentMove.rla[2] > 0)
 				{
 					RforearmTransform->RotateWXYZ(increaseAngle, 0, 0, -1);
@@ -725,6 +710,9 @@ public:
 			////////////  Left upper Arm
 			if (currentMove.lua[0] != 0)
 			{
+				increaseAngle = abs(jointIncrease.lua[0]);
+				decreseAngle = abs(jointIncrease.lua[0]) * -1;
+
 				if (currentMove.lua[0] > 0)
 				{
 					LarmTransform->RotateWXYZ(increaseAngle, -1, 0, 0);
@@ -738,6 +726,9 @@ public:
 			}
 			if (currentMove.lua[1] != 0)
 			{
+				increaseAngle = abs(jointIncrease.lua[1]);
+				decreseAngle = abs(jointIncrease.lua[1]) * -1;
+
 				if (currentMove.lua[1] > 0)
 				{
 					LarmTransform->RotateWXYZ(increaseAngle, 0, -1, 0);
@@ -752,6 +743,9 @@ public:
 			}
 			if (currentMove.lua[2] != 0)
 			{
+				increaseAngle = abs(jointIncrease.lua[2]);
+				decreseAngle = abs(jointIncrease.lua[2]) * -1;
+
 				if (currentMove.lua[2] > 0)
 				{
 					LarmTransform->RotateWXYZ(increaseAngle, 0, 0, 1);
@@ -767,6 +761,9 @@ public:
 			////////////  Left Lower Arm
 			if (currentMove.lla[0] != 0)
 			{
+				increaseAngle = abs(jointIncrease.lla[0]);
+				decreseAngle = abs(jointIncrease.lla[0]) * -1;
+
 				if (currentMove.lla[0] > 0)
 				{
 					LforearmTransform->RotateWXYZ(increaseAngle, -1, 0, 0);
@@ -780,6 +777,9 @@ public:
 			}
 			if (currentMove.lla[1] != 0)
 			{
+				increaseAngle = abs(jointIncrease.lla[1]);
+				decreseAngle = abs(jointIncrease.lla[1]) * -1;
+
 				if (currentMove.lla[1] > 0)
 				{
 					LforearmTransform->RotateWXYZ(increaseAngle, 0, -1, 0);
@@ -794,6 +794,9 @@ public:
 			}
 			if (currentMove.lla[2] != 0)
 			{
+				increaseAngle = abs(jointIncrease.lla[2]);
+				decreseAngle = abs(jointIncrease.lla[2]) * -1;
+
 				if (currentMove.lla[2] > 0)
 				{
 					LforearmTransform->RotateWXYZ(increaseAngle, 0, 0, 1);
@@ -809,6 +812,9 @@ public:
 			////////////  Right Upper Leg
 			if (currentMove.rul[0] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rul[0]);
+				decreseAngle = abs(jointIncrease.rul[0]) * -1;
+
 				if (currentMove.rul[0] > 0)
 				{
 					RlulegTransform->RotateWXYZ(increaseAngle, -1, 0, 0);
@@ -822,6 +828,9 @@ public:
 			}
 			if (currentMove.rul[1] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rul[1]);
+				decreseAngle = abs(jointIncrease.rul[1]) * -1;
+
 				if (currentMove.rul[1] > 0)
 				{
 					RlulegTransform->RotateWXYZ(increaseAngle, 0, -1, 0);
@@ -836,6 +845,9 @@ public:
 			}
 			if (currentMove.rul[2] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rul[2]);
+				decreseAngle = abs(jointIncrease.rul[2]) * -1;
+
 				if (currentMove.rul[2] > 0)
 				{
 					RlulegTransform->RotateWXYZ(increaseAngle, 0, 0, -1);
@@ -851,6 +863,9 @@ public:
 			////////////  Right Lower Leg
 			if (currentMove.rll[0] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rll[0]);
+				decreseAngle = abs(jointIncrease.rll[0]) * -1;
+
 				if (currentMove.rll[0] > 0)
 				{
 					RllegTransform->RotateWXYZ(increaseAngle, -1, 0, 0);
@@ -864,6 +879,9 @@ public:
 			}
 			if (currentMove.rll[1] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rll[1]);
+				decreseAngle = abs(jointIncrease.rll[1]) * -1;
+
 				if (currentMove.rll[1] > 0)
 				{
 					RllegTransform->RotateWXYZ(increaseAngle, 0, -1, 0);
@@ -878,6 +896,9 @@ public:
 			}
 			if (currentMove.rll[2] != 0)
 			{
+				increaseAngle = abs(jointIncrease.rll[2]);
+				decreseAngle = abs(jointIncrease.rll[2]) * -1;
+
 				if (currentMove.rll[2] > 0)
 				{
 					RllegTransform->RotateWXYZ(increaseAngle, 0, 0, -1);
@@ -971,7 +992,91 @@ public:
 					currentMove.lll[2] += abs(decreseAngle);
 				}
 			}
+			
 
+
+			if (currntIdx == drawIdx)
+			{
+				if (b_leftHand)
+				{
+					double leftdata[3] = { 0,0,0 };
+					LeftHand_ObjReader_Transform->GetPosition(leftdata);
+
+					vtkNew<vtkSphereSource> sphereSource1;
+					vtkNew<vtkPolyDataMapper> mapper1;
+					vtkNew<vtkActor> actor1;
+
+
+					sphereSource1->SetCenter(leftdata[0], leftdata[1], leftdata[2]);
+					sphereSource1->SetRadius(1);
+					// Make the surface smooth.
+					sphereSource1->SetPhiResolution(18);
+					sphereSource1->SetThetaResolution(18);
+
+
+					mapper1->SetInputConnection(sphereSource1->GetOutputPort());
+
+
+					actor1->SetMapper(mapper1);
+					actor1->GetProperty()->SetColor(colors->GetColor3d("Firebrick").GetData());
+					actor1->GetProperty()->SetOpacity((double)((double)(100 / frameCnt * TimerCount) / 100));
+					mRenderer->AddActor(actor1);
+				}
+
+				if (b_rightHand)
+				{
+					double rightdata[3] = { 0,0,0 };
+					RightHand_ObjReader_Transform->GetPosition(rightdata);
+
+					vtkNew<vtkSphereSource> sphereSource2;
+					vtkNew<vtkPolyDataMapper> mapper2;
+					vtkNew<vtkActor> actor2;
+
+
+					sphereSource2->SetCenter(rightdata[0], rightdata[1], rightdata[2]);
+					sphereSource2->SetRadius(1);
+					// Make the surface smooth.
+					sphereSource2->SetPhiResolution(18);
+					sphereSource2->SetThetaResolution(18);
+
+
+					mapper2->SetInputConnection(sphereSource2->GetOutputPort());
+
+
+					actor2->SetMapper(mapper2);
+					actor2->GetProperty()->SetColor(colors->GetColor3d("Firebrick").GetData());
+					actor2->GetProperty()->SetOpacity((double)((double)(100 / frameCnt * TimerCount) / 100));
+					mRenderer->AddActor(actor2);
+
+				}
+
+				if (b_rightFoot)
+				{
+					double rightdata[3] = { 0,0,0 };
+					RF_ObjReader_Transform->GetPosition(rightdata);
+
+					vtkNew<vtkSphereSource> sphereSource3;
+					vtkNew<vtkPolyDataMapper> mapper3;
+					vtkNew<vtkActor> actor3;
+
+
+					sphereSource3->SetCenter(rightdata[0], rightdata[1], rightdata[2]);
+					sphereSource3->SetRadius(1);
+					// Make the surface smooth.
+					sphereSource3->SetPhiResolution(18);
+					sphereSource3->SetThetaResolution(18);
+
+
+					mapper3->SetInputConnection(sphereSource3->GetOutputPort());
+
+
+					actor3->SetMapper(mapper3);
+					actor3->GetProperty()->SetColor(colors->GetColor3d("Firebrick").GetData());
+					actor3->GetProperty()->SetOpacity((double)((double)(100 / frameCnt * TimerCount) / 100));
+					mRenderer->AddActor(actor3);
+				}
+
+			}
 			if (b_saveImage)
 			{
 				vtkNew<vtkWindowToImageFilter> windowToImageFilter;
