@@ -68,6 +68,8 @@ public slots:
 	void saveImage();
 	void drawTrajectory();
 
+	void drawThetaPhi();
+
 
 };
 

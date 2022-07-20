@@ -13456,6 +13456,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	QObject::connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::saveImage);
 	QObject::connect(ui->btnTrajectory, &QPushButton::clicked, this, &MainWindow::drawTrajectory);
 
+	QObject::connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::drawThetaPhi);
+
 }
 
 MainWindow::~MainWindow() {
@@ -14786,6 +14788,31 @@ void MainWindow::onDrawSphereClick() {
 	vtkNew<customMouseInteractorStyle> style;
 	renderWindowInteractor->SetInteractorStyle(style);
 	renderWindowInteractor->Start();
+
+
+}
+
+void MainWindow::drawThetaPhi()
+{
+
+	std::cout << "theta phi" << std::endl;
+
+	QString q_theta = ui->edit_theta->text();
+	QString q_phi = ui->edit_phi->text();
+
+	int getTheta = 0;
+	int getPhi = 0;
+
+
+	if(q_theta.toStdString().size()>0)
+		getTheta = stoi(q_theta.toStdString());
+	
+
+	if (q_phi.toStdString().size() > 0)
+		getPhi = stoi(q_phi.toStdString());
+
+
+	std::cout << getTheta << "  " << getPhi << std::endl;
 
 
 }
