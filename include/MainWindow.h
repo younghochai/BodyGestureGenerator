@@ -51,6 +51,7 @@ public:
     ~MainWindow();
 
 	std::vector<JointMove> savedPoses;
+	void moveToward(std::vector<double> target);
 
 
 

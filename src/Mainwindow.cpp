@@ -2,12 +2,17 @@
 #include <iostream>
 #include "ui_MainWindow.h"
 
-
+#include <vtkSphere.h>
 #include "allHeaders.h"
 #include <vtkConeSource.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkSampleFunction.h>
+#include <vtkContourFilter.h>
+#include <vtkIdFilter.h>
+#include <vtkBox.h>
+#include <vtkClipPolyData.h>
 
 using namespace std;
 bool b_saveImage = false;
@@ -186,6 +191,112 @@ public:
 					//actor->GetProperty()->SetRepresentationToWireframe();
 					//actor->GetProperty()->SetColor(colors->GetColor3d("Azure").GetData());
 					//mRenderer->AddActor(actor);
+
+
+					vtkNew<vtkNamedColors> colors;
+
+					// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
+
+					vtkNew<vtkSphereSource> sphereSource;
+					sphereSource->SetCenter(.5, 0, 0);
+
+					unsigned int res = 18;
+					sphereSource->SetThetaResolution(res * 2);
+					sphereSource->SetPhiResolution(res);
+					sphereSource->Update();
+
+					vtkNew<vtkIdFilter> cellIdFilter;
+					cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
+					cellIdFilter->SetCellIds(true);
+					cellIdFilter->SetPointIds(false);
+#if VTK890
+					cellIdFilter->SetCellIdsArrayName("CellIds");
+#else
+					cellIdFilter->SetIdsArrayName("CellIds");
+#endif
+					cellIdFilter->Update();
+
+					//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
+
+					vtkNew<vtkIdFilter> pointIdFilter;
+					pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
+					pointIdFilter->SetCellIds(false);
+					pointIdFilter->SetPointIds(true);
+#if VTK890
+					pointIdFilter->SetPointIdsArrayName("PointIds");
+#else
+					pointIdFilter->SetIdsArrayName("PointIds");
+#endif
+					pointIdFilter->Update();
+
+					vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
+
+					//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
+
+					vtkNew<vtkCubeSource> cubeSource;
+					cubeSource->Update();
+
+					vtkNew<vtkBox> implicitCube;
+					implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
+
+					vtkNew<vtkClipPolyData> clipper;
+					clipper->SetClipFunction(implicitCube);
+					clipper->SetInputData(sphereWithIds);
+					clipper->InsideOutOn();
+					clipper->Update();
+
+					//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
+
+					// Get the clipped cell ids
+					vtkPolyData* clipped = clipper->GetOutput();
+
+					std::cout << "There are " << clipped->GetNumberOfPoints()
+						<< " clipped points." << std::endl;
+					std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
+						<< std::endl;
+
+					//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
+
+					//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
+					//{
+					//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
+					//		<< std::endl;
+					//}
+
+					// Create a mapper and actor for clipped sphere
+
+					vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
+					translation->Translate(-12.0, 70.0, +20.0);
+
+					vtkNew<vtkPolyDataMapper> clippedMapper;
+					clippedMapper->SetInputConnection(clipper->GetOutputPort());
+					clippedMapper->ScalarVisibilityOff();
+
+
+					vtkNew<vtkActor> clippedActor;
+					clippedActor->SetMapper(clippedMapper);
+					clippedActor->RotateZ(90);
+					clippedActor->RotateY(90);
+					clippedActor->SetScale(60);
+					clippedActor->SetUserTransform(translation);
+					clippedActor->GetProperty()->SetOpacity(0.5);
+					clippedActor->GetProperty()->SetRepresentationToWireframe();
+					clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
+
+					// Create a mapper and actor for cube
+					vtkNew<vtkPolyDataMapper> cubeMapper;
+					cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
+
+					vtkNew<vtkActor> cubeActor;
+					cubeActor->SetMapper(cubeMapper);
+
+					cubeActor->GetProperty()->SetRepresentationToWireframe();
+					cubeActor->GetProperty()->SetOpacity(0.5);
+					cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
+
+					mRenderer->UseHiddenLineRemovalOn();
+					mRenderer->AddActor(clippedActor);
+
 
 
 					CHEST(poses[currntIdx - 1].chest[0], -1, 0, 0);
@@ -12333,6 +12444,23 @@ void MainWindow::displayRobot_Model(int rotate)
 	RarmTransform->RotateWXYZ(-4, 0, 0, 1);
 	LarmTransform->RotateWXYZ(4, 0, 0, 1);
 
+
+	//TargetPoint - Sphere
+	double rightData[3] = { 0,0,0 };
+	RightHand_ObjReader_Transform->GetPosition(rightData);
+	targetSphere->SetCenter(rightData[0], rightData[1]-8, rightData[2]);
+	//targetSphere->SetCenter(31, 0, 0);
+	targetSphere->SetRadius(1);
+	targetSphere->SetPhiResolution(100);
+	targetSphere->SetThetaResolution(100);
+
+	targetMapper->SetInputConnection(targetSphere->GetOutputPort());
+	targetActor->SetMapper(targetMapper);
+	targetActor->GetProperty()->SetColor(colors->GetColor3d("DarkGreen").GetData());
+
+
+
+
 	//renderer->AddActor(planeActor);
 	mRenderer->AddActor(PlconeActor);
 	mRenderer->AddActor(CUconeActor);
@@ -12353,6 +12481,8 @@ void MainWindow::displayRobot_Model(int rotate)
 	mRenderer->AddActor(LlulegActor);
 	mRenderer->AddActor(LllegActor);
 	mRenderer->AddActor(LF_objActor);
+
+	mRenderer->AddActor(targetActor);
 }
 
 void MainWindow::displayFixedFoots_Model()
@@ -13458,10 +13588,71 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	QObject::connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::drawThetaPhi);
 
+
+	//vtkNew<vtkSphereSource> sphereSource;
+	//sphereSource->SetCenter(-11.5, -2.5, -77.0);
+	//sphereSource->SetRadius(40.0);
+	//// Make the surface smooth.
+	//sphereSource->SetPhiResolution(18);
+	//sphereSource->SetThetaResolution(18);
+
+	//vtkNew<vtkPolyDataMapper> mapper;
+	//mapper->SetInputConnection(sphereSource->GetOutputPort());
+
+	//vtkNew<vtkActor> actor;
+	//actor->SetMapper(mapper);
+	//actor->RotateX(90);
+	//actor->GetProperty()->SetInterpolationToFlat();
+	//actor->GetProperty()->SetOpacity(0.5);
+	//actor->GetProperty()->SetRepresentationToWireframe();
+	//actor->GetProperty()->SetColor(colors->GetColor3d("Azure").GetData());
+	//mRenderer->AddActor(actor);
+	//mRenderer->UseHiddenLineRemovalOn();
+
+	//auto colors = vtkSmartPointer<vtkNamedColors>::New();
+	//vtkColor3d actorColor = colors->GetColor3d("AliceBlue");
+	//vtkColor3d EdgeColour = colors->GetColor3d("SteelBlue");
+	//vtkColor3d BackgroundColour = colors->GetColor3d("Silver");
+
+	//// create a sphere
+	//auto sphere = vtkSmartPointer<vtkSphere>::New();
+	//sphere->SetCenter(0.0, 0.0, 0.0);
+	//sphere->SetRadius(0.5);
+
+	///* The sample function generates a distance function from the implicit
+	//	   function.This is then contoured to get a polygonal surface.*/
+	//auto sample = vtkSmartPointer<vtkSampleFunction>::New();
+	//sample->SetImplicitFunction(sphere);
+	////sample->SetModelBounds(-.5, .5, -.5, .5, -.5, .5);
+	//sample->SetSampleDimensions(20, 20, 20);
+	//sample->ComputeNormalsOff();
+
+	//// contour
+	//auto surface = vtkSmartPointer<vtkContourFilter>::New();
+	//surface->SetInputConnection(sample->GetOutputPort());
+	//surface->SetValue(3, 0.);
+
+	//// Create a mapper and an actor
+	//auto mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+	//mapper->SetInputConnection(surface->GetOutputPort());
+	//mapper->ScalarVisibilityOff();
+	//auto actor = vtkSmartPointer<vtkActor>::New();
+	//actor->SetMapper(mapper);
+	//actor->GetProperty()->EdgeVisibilityOn();
+	//actor->GetProperty()->SetColor(actorColor.GetData());
+	//actor->GetProperty()->SetEdgeColor(EdgeColour.GetData());
+
+
+
+
 }
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::moveToward(std::vector<double> target)
+{
 }
 
 void MainWindow::selectModel(int ID)
@@ -14772,12 +14963,11 @@ void MainWindow::onDrawSphereClick() {
 	//// Create the actor where the sphere is rendered
 	//vtkSmartPointer<vtkPolyDataMapper> sphereMapper =
 	//	vtkSmartPointer<vtkPolyDataMapper>::New();
-	//sphereMapper->SetInputData(coneSource->GetOutput());
-
+	//sphereMapper->SetInputData(coneSource->GetOutput());  
 	//vtkSmartPointer<vtkActor> cone = vtkSmartPointer<vtkActor>::New();
 	//cone->SetMapper(sphereMapper);
 
-	//// Add the sphere actor to the OpenGL
+	//// Add the sphere actor to the OpenGL   
 	//mRenderer->AddViewProp(cone);
 
 	mRenderer->ResetCamera();

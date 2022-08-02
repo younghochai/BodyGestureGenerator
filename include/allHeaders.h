@@ -132,6 +132,14 @@ vtkSmartPointer<vtkInteractorStyle> mInteractorStyle;
 
 
 
+//***************************************************************************************************  Robot Model *******************************//
+
+
+vtkSmartPointer<vtkSphereSource> targetSphere = vtkSmartPointer<vtkSphereSource>::New();
+vtkSmartPointer<vtkPolyDataMapper> targetMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+vtkSmartPointer<vtkTransform> targetTransform = vtkSmartPointer<vtkTransform>::New();
+vtkSmartPointer<vtkActor> targetActor = vtkSmartPointer<vtkActor>::New();
+
 
 // Grid Surface
 vtkSmartPointer<vtkPlaneSource> planeSource = vtkSmartPointer<vtkPlaneSource>::New();
@@ -158,7 +166,7 @@ vtkSmartPointer<vtkTransform> CUconeTransform = vtkSmartPointer<vtkTransform>::N
 vtkSmartPointer<vtkActor> CUconeActor = vtkSmartPointer<vtkActor>::New();
 
 
-// chest upperCone
+// chest 
 vtkSmartPointer<vtkConeSource> CUcone_upper = vtkSmartPointer<vtkConeSource>::New();
 vtkSmartPointer<vtkPolyDataMapper> CUconeMapper_upper = vtkSmartPointer<vtkPolyDataMapper>::New();
 vtkSmartPointer<vtkTransform> CUconeTransform_upper = vtkSmartPointer<vtkTransform>::New();
