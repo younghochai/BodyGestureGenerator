@@ -119,6 +119,11 @@ int trajCount = 0;
 bool VitruvianAvatar::isLoaded = false;
 VitruvianAvatar vAvatar;
 
+int totalAngleOfRUA = 0;
+int totalAngleOfRLA = 0;
+
+int totalAngleOfRUA_z = 0;
+int totalAngleOfRLA_z = 0;
 
 vtkNew<vtkNamedColors> colors;
 vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
@@ -2378,6 +2383,8 @@ void CHEST(int A, int x, int y, int z)
 	mRenderWindow->Render();
 }
 
+
+
 void rua(int A, int x, int y, int z)
 {
 	mRenderWindow->Render();
@@ -2397,6 +2404,105 @@ void rla(int A, int x, int y, int z)
 	RforearmTransform->Translate(arm_X, -arm_Y2, 0);
 	//RarmTransform->Identity();
 	mRenderWindow->Render();
+}
+
+void inverseKinematicesRH(double ruaA, double rlaA, int x, int y, int z)
+{
+	int angle1 = 0;
+	int angle2 = 0;
+
+	if (x != 0)
+	{
+		std::cout << "input X " << std::endl;
+		if (ruaA > totalAngleOfRUA)
+		{
+			angle1 = ruaA - totalAngleOfRUA;
+
+			totalAngleOfRUA += angle1;
+		}
+
+		if (ruaA < totalAngleOfRUA)
+		{
+			angle1 = totalAngleOfRUA - ruaA;
+
+			totalAngleOfRUA -= angle1;
+
+			angle1 *= -1;
+		}
+
+		if (rlaA > totalAngleOfRLA)
+		{
+			angle2 = rlaA - totalAngleOfRLA;
+			totalAngleOfRLA += angle2;
+
+		}
+
+		if (rlaA < totalAngleOfRLA)
+		{
+			angle2 = totalAngleOfRLA - rlaA;
+			totalAngleOfRLA -= angle2;
+
+			angle1 *= -1;
+		}
+	}
+
+	if (z != 0)
+	{
+		std::cout << "input Z " << std::endl;
+
+		if (ruaA > totalAngleOfRUA_z)
+		{
+			angle1 = ruaA - totalAngleOfRUA_z;
+
+			totalAngleOfRUA_z += angle1;
+		}
+
+		if (ruaA < totalAngleOfRUA_z)
+		{
+			angle1 = totalAngleOfRUA_z - ruaA;
+
+			totalAngleOfRUA_z -= angle1;
+
+			angle1 *= -1;
+		}
+
+		if (rlaA > totalAngleOfRLA_z)
+		{
+			angle2 = rlaA - totalAngleOfRLA_z;
+			totalAngleOfRLA_z += angle2;
+
+		}
+
+		if (rlaA < totalAngleOfRLA_z)
+		{
+			angle2 = totalAngleOfRLA_z - rlaA;
+			totalAngleOfRLA_z -= angle2;
+
+			angle1 *= -1;
+		}
+	}
+
+
+	std::cout << totalAngleOfRUA << std::endl;
+	std::cout << totalAngleOfRLA << std::endl;
+
+	mRenderWindow->Render();
+	//RarmTransform->Identity();
+	RarmTransform->Translate(-arm_X, arm_Y, 0);
+	RarmTransform->RotateWXYZ(angle1, x, y, z);
+	RarmTransform->Translate(arm_X, -arm_Y, 0);
+	//RarmTransform->Identity();
+	mRenderWindow->Render();
+	
+
+	mRenderWindow->Render();
+	//RforearmTransform->Identity();
+	RforearmTransform->Translate(-arm_X, arm_Y2, 0);
+	RforearmTransform->RotateWXYZ(angle2, x, y, z);
+	RforearmTransform->Translate(arm_X, -arm_Y2, 0);
+	//RforearmTransform->Identity();
+	mRenderWindow->Render();
+
 }
 
 void lua(int A, int x, int y, int z)
