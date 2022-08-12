@@ -193,109 +193,109 @@ public:
 					//mRenderer->AddActor(actor);
 
 
-					vtkNew<vtkNamedColors> colors;
-
-					// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
-
-					vtkNew<vtkSphereSource> sphereSource;
-					sphereSource->SetCenter(.5, 0, 0);
-
-					unsigned int res = 18;
-					sphereSource->SetThetaResolution(res * 2);
-					sphereSource->SetPhiResolution(res);
-					sphereSource->Update();
-
-					vtkNew<vtkIdFilter> cellIdFilter;
-					cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
-					cellIdFilter->SetCellIds(true);
-					cellIdFilter->SetPointIds(false);
-#if VTK890
-					cellIdFilter->SetCellIdsArrayName("CellIds");
-#else
-					cellIdFilter->SetIdsArrayName("CellIds");
-#endif
-					cellIdFilter->Update();
-
-					//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
-
-					vtkNew<vtkIdFilter> pointIdFilter;
-					pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
-					pointIdFilter->SetCellIds(false);
-					pointIdFilter->SetPointIds(true);
-#if VTK890
-					pointIdFilter->SetPointIdsArrayName("PointIds");
-#else
-					pointIdFilter->SetIdsArrayName("PointIds");
-#endif
-					pointIdFilter->Update();
-
-					vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
-
-					//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
-
-					vtkNew<vtkCubeSource> cubeSource;
-					cubeSource->Update();
-
-					vtkNew<vtkBox> implicitCube;
-					implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
-
-					vtkNew<vtkClipPolyData> clipper;
-					clipper->SetClipFunction(implicitCube);
-					clipper->SetInputData(sphereWithIds);
-					clipper->InsideOutOn();
-					clipper->Update();
-
-					//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
-
-					// Get the clipped cell ids
-					vtkPolyData* clipped = clipper->GetOutput();
-
-					std::cout << "There are " << clipped->GetNumberOfPoints()
-						<< " clipped points." << std::endl;
-					std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
-						<< std::endl;
-
-					//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
-
-					//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
-					//{
-					//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
-					//		<< std::endl;
-					//}
-
-					// Create a mapper and actor for clipped sphere
-
-					vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
-					translation->Translate(-12.0, 70.0, +20.0);
-
-					vtkNew<vtkPolyDataMapper> clippedMapper;
-					clippedMapper->SetInputConnection(clipper->GetOutputPort());
-					clippedMapper->ScalarVisibilityOff();
-
-
-					vtkNew<vtkActor> clippedActor;
-					clippedActor->SetMapper(clippedMapper);
-					clippedActor->RotateZ(90);
-					clippedActor->RotateY(90);
-					clippedActor->SetScale(60);
-					clippedActor->SetUserTransform(translation);
-					clippedActor->GetProperty()->SetOpacity(0.5);
-					clippedActor->GetProperty()->SetRepresentationToWireframe();
-					clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
-
-					// Create a mapper and actor for cube
-					vtkNew<vtkPolyDataMapper> cubeMapper;
-					cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
-
-					vtkNew<vtkActor> cubeActor;
-					cubeActor->SetMapper(cubeMapper);
-
-					cubeActor->GetProperty()->SetRepresentationToWireframe();
-					cubeActor->GetProperty()->SetOpacity(0.5);
-					cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
-
-					mRenderer->UseHiddenLineRemovalOn();
-					mRenderer->AddActor(clippedActor);
+//					vtkNew<vtkNamedColors> colors;
+//
+//					// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
+//
+//					vtkNew<vtkSphereSource> sphereSource;
+//					sphereSource->SetCenter(.5, 0, 0);
+//
+//					unsigned int res = 18;
+//					sphereSource->SetThetaResolution(res * 2);
+//					sphereSource->SetPhiResolution(res);
+//					sphereSource->Update();
+//
+//					vtkNew<vtkIdFilter> cellIdFilter;
+//					cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
+//					cellIdFilter->SetCellIds(true);
+//					cellIdFilter->SetPointIds(false);
+//#if VTK890
+//					cellIdFilter->SetCellIdsArrayName("CellIds");
+//#else
+//					cellIdFilter->SetIdsArrayName("CellIds");
+//#endif
+//					cellIdFilter->Update();
+//
+//					//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
+//
+//					vtkNew<vtkIdFilter> pointIdFilter;
+//					pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
+//					pointIdFilter->SetCellIds(false);
+//					pointIdFilter->SetPointIds(true);
+//#if VTK890
+//					pointIdFilter->SetPointIdsArrayName("PointIds");
+//#else
+//					pointIdFilter->SetIdsArrayName("PointIds");
+//#endif
+//					pointIdFilter->Update();
+//
+//					vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
+//
+//					//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
+//
+//					vtkNew<vtkCubeSource> cubeSource;
+//					cubeSource->Update();
+//
+//					vtkNew<vtkBox> implicitCube;
+//					implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
+//
+//					vtkNew<vtkClipPolyData> clipper;
+//					clipper->SetClipFunction(implicitCube);
+//					clipper->SetInputData(sphereWithIds);
+//					clipper->InsideOutOn();
+//					clipper->Update();
+//
+//					//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
+//
+//					// Get the clipped cell ids
+//					vtkPolyData* clipped = clipper->GetOutput();
+//
+//					std::cout << "There are " << clipped->GetNumberOfPoints()
+//						<< " clipped points." << std::endl;
+//					std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
+//						<< std::endl;
+//
+//					//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
+//
+//					//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
+//					//{
+//					//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
+//					//		<< std::endl;
+//					//}
+//
+//					// Create a mapper and actor for clipped sphere
+//
+//					vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
+//					translation->Translate(-12.0, 70.0, +20.0);
+//
+//					vtkNew<vtkPolyDataMapper> clippedMapper;
+//					clippedMapper->SetInputConnection(clipper->GetOutputPort());
+//					clippedMapper->ScalarVisibilityOff();
+//
+//
+//					vtkNew<vtkActor> clippedActor;
+//					clippedActor->SetMapper(clippedMapper);
+//					clippedActor->RotateZ(90);
+//					clippedActor->RotateY(90);
+//					clippedActor->SetScale(60);
+//					clippedActor->SetUserTransform(translation);
+//					clippedActor->GetProperty()->SetOpacity(0.5);
+//					clippedActor->GetProperty()->SetRepresentationToWireframe();
+//					clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
+//
+//					// Create a mapper and actor for cube
+//					vtkNew<vtkPolyDataMapper> cubeMapper;
+//					cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
+//
+//					vtkNew<vtkActor> cubeActor;
+//					cubeActor->SetMapper(cubeMapper);
+//
+//					cubeActor->GetProperty()->SetRepresentationToWireframe();
+//					cubeActor->GetProperty()->SetOpacity(0.5);
+//					cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
+//
+//					mRenderer->UseHiddenLineRemovalOn();
+//					mRenderer->AddActor(clippedActor);
 
 
 
@@ -2290,10 +2290,10 @@ namespace {
 			double rhIK_theta1 = rhIK_angle1 * 180 / PI;
 			double rhIK_theta2 = rhIK_angle2 * 180 / PI;
 
-			double rhIK_theta0 = atan(z / x) * 180 / PI;
+			double rhIK_theta0 = atan((double)((double)rhIK_Targetz / (double)rhIK_Targetx)) * 180 / PI;
 
-			cout << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
-			cout << "testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+			cout << rhIK_theta0 <<"  theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+			cout << rhIK_Targetz<<"testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
 
 			if (boneID == 10)
 			{
@@ -3838,8 +3838,11 @@ namespace {
 						if (diff > prevY)
 						{
 							rhIK_Targetx++;
+
 							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
 							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
+							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
+							mRenderWindow->Render();
 						}
 
 						if (diff < prevY)
@@ -3847,9 +3850,11 @@ namespace {
 							rhIK_Targetx--;
 							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, -anim_rul_x, anim_rul_y, anim_rul_z, boneID);
 							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
+							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
+							mRenderWindow->Render();
 						}
 
-						std::cout << "rhIK_Targetx = " << rhIK_Targetx << std::endl;
+						
 					}
 
 					if (flag == 2)
@@ -3859,6 +3864,8 @@ namespace {
 							rhIK_Targety++;
 							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
 							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
+							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
+							mRenderWindow->Render();
 						}
 
 						if (diff < prevY)
@@ -3866,12 +3873,59 @@ namespace {
 							rhIK_Targety--;
 							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, -anim_rul_x, anim_rul_y, anim_rul_z, boneID);
 							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
+							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
+							mRenderWindow->Render();
 						}
 
-						std::cout << "rhIK_Targety = " << rhIK_Targety << std::endl;
+						
+					}
+
+
+					//totalAngleOfRUA_z
+					if (flag == 3)
+					{
+						if (diff > prevY)
+						{
+							rhIK_Targetz++;
+						}
+
+						if (diff < prevY)
+						{
+							rhIK_Targetz--;
+						}
+
+						int angle_z = 0;
+						int moveAngle = 0;
+						angle_z = atan((double)((double)rhIK_Targetz / (double)rhIK_Targetx)) * 180 / PI;
+
+						if (angle_z > totalAngleOfRUA_z)
+						{
+							moveAngle = angle_z - totalAngleOfRUA_z;
+
+							totalAngleOfRUA_z += moveAngle;
+						}
+
+						if (angle_z < totalAngleOfRUA_z)
+						{
+							moveAngle = totalAngleOfRUA_z - angle_z;
+
+							totalAngleOfRUA_z -= moveAngle;
+
+							moveAngle *= -1;
+						}
+
+						std::cout << "rhIK_Targetz = " << rhIK_Targetz << "  angle_z = " << angle_z << "  moveAngle = " << moveAngle << std::endl;
+
+						rua(moveAngle, anim_rul_x, anim_rul_y, anim_rul_z);
+						//computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
+						//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
+						targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
+						mRenderWindow->Render();
 					}
 
 				
+					std::cout << "  rhIK_Targetx = " << rhIK_Targetx << "  rhIK_Targety = " << rhIK_Targety << "  rhIK_Targetz = " << rhIK_Targetz << std::endl;
+
 					mRenderer->Render();
 
 
@@ -4976,6 +5030,20 @@ namespace {
 
 			flag = 3;
 			boneID = 0;
+
+			if (this->InteractionProp == this->tartget)
+			{
+
+				b_targetSelect = true;
+				boneID = 10;
+				this->Move = true;
+
+				anim_rul_x = 0;
+				anim_rul_y = 0;
+				anim_rul_z = 1;
+
+			}
+
 			if (this->InteractionProp == this->RH_Actor)
 			{
 				boneID = 3332;
@@ -5472,8 +5540,6 @@ namespace {
 				anim_rul_x = 1;
 				anim_rul_y = 0;
 				anim_rul_z = 0;
-
-				
 
 			}
 
@@ -12602,18 +12668,125 @@ void MainWindow::displayRobot_Model(int rotate)
 	double rightData[3] = { 0,0,0 };
 	RightHand_ObjReader_Transform->GetPosition(rightData);
 	//targetTransform->Translate(rightData[0], rightData[1] - 8, rightData[2]);
-	targetSphere->SetCenter(rightData[0], rightData[1]-8, rightData[2]);
+
+	targetSphere->SetCenter(rhIK_Targetx, 0, rhIK_Targety);
 	//targetSphere->SetCenter(31, 0, 0);
 	targetSphere->SetRadius(3);
 	targetSphere->SetPhiResolution(100);
 	targetSphere->SetThetaResolution(100);
 
-
+	targetTransform->RotateZ(270);
+	targetTransform->Translate(-100, -15, 0);
 	targetMapper->SetInputConnection(targetSphere->GetOutputPort());
 	targetActor->SetUserTransform(targetTransform);
 	targetActor->SetMapper(targetMapper);
 	targetActor->GetProperty()->SetColor(colors->GetColor3d("DarkGreen").GetData());
 
+
+
+	vtkNew<vtkNamedColors> colors;
+
+	// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
+
+	vtkNew<vtkSphereSource> sphereSource;
+	sphereSource->SetCenter(.5, 0, 0);
+
+	unsigned int res = 18;
+	sphereSource->SetThetaResolution(res * 2);
+	sphereSource->SetPhiResolution(res);
+	sphereSource->Update();
+
+	vtkNew<vtkIdFilter> cellIdFilter;
+	cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
+	cellIdFilter->SetCellIds(true);
+	cellIdFilter->SetPointIds(false);
+#if VTK890
+	cellIdFilter->SetCellIdsArrayName("CellIds");
+#else
+	cellIdFilter->SetIdsArrayName("CellIds");
+#endif
+	cellIdFilter->Update();
+
+	//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
+
+	vtkNew<vtkIdFilter> pointIdFilter;
+	pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
+	pointIdFilter->SetCellIds(false);
+	pointIdFilter->SetPointIds(true);
+#if VTK890
+	pointIdFilter->SetPointIdsArrayName("PointIds");
+#else
+	pointIdFilter->SetIdsArrayName("PointIds");
+#endif
+	pointIdFilter->Update();
+
+	vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
+
+	//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
+
+	vtkNew<vtkCubeSource> cubeSource;
+	cubeSource->Update();
+
+	vtkNew<vtkBox> implicitCube;
+	implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
+
+	vtkNew<vtkClipPolyData> clipper;
+	clipper->SetClipFunction(implicitCube);
+	clipper->SetInputData(sphereWithIds);
+	clipper->InsideOutOn();
+	clipper->Update();
+
+	//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
+
+	// Get the clipped cell ids
+	vtkPolyData* clipped = clipper->GetOutput();
+
+	std::cout << "There are " << clipped->GetNumberOfPoints()
+		<< " clipped points." << std::endl;
+	std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
+		<< std::endl;
+
+	//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
+
+	//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
+	//{
+	//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
+	//		<< std::endl;
+	//}
+
+	// Create a mapper and actor for clipped sphere
+
+	vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
+	translation->Translate(-12.0, 70.0, +30.0);
+
+	vtkNew<vtkPolyDataMapper> clippedMapper;
+	clippedMapper->SetInputConnection(clipper->GetOutputPort());
+	clippedMapper->ScalarVisibilityOff();
+
+
+	vtkNew<vtkActor> clippedActor;
+	clippedActor->SetMapper(clippedMapper);
+	clippedActor->RotateZ(90);
+	clippedActor->RotateY(90);
+	clippedActor->SetScale(60);
+	clippedActor->SetUserTransform(translation);
+	clippedActor->GetProperty()->SetOpacity(0.5);
+	clippedActor->GetProperty()->SetRepresentationToWireframe();
+	clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
+
+	// Create a mapper and actor for cube
+	vtkNew<vtkPolyDataMapper> cubeMapper;
+	cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
+
+	vtkNew<vtkActor> cubeActor;
+	cubeActor->SetMapper(cubeMapper);
+
+	cubeActor->GetProperty()->SetRepresentationToWireframe();
+	cubeActor->GetProperty()->SetOpacity(0.5);
+	cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
+
+	mRenderer->UseHiddenLineRemovalOn();
+	mRenderer->AddActor(clippedActor);
 
 
 
@@ -15126,6 +15299,8 @@ void MainWindow::onDrawSphereClick() {
 
 	//// Add the sphere actor to the OpenGL   
 	//mRenderer->AddViewProp(cone);
+
+
 
 	mRenderer->ResetCamera();
 	mRenderWindow->Render();

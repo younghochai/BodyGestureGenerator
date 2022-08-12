@@ -123,7 +123,7 @@ int totalAngleOfRUA = 0;
 int totalAngleOfRLA = 0;
 
 int totalAngleOfRUA_z = 0;
-int totalAngleOfRLA_z = 0;
+//int totalAngleOfRLA_z = 0;
 
 vtkNew<vtkNamedColors> colors;
 vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
@@ -1894,6 +1894,7 @@ int captureCount = 0;
 // for RightHand Inverse Kinematics
 int rhIK_Targetx = 31;
 int rhIK_Targety = 0;
+int rhIK_Targetz = 0;
 
 int lhIK_Targetx = 31;
 int lhIK_Targety = 0;
@@ -2446,41 +2447,6 @@ void inverseKinematicesRH(double ruaA, double rlaA, int x, int y, int z)
 		}
 	}
 
-	if (z != 0)
-	{
-		std::cout << "input Z " << std::endl;
-
-		if (ruaA > totalAngleOfRUA_z)
-		{
-			angle1 = ruaA - totalAngleOfRUA_z;
-
-			totalAngleOfRUA_z += angle1;
-		}
-
-		if (ruaA < totalAngleOfRUA_z)
-		{
-			angle1 = totalAngleOfRUA_z - ruaA;
-
-			totalAngleOfRUA_z -= angle1;
-
-			angle1 *= -1;
-		}
-
-		if (rlaA > totalAngleOfRLA_z)
-		{
-			angle2 = rlaA - totalAngleOfRLA_z;
-			totalAngleOfRLA_z += angle2;
-
-		}
-
-		if (rlaA < totalAngleOfRLA_z)
-		{
-			angle2 = totalAngleOfRLA_z - rlaA;
-			totalAngleOfRLA_z -= angle2;
-
-			angle1 *= -1;
-		}
-	}
 
 
 	std::cout << totalAngleOfRUA << std::endl;
