@@ -29,6 +29,15 @@ struct JointMove
 
 
 
+struct targetPoint
+{
+	int pos_x = 0;
+	int pos_y = 0;
+	int pos_z = 0;
+};
+
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -51,6 +60,7 @@ public:
     ~MainWindow();
 
 	std::vector<JointMove> savedPoses;
+	std::vector<targetPoint> savedTarget;
 	void moveToward(std::vector<double> target);
 
 
@@ -69,6 +79,9 @@ public slots:
 	void saveImage();
 	void drawTrajectory();
 
+	void selectTarget();
+	void targetAdd();
+	
 	void drawThetaPhi();
 
 

@@ -64,6 +64,1321 @@ string COLOR_TConstraintProp_line_actor1 = "SandyBrown";
 string COLOR_TConstraintProp_line_actor2 = "SandyBrown";
 string COLOR_TConstraintProp_line_actor3 = "SandyBrown";
 
+
+
+// To animate Free Left Foot and Free Right Foot
+void animateFreeLF(double lulA, double lllA, int x, int y, int z)
+{
+	IK_freeLeftUpperLeg_Transform->Identity();
+	IK_freeLeftUpperLeg_Transform->Translate(-freefootLUL_x, freefootLUL_y, 0);
+	IK_freeLeftUpperLeg_Transform->RotateWXYZ(lulA, x, y, z);
+	IK_freeLeftUpperLeg_Transform->Translate(freefootLUL_x, -freefootLUL_y, 0);
+
+
+	IK_freeLeftLowerLeg_Transform->Identity();
+	IK_freeLeftLowerLeg_Transform->Translate(-freefootLLL_x, freefootLLL_y, 0);
+	IK_freeLeftLowerLeg_Transform->RotateWXYZ(lllA, x, y, z);
+	IK_freeLeftLowerLeg_Transform->Translate(freefootLLL_x, -freefootLLL_y, 0);
+	mRenderWindow->Render();
+}
+void animateFreeRF(double rulA, double rllA, int x, int y, int z)
+{
+	IK_freeRightUpperLeg_Transform->Identity();
+	IK_freeRightUpperLeg_Transform->Translate(-freefootRUL_x, freefootRUL_y, 0);
+	IK_freeRightUpperLeg_Transform->RotateWXYZ(rulA, x, y, z);
+	IK_freeRightUpperLeg_Transform->Translate(freefootRUL_x, -freefootRUL_y, 0);
+
+
+	IK_freeRightLowerLeg_Transform->Identity();
+	IK_freeRightLowerLeg_Transform->Translate(-freefootRLL_x, freefootRLL_y, 0);
+	IK_freeRightLowerLeg_Transform->RotateWXYZ(rllA, x, y, z);
+	IK_freeRightLowerLeg_Transform->Translate(freefootRLL_x, -freefootRLL_y, 0);
+	mRenderWindow->Render();
+}
+
+// animation for skeleton Model 
+void animateSM_CH0(int A, int x, int y, int z)
+{
+	//stickModel_chest_0_Transform->Identity();
+	stickModel_chest_0_Transform->Translate(CH0_x, CH0_y, 0);
+	stickModel_chest_0_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_chest_0_Transform->Translate(-CH0_x, -CH0_y, 0);
+	mRenderWindow->Render();
+}
+
+void animateSM_RUA(int A, int x, int y, int z)
+{
+	//stickModel_rightUpperArm_Transform->Identity();
+	stickModel_rightUpperArm_Transform->Translate(smUA_x, smUA_y, 0);
+	stickModel_rightUpperArm_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_rightUpperArm_Transform->Translate(-smUA_x, -smUA_y, 0);
+	mRenderWindow->Render();
+
+}
+void animateSM_RLA(int A, int x, int y, int z)
+{
+	//stickModel_rightLowerArm_Transform->Identity();
+	stickModel_rightLowerArm_Transform->Translate(smLA_x, smLA_y, 0);
+	stickModel_rightLowerArm_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_rightLowerArm_Transform->Translate(-smLA_x, -smLA_y, 0);
+	mRenderWindow->Render();
+}
+void animateSM_ikRH(double ruaA, double rlaA, int x, int y, int z)
+{
+	//stickModel_rightUpperArm_Transform->Identity();
+	//stickModel_rightUpperArm_Transform->Translate(smUA_x, smUA_y, 0);
+	//stickModel_rightUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
+	//stickModel_rightUpperArm_Transform->Translate(-smUA_x, -smUA_y, 0);
+	//mRenderWindow->Render();
+
+	//stickModel_rightLowerArm_Transform->Identity();
+	//stickModel_rightLowerArm_Transform->Translate(smLA_x, smLA_y, 0);
+	//stickModel_rightLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
+	//stickModel_rightLowerArm_Transform->Translate(-smLA_x, -smLA_y, 0);
+	//mRenderWindow->Render();
+
+	RarmTransform->Identity();
+	RarmTransform->Translate(smUA_x, smUA_y, 0);
+	RarmTransform->RotateWXYZ(ruaA, x, y, z);
+	RarmTransform->Translate(-smUA_x, -smUA_y, 0);
+	mRenderWindow->Render();
+
+	RforearmTransform->Identity();
+	RforearmTransform->Translate(smLA_x, smLA_y, 0);
+	RforearmTransform->RotateWXYZ(rlaA, x, y, z);
+	RforearmTransform->Translate(-smLA_x, -smLA_y, 0);
+	mRenderWindow->Render();
+
+
+}
+void animateSM_RH(int X)
+{
+	stickModel_rightHand_Transform->Identity();
+	stickModel_rightHand_Transform->Translate(smH_x, smH_y, 0);
+	stickModel_rightHand_Transform->RotateWXYZ(X, 1, 0, 0);
+
+	mRenderWindow->Render();
+}
+
+void animateSM_LUA(int A, int x, int y, int z)
+{
+	//stickModel_leftUpperArm_Transform->Identity();
+	stickModel_leftUpperArm_Transform->Translate(-smUA_x, smUA_y, 0);
+	stickModel_leftUpperArm_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_leftUpperArm_Transform->Translate(smUA_x, -smUA_y, 0);
+	mRenderWindow->Render();
+
+}
+void animateSM_LLA(int A, int x, int y, int z)
+{
+	//stickModel_leftLowerArm_Transform->Identity();
+	stickModel_leftLowerArm_Transform->Translate(-smLA_x, smLA_y, 0);
+	stickModel_leftLowerArm_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_leftLowerArm_Transform->Translate(smLA_x, -smLA_y, 0);
+	mRenderWindow->Render();
+}
+void animateSM_ikLH(double luaA, double llaA, int x, int y, int z)
+{
+	stickModel_leftUpperArm_Transform->Identity();
+	stickModel_leftUpperArm_Transform->Translate(-smUA_x, smUA_y, 0);
+	stickModel_leftUpperArm_Transform->RotateWXYZ(luaA, x, y, z);
+	stickModel_leftUpperArm_Transform->Translate(smUA_x, -smUA_y, 0);
+	mRenderWindow->Render();
+
+	stickModel_leftLowerArm_Transform->Identity();
+	stickModel_leftLowerArm_Transform->Translate(-smLA_x, smLA_y, 0);
+	stickModel_leftLowerArm_Transform->RotateWXYZ(llaA, x, y, z);
+	stickModel_leftLowerArm_Transform->Translate(smLA_x, -smLA_y, 0);
+	mRenderWindow->Render();
+}
+void animateSM_LH(int X)
+{
+	stickModel_leftHand_Transform->Identity();
+	stickModel_leftHand_Transform->Translate(-smH_x, smH_y, 0);
+	stickModel_leftHand_Transform->RotateWXYZ(X, 1, 0, 0);
+
+	mRenderWindow->Render();
+}
+
+void animateSM_RUL(int A, int x, int y, int z)
+{
+	//stickModel_rightUpperLeg_Transform->Identity();
+	stickModel_rightUpperLeg_Transform->Translate(smUL_x, smUL_y, 0);
+	stickModel_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_rightUpperLeg_Transform->Translate(-smUL_x, -smUL_y, 0);
+	mRenderWindow->Render();
+
+}
+void animateSM_RLL(int A, int x, int y, int z)
+{
+	//stickModel_rightLowerLeg_Transform->Identity();
+	stickModel_rightLowerLeg_Transform->Translate(smLL_x, smLL_y, 0);
+	stickModel_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_rightLowerLeg_Transform->Translate(-smLL_x, -smLL_y, 0);
+	mRenderWindow->Render();
+}
+void animateSM_ikRF(double ruaA, double rlaA, int x, int y, int z)
+{
+	stickModel_rightUpperLeg_Transform->Identity();
+	stickModel_rightUpperLeg_Transform->Translate(smUL_x, smUL_y, 0);
+	stickModel_rightUpperLeg_Transform->RotateWXYZ(ruaA, x, y, z);
+	stickModel_rightUpperLeg_Transform->Translate(-smUL_x, -smUL_y, 0);
+	mRenderWindow->Render();
+
+	stickModel_rightLowerLeg_Transform->Identity();
+	stickModel_rightLowerLeg_Transform->Translate(smLL_x, smLL_y, 0);
+	stickModel_rightLowerLeg_Transform->RotateWXYZ(rlaA, x, y, z);
+	stickModel_rightLowerLeg_Transform->Translate(-smLL_x, -smLL_y, 0);
+	mRenderWindow->Render();
+}
+void animateSM_RF(int X)
+{
+	stickModel_rightFoot_Transform->Identity();
+	stickModel_rightFoot_Transform->Translate(smF_x, smF_y, 0);
+	stickModel_rightFoot_Transform->RotateWXYZ(X, 1, 0, 0);
+	mRenderWindow->Render();
+}
+
+void animateSM_LUL(int A, int x, int y, int z)
+{
+	//stickModel_leftUpperLeg_Transform->Identity();
+	stickModel_leftUpperLeg_Transform->Translate(-smUL_x, smUL_y, 0);
+	stickModel_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_leftUpperLeg_Transform->Translate(smUL_x, -smUL_y, 0);
+	mRenderWindow->Render();
+
+}
+void animateSM_LLL(int A, int x, int y, int z)
+{
+	//stickModel_leftLowerLeg_Transform->Identity();
+	stickModel_leftLowerLeg_Transform->Translate(-smLL_x, smLL_y, 0);
+	stickModel_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+	stickModel_leftLowerLeg_Transform->Translate(smLL_x, -smLL_y, 0);
+	mRenderWindow->Render();
+}
+void animateSM_ikLF(double ruaA, double rlaA, int x, int y, int z)
+{
+	stickModel_leftUpperLeg_Transform->Identity();
+	stickModel_leftUpperLeg_Transform->Translate(-smUL_x, smUL_y, 0);
+	stickModel_leftUpperLeg_Transform->RotateWXYZ(ruaA, x, y, z);
+	stickModel_leftUpperLeg_Transform->Translate(smUL_x, -smUL_y, 0);
+	mRenderWindow->Render();
+
+	stickModel_leftLowerLeg_Transform->Identity();
+	stickModel_leftLowerLeg_Transform->Translate(-smLL_x, smLL_y, 0);
+	stickModel_leftLowerLeg_Transform->RotateWXYZ(rlaA, x, y, z);
+	stickModel_leftLowerLeg_Transform->Translate(smLL_x, -smLL_y, 0);
+	mRenderWindow->Render();
+}
+void animateSM_LF(int X)
+{
+	stickModel_leftFoot_Transform->Identity();
+	stickModel_leftFoot_Transform->Translate(-smF_x, smF_y, 0);
+	stickModel_leftFoot_Transform->RotateWXYZ(X, 1, 0, 0);
+	mRenderWindow->Render();
+}
+
+
+// animation for FixedFoot IK model
+void animateffIK_xPL(double ULangle, double LLangle, int x, int y, int z)
+{
+
+	mRenderWindow->Render();
+	IK_rightLowerLeg_Transform->Identity();
+	IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
+	IK_rightLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
+	IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
+
+	IK_rightUpperLeg_Transform->Identity();
+	IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
+	IK_rightUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
+	IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
+
+
+	IK_leftLowerLeg_Transform->Identity();
+	IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
+	IK_leftLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
+	IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
+
+	IK_leftUpperLeg_Transform->Identity();
+	IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
+	IK_leftUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
+	IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
+
+
+}
+void animateffIK_PL(double ULangle, double LLangle, int x, int y, int z)
+{
+
+	/*mRenderWindow->Render();*/
+	IK_chest_0_Transform->Identity();
+	IK_chest_0_Transform->Translate(ffIK_CH0_x, ffIK_CH0_y, 0);
+	IK_chest_0_Transform->RotateWXYZ(ULangle * 2.5, x, y, z);
+	IK_chest_0_Transform->Translate(-ffIK_CH0_x, -ffIK_CH0_y, 0);
+
+	IK_rightLowerLeg_Transform->Identity();
+	IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
+	IK_rightLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
+	IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
+
+	IK_rightUpperLeg_Transform->Identity();
+	IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
+	IK_rightUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
+	IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
+
+
+	IK_leftLowerLeg_Transform->Identity();
+	IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
+	IK_leftLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
+	IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
+
+	IK_leftUpperLeg_Transform->Identity();
+	IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
+	IK_leftUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
+	IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
+
+	mRenderWindow->Render();
+
+}
+void animateffIK_CH0(int A, int x, int y, int z)
+{
+	//IK_chest_0_Transform->Identity();
+	IK_chest_0_Transform->Translate(ffIK_CH0_x, ffIK_CH0_y, 0);
+	IK_chest_0_Transform->RotateWXYZ(A, x, y, z);
+	IK_chest_0_Transform->Translate(-ffIK_CH0_x, -ffIK_CH0_y, 0);
+	mRenderWindow->Render();
+}
+
+void animateffIK_RUA(int A, int x, int y, int z)
+{
+	//IK_rightUpperArm_Transform->Identity();
+	IK_rightUpperArm_Transform->Translate(ffIK_UA_x, ffIK_UA_y, 0);
+	IK_rightUpperArm_Transform->RotateWXYZ(A, x, y, z);
+	IK_rightUpperArm_Transform->Translate(-ffIK_UA_x, -ffIK_UA_y, 0);
+	mRenderWindow->Render();
+}
+void animateffIK_RLA(int A, int x, int y, int z)
+{
+	//IK_rightLowerArm_Transform->Identity();
+	IK_rightLowerArm_Transform->Translate(ffIK_LA_x, ffIK_LA_y, 0);
+	IK_rightLowerArm_Transform->RotateWXYZ(A, x, y, z);
+	IK_rightLowerArm_Transform->Translate(-ffIK_LA_x, -ffIK_LA_y, 0);
+	mRenderWindow->Render();
+}
+void animateffIK_RH(double ruaA, double rlaA, int x, int y, int z)
+{
+
+	IK_rightUpperArm_Transform->Identity();
+	IK_rightUpperArm_Transform->Translate(ffIK_UA_x, ffIK_UA_y, 0);
+	IK_rightUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
+	IK_rightUpperArm_Transform->Translate(-ffIK_UA_x, -ffIK_UA_y, 0);
+
+
+	IK_rightLowerArm_Transform->Identity();
+	IK_rightLowerArm_Transform->Translate(ffIK_LA_x, ffIK_LA_y, 0);
+	IK_rightLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
+	IK_rightLowerArm_Transform->Translate(-ffIK_LA_x, -ffIK_LA_y, 0);
+	mRenderWindow->Render();
+
+
+}
+
+void animateffIK_LUA(int A, int x, int y, int z)
+{
+	//IK_leftUpperArm_Transform->Identity();
+	IK_leftUpperArm_Transform->Translate(ffIK_LUA_x, ffIK_LUA_y, 0);
+	IK_leftUpperArm_Transform->RotateWXYZ(A, x, y, z);
+	IK_leftUpperArm_Transform->Translate(-ffIK_LUA_x, -ffIK_LUA_y, 0);
+	mRenderWindow->Render();
+}
+void animateffIK_LLA(int A, int x, int y, int z)
+{
+	//IK_leftLowerArm_Transform->Identity();
+	IK_leftLowerArm_Transform->Translate(ffIK_LLA_x, ffIK_LLA_y, 0);
+	IK_leftLowerArm_Transform->RotateWXYZ(A, x, y, z);
+	IK_leftLowerArm_Transform->Translate(-ffIK_LLA_x, -ffIK_LLA_y, 0);
+	mRenderWindow->Render();
+}
+void animateffIK_LH(double ruaA, double rlaA, int x, int y, int z)
+{
+	IK_leftUpperArm_Transform->Identity();
+	IK_leftUpperArm_Transform->Translate(ffIK_UA_x, ffIK_UA_y, 0);
+	IK_leftUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
+	IK_leftUpperArm_Transform->Translate(-ffIK_UA_x, -ffIK_UA_y, 0);
+
+
+	IK_leftLowerArm_Transform->Identity();
+	IK_leftLowerArm_Transform->Translate(ffIK_LA_x, ffIK_LA_y, 0);
+	IK_leftLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
+	IK_leftLowerArm_Transform->Translate(-ffIK_LA_x, -ffIK_LA_y, 0);
+	mRenderWindow->Render();
+}
+
+
+void animateffIK_RUL(int A, int x, int y, int z)
+{
+
+	if (ffIK_both == 1)
+	{
+		//IK_rightUpperLeg_Transform->Identity();
+		IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
+		IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
+
+		IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
+		IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
+		mRenderWindow->Render();
+
+	}
+	if (ffIK_RF == 1)
+	{
+		//IK_rightUpperLeg_Transform->Identity();
+		IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
+		IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
+	}
+	if (ffIK_LF == 1)
+	{
+		IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
+		IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
+		mRenderWindow->Render();
+	}
+}
+void animateffIK_RLL(int A, int x, int y, int z)
+{
+	if (ffIK_both == 1)
+	{
+		//IK_leftLowerLeg_Transform->Identity();
+		IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
+
+		IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
+
+		mRenderWindow->Render();
+	}
+	if (ffIK_RF == 1)
+	{
+		//IK_leftLowerLeg_Transform->Identity();
+		IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
+
+		mRenderWindow->Render();
+	}
+	if (ffIK_LF == 1)
+	{
+		IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
+
+		mRenderWindow->Render();
+	}
+
+}
+
+
+void animateffIK_LUL(int A, int x, int y, int z)
+{
+
+	if (ffIK_both == 1)
+	{
+		//IK_leftUpperLeg_Transform->Identity();
+		IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
+		IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
+
+		//IK_rightUpperLeg_Transform->Identity();
+		IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
+		IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
+
+		mRenderWindow->Render();
+	}
+	if (ffIK_RF == 1)
+	{
+		//IK_rightUpperLeg_Transform->Identity();
+		IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
+		IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
+
+		mRenderWindow->Render();
+
+	}
+	if (ffIK_LF == 1)
+	{
+		//IK_leftUpperLeg_Transform->Identity();
+		IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
+		IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
+
+		mRenderWindow->Render();
+	}
+
+}
+void animateffIK_LLL(int A, int x, int y, int z)
+{
+
+	if (ffIK_both == 1)
+	{
+		//IK_leftLowerLeg_Transform->Identity();
+		IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
+
+		//IK_leftLowerLeg_Transform->Identity();
+		IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
+
+		mRenderWindow->Render();
+	}
+	if (ffIK_RF == 1)
+	{
+		//IK_leftLowerLeg_Transform->Identity();
+		IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
+
+		mRenderWindow->Render();
+	}
+	if (ffIK_LF == 1)
+	{
+		//IK_leftLowerLeg_Transform->Identity();
+		IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
+		IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
+		IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
+
+		mRenderWindow->Render();
+
+	}
+
+}
+void computeSM_ikRH(int temptarget_X, int temptarget_Y, int x, int y, int z, int boneID)
+{
+	rhIK_target_X = temptarget_X;
+	rhIK_target_Y = temptarget_Y;
+	rhIK_targetDistSqr = (rhIK_target_X * rhIK_target_X + rhIK_target_Y * rhIK_target_Y);
+	rhIK_cosAngle2_denom = 2 * rhIK_length1 * rhIK_length2;
+	std::cout << "rhIK_cosAngle2_denom " << rhIK_cosAngle2_denom << std::endl;
+	std::cout << "rhIK_targetDistSqr " << rhIK_targetDistSqr << std::endl;
+
+	if (rhIK_cosAngle2_denom > epsilon)
+	{
+		rhIK_cosAngle2 = (rhIK_targetDistSqr - rhIK_length1 * rhIK_length1 - rhIK_length2 * rhIK_length2) / (rhIK_cosAngle2_denom);
+		if ((rhIK_cosAngle2 < -1.0) || (rhIK_cosAngle2 > 1.0))
+		{
+			rhIK_foundValidSolution = false;
+		}
+		double rhIK_tempMin;
+		rhIK_tempMin = min(1.0, rhIK_cosAngle2);
+		rhIK_cosAngle2 = max(-1.0, rhIK_tempMin);
+		rhIK_angle2 = acos(rhIK_cosAngle2);
+		if (!rhIK_solvePosAngle2)
+		{
+			rhIK_angle2 = -rhIK_angle2;
+		}
+		rhIK_sinAngle2 = sin(rhIK_angle2);
+
+	}
+	else
+	{
+		double rhIK_totalLenSqr = (rhIK_length1 + rhIK_length2) * (rhIK_length1 + rhIK_length2);
+		if (rhIK_targetDistSqr < (rhIK_totalLenSqr - epsilon) || rhIK_targetDistSqr >(rhIK_totalLenSqr + epsilon))
+		{
+			rhIK_foundValidSolution = false;
+		}
+		rhIK_angle2 = 0.0;
+		rhIK_cosAngle2 = 1.0;
+		rhIK_sinAngle2 = 0.0;
+	}
+
+	double rhIK_triAdjacent = rhIK_length1 + rhIK_length2 * rhIK_cosAngle2;
+	double rhIK_triOpposite = rhIK_length2 * rhIK_sinAngle2;
+
+	double rhIK_tanY = rhIK_target_Y * rhIK_triAdjacent - rhIK_target_X * rhIK_triOpposite;
+	double rhIK_tanX = rhIK_target_X * rhIK_triAdjacent + rhIK_target_Y * rhIK_triOpposite;
+	rhIK_angle1 = atan2(rhIK_tanY, rhIK_tanX);
+
+
+	double rhIK_theta1 = rhIK_angle1 * 180 / PI;
+	double rhIK_theta2 = rhIK_angle2 * 180 / PI;
+
+
+	cout <<"  theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+	cout << rhIK_Targetz << "testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+
+	if (boneID == 10)
+	{
+		//animateSM_ikRH(rhIK_theta1, rhIK_theta2, x, y, z);
+
+
+		std::cout << "inverse Kinematices In " << x << " " << y << " " << z << std::endl;
+		inverseKinematicesRH(rhIK_theta1, rhIK_theta2, x, y, z);
+
+		// rightUpperArm
+		qxIK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[2].setX(0);
+		xaxisQY_IK[2].setY(sin(0 / 2));
+		xaxisQY_IK[2].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[2].setX(0);
+		xaxisQZ_IK[2].setY(sin(0 / 2));
+		xaxisQZ_IK[2].setZ(sin(0 / 2));
+
+		xaxisQP_IK[2] = xaxisQX_IK[2].multiply(xaxisQY_IK[2].multiply(xaxisQZ_IK[2]));
+
+		//rightLowerArm
+		qxIK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[3].setX(0);
+		xaxisQY_IK[3].setY(sin(0 / 2));
+		xaxisQY_IK[3].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[3].setX(0);
+		xaxisQZ_IK[3].setY(sin(0 / 2));
+		xaxisQZ_IK[3].setZ(sin(0 / 2));
+
+		xaxisQP_IK[3] = xaxisQX_IK[3].multiply(xaxisQY_IK[3].multiply(xaxisQZ_IK[3]));
+	}
+	if (boneID == 15)
+	{
+		animateSM_ikLH(rhIK_theta1, rhIK_theta2, x, y, z);
+
+		// leftUpperArm
+		qxIK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[4].setX(0);
+		xaxisQY_IK[4].setY(sin(0 / 2));
+		xaxisQY_IK[4].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[4].setX(0);
+		xaxisQZ_IK[4].setY(sin(0 / 2));
+		xaxisQZ_IK[4].setZ(sin(0 / 2));
+
+		xaxisQP_IK[4] = xaxisQX_IK[4].multiply(xaxisQY_IK[4].multiply(xaxisQZ_IK[4]));
+
+		//LeftLowerArm
+		qxIK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[5].setX(0);
+		xaxisQY_IK[5].setY(sin(0 / 2));
+		xaxisQY_IK[5].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[5].setX(0);
+		xaxisQZ_IK[5].setY(sin(0 / 2));
+		xaxisQZ_IK[5].setZ(sin(0 / 2));
+
+		xaxisQP_IK[5] = xaxisQX_IK[5].multiply(xaxisQY_IK[5].multiply(xaxisQZ_IK[5]));
+
+	}
+	if (boneID == 16)
+	{
+		animateSM_ikRF(-rhIK_theta1, -rhIK_theta2, x, y, z);
+
+		// rightUpperLeg
+		qxIK[6].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[6].setW(cos(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[6].setX(0);
+		xaxisQY_IK[6].setY(sin(0 / 2));
+		xaxisQY_IK[6].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[6].setX(0);
+		xaxisQZ_IK[6].setY(sin(0 / 2));
+		xaxisQZ_IK[6].setZ(sin(0 / 2));
+
+		xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
+
+		//rightLowerLeg
+		qxIK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		qxIK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[7].setX(0);
+		xaxisQY_IK[7].setY(sin(0 / 2));
+		xaxisQY_IK[7].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[7].setX(0);
+		xaxisQZ_IK[7].setY(sin(0 / 2));
+		xaxisQZ_IK[7].setZ(sin(0 / 2));
+
+		xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
+
+	}
+	if (boneID == 21)
+	{
+		animateSM_ikLF(-rhIK_theta1, -rhIK_theta2, x, y, z);
+
+		// leftUpperLeg
+		qxIK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
+		qxIK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[8].setX(0);
+		xaxisQY_IK[8].setY(sin(0 / 2));
+		xaxisQY_IK[8].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[8].setX(0);
+		xaxisQZ_IK[8].setY(sin(0 / 2));
+		xaxisQZ_IK[8].setZ(sin(0 / 2));
+
+		xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
+
+		//leftLowerLeg
+		qxIK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		qxIK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[9].setX(0);
+		xaxisQY_IK[9].setY(sin(0 / 2));
+		xaxisQY_IK[9].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[9].setX(0);
+		xaxisQZ_IK[9].setY(sin(0 / 2));
+		xaxisQZ_IK[9].setZ(sin(0 / 2));
+
+		xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
+	}
+
+
+
+	//=======================================================================================================================================================================
+	if (boneID == 500)
+	{
+		if (flag == 1)
+		{
+			animateffIK_PL(rhIK_theta1, rhIK_theta2, x, y, z);
+
+
+			// rightUpperLeg
+			qxIK[1].setW(cos((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+			qxIK[1].setX(1 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+			qxIK[1].setY(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+			qxIK[1].setZ(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+
+			xaxisQX_IK[1].setW(cos((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+			xaxisQX_IK[1].setX(1 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+			xaxisQX_IK[1].setY(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+			xaxisQX_IK[1].setZ(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
+
+			xaxisQY_IK[1].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQY_IK[1].setX(0);
+			xaxisQY_IK[1].setY(sin(0 / 2));
+			xaxisQY_IK[1].setZ(sin(0 / 2));
+
+			xaxisQZ_IK[1].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQZ_IK[1].setX(0);
+			xaxisQZ_IK[1].setY(sin(0 / 2));
+			xaxisQZ_IK[1].setZ(sin(0 / 2));
+
+			xaxisQP_IK[1] = xaxisQX_IK[1].multiply(xaxisQY_IK[1].multiply(xaxisQZ_IK[1]));
+
+			if (ffIK_both == 1)
+			{
+
+				// rightUpperLeg
+				qxIK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQX_IK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[6].setX(0);
+				xaxisQY_IK[6].setY(sin(0 / 2));
+				xaxisQY_IK[6].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[6].setX(0);
+				xaxisQZ_IK[6].setY(sin(0 / 2));
+				xaxisQZ_IK[6].setZ(sin(0 / 2));
+
+				xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
+
+				//rightLowerLeg
+				qxIK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQX_IK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[7].setX(0);
+				xaxisQY_IK[7].setY(sin(0 / 2));
+				xaxisQY_IK[7].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[7].setX(0);
+				xaxisQZ_IK[7].setY(sin(0 / 2));
+				xaxisQZ_IK[7].setZ(sin(0 / 2));
+
+				xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
+
+
+				// leftUpperLeg
+				qxIK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQX_IK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[8].setX(0);
+				xaxisQY_IK[8].setY(sin(0 / 2));
+				xaxisQY_IK[8].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[8].setX(0);
+				xaxisQZ_IK[8].setY(sin(0 / 2));
+				xaxisQZ_IK[8].setZ(sin(0 / 2));
+
+				xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
+
+				//leftLowerLeg
+				qxIK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQX_IK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[9].setX(0);
+				xaxisQY_IK[9].setY(sin(0 / 2));
+				xaxisQY_IK[9].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[9].setX(0);
+				xaxisQZ_IK[9].setY(sin(0 / 2));
+				xaxisQZ_IK[9].setZ(sin(0 / 2));
+
+				xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
+			}
+			if (ffIK_RF == 1)
+			{
+
+				// rightUpperLeg
+				qxIK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQX_IK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[6].setX(0);
+				xaxisQY_IK[6].setY(sin(0 / 2));
+				xaxisQY_IK[6].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[6].setX(0);
+				xaxisQZ_IK[6].setY(sin(0 / 2));
+				xaxisQZ_IK[6].setZ(sin(0 / 2));
+
+				xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
+
+				//rightLowerLeg
+				qxIK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQX_IK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[7].setX(0);
+				xaxisQY_IK[7].setY(sin(0 / 2));
+				xaxisQY_IK[7].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[7].setX(0);
+				xaxisQZ_IK[7].setY(sin(0 / 2));
+				xaxisQZ_IK[7].setZ(sin(0 / 2));
+
+				xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
+
+			}
+			if (ffIK_LF == 1)
+			{
+				// leftUpperLeg
+				qxIK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				qxIK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQX_IK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+				xaxisQX_IK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+				xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[8].setX(0);
+				xaxisQY_IK[8].setY(sin(0 / 2));
+				xaxisQY_IK[8].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[8].setX(0);
+				xaxisQZ_IK[8].setY(sin(0 / 2));
+				xaxisQZ_IK[8].setZ(sin(0 / 2));
+
+				xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
+
+				//leftLowerLeg
+				qxIK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				qxIK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQX_IK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+				xaxisQX_IK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+				xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQY_IK[9].setX(0);
+				xaxisQY_IK[9].setY(sin(0 / 2));
+				xaxisQY_IK[9].setZ(sin(0 / 2));
+
+				xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+				xaxisQZ_IK[9].setX(0);
+				xaxisQZ_IK[9].setY(sin(0 / 2));
+				xaxisQZ_IK[9].setZ(sin(0 / 2));
+
+				xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
+			}
+
+
+
+
+
+		}
+		if (flag == 2)
+		{
+			animateffIK_xPL(rhIK_theta1, rhIK_theta2, x, y, z);
+
+
+			// rightUpperLeg
+			qxIK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+			qxIK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+			qxIK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+			qxIK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+			xaxisQX_IK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+			xaxisQX_IK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+			xaxisQX_IK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+			xaxisQX_IK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+			xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQY_IK[6].setX(0);
+			xaxisQY_IK[6].setY(sin(0 / 2));
+			xaxisQY_IK[6].setZ(sin(0 / 2));
+
+			xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQZ_IK[6].setX(0);
+			xaxisQZ_IK[6].setY(sin(0 / 2));
+			xaxisQZ_IK[6].setZ(sin(0 / 2));
+
+			xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
+
+			//rightLowerLeg
+			qxIK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+			qxIK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+			qxIK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+			qxIK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+			xaxisQX_IK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+			xaxisQX_IK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+			xaxisQX_IK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+			xaxisQX_IK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+			xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQY_IK[7].setX(0);
+			xaxisQY_IK[7].setY(sin(0 / 2));
+			xaxisQY_IK[7].setZ(sin(0 / 2));
+
+			xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQZ_IK[7].setX(0);
+			xaxisQZ_IK[7].setY(sin(0 / 2));
+			xaxisQZ_IK[7].setZ(sin(0 / 2));
+
+			xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
+
+
+			// leftUpperLeg
+			qxIK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+			qxIK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+			qxIK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+			qxIK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+			xaxisQX_IK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+			xaxisQX_IK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+			xaxisQX_IK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+			xaxisQX_IK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+			xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQY_IK[8].setX(0);
+			xaxisQY_IK[8].setY(sin(0 / 2));
+			xaxisQY_IK[8].setZ(sin(0 / 2));
+
+			xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQZ_IK[8].setX(0);
+			xaxisQZ_IK[8].setY(sin(0 / 2));
+			xaxisQZ_IK[8].setZ(sin(0 / 2));
+
+			xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
+
+			//leftLowerLeg
+			qxIK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+			qxIK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+			qxIK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+			qxIK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+			xaxisQX_IK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+			xaxisQX_IK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+			xaxisQX_IK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+			xaxisQX_IK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+			xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQY_IK[9].setX(0);
+			xaxisQY_IK[9].setY(sin(0 / 2));
+			xaxisQY_IK[9].setZ(sin(0 / 2));
+
+			xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+			xaxisQZ_IK[9].setX(0);
+			xaxisQZ_IK[9].setY(sin(0 / 2));
+			xaxisQZ_IK[9].setZ(sin(0 / 2));
+
+			xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
+		}
+
+	}
+
+	if (boneID == 510)
+	{
+		animateffIK_RH(rhIK_theta1, rhIK_theta2, x, y, z);
+		// rightUpperArm
+		qxIK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[2].setX(0);
+		xaxisQY_IK[2].setY(sin(0 / 2));
+		xaxisQY_IK[2].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[2].setX(0);
+		xaxisQZ_IK[2].setY(sin(0 / 2));
+		xaxisQZ_IK[2].setZ(sin(0 / 2));
+
+		xaxisQP_IK[2] = xaxisQX_IK[2].multiply(xaxisQY_IK[2].multiply(xaxisQZ_IK[2]));
+
+		//rightLowerArm
+		qxIK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[3].setX(0);
+		xaxisQY_IK[3].setY(sin(0 / 2));
+		xaxisQY_IK[3].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[3].setX(0);
+		xaxisQZ_IK[3].setY(sin(0 / 2));
+		xaxisQZ_IK[3].setZ(sin(0 / 2));
+
+		xaxisQP_IK[3] = xaxisQX_IK[3].multiply(xaxisQY_IK[3].multiply(xaxisQZ_IK[3]));
+
+
+	}
+	if (boneID == 511)
+	{
+		animateffIK_LH(rhIK_theta1, rhIK_theta2, x, y, z);
+
+		// leftUpperArm
+		qxIK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		qxIK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[4].setX(0);
+		xaxisQY_IK[4].setY(sin(0 / 2));
+		xaxisQY_IK[4].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[4].setX(0);
+		xaxisQZ_IK[4].setY(sin(0 / 2));
+		xaxisQZ_IK[4].setZ(sin(0 / 2));
+
+		xaxisQP_IK[4] = xaxisQX_IK[4].multiply(xaxisQY_IK[4].multiply(xaxisQZ_IK[4]));
+
+		//LeftLowerArm
+		qxIK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		qxIK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[5].setX(0);
+		xaxisQY_IK[5].setY(sin(0 / 2));
+		xaxisQY_IK[5].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[5].setX(0);
+		xaxisQZ_IK[5].setY(sin(0 / 2));
+		xaxisQZ_IK[5].setZ(sin(0 / 2));
+
+		xaxisQP_IK[5] = xaxisQX_IK[5].multiply(xaxisQY_IK[5].multiply(xaxisQZ_IK[5]));
+	}
+
+	//========================================================================================================================================================================
+
+
+
+	if (boneID == 1003)
+	{
+		animateFreeLF(-rhIK_theta1, -rhIK_theta2, x, y, z);
+
+		// leftUpperLeg
+		qxIK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
+		qxIK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[8].setX(0);
+		xaxisQY_IK[8].setY(sin(0 / 2));
+		xaxisQY_IK[8].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[8].setX(0);
+		xaxisQZ_IK[8].setY(sin(0 / 2));
+		xaxisQZ_IK[8].setZ(sin(0 / 2));
+
+		xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
+
+		//leftLowerLeg
+		qxIK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		qxIK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[9].setX(0);
+		xaxisQY_IK[9].setY(sin(0 / 2));
+		xaxisQY_IK[9].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[9].setX(0);
+		xaxisQZ_IK[9].setY(sin(0 / 2));
+		xaxisQZ_IK[9].setZ(sin(0 / 2));
+
+		xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
+	}
+	if (boneID == 2003)
+	{
+		animateFreeRF(-rhIK_theta1, -rhIK_theta2, x, y, z);
+
+		// rightUpperLeg
+		qxIK[6].setW(cos(rhIK_theta1 * PI / 180 / 2));
+		qxIK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		qxIK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQX_IK[6].setW(cos(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
+		xaxisQX_IK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
+
+		xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[6].setX(0);
+		xaxisQY_IK[6].setY(sin(0 / 2));
+		xaxisQY_IK[6].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[6].setX(0);
+		xaxisQZ_IK[6].setY(sin(0 / 2));
+		xaxisQZ_IK[6].setZ(sin(0 / 2));
+
+		xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
+
+		//rightLowerLeg
+		qxIK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		qxIK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		qxIK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQX_IK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
+		xaxisQX_IK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
+
+		xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQY_IK[7].setX(0);
+		xaxisQY_IK[7].setY(sin(0 / 2));
+		xaxisQY_IK[7].setZ(sin(0 / 2));
+
+		xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
+		xaxisQZ_IK[7].setX(0);
+		xaxisQZ_IK[7].setY(sin(0 / 2));
+		xaxisQZ_IK[7].setZ(sin(0 / 2));
+
+		xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
+
+	}
+	//========================================================================================================================================================================
+
+
+
+	if (ffIK_both == 0 && ffIK_RF == 0 && ffIK_LF == 0)
+	{
+		qxIK[1] = qx[1];
+		xaxisQP_IK[1] = xaxisQP[1];
+
+
+		/*	qxIK[2] = qx[2];
+			xaxisQP_IK[2] = xaxisQP[2];*/
+	}
+
+
+
+}
+
+
 void colorSetting(int flag, string color)
 {
 
@@ -1374,498 +2689,6 @@ namespace {
 
 
 
-		// animation for skeleton Model 
-		void animateSM_CH0(int A, int x, int y, int z)
-		{
-			//stickModel_chest_0_Transform->Identity();
-			stickModel_chest_0_Transform->Translate(CH0_x, CH0_y, 0);
-			stickModel_chest_0_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_chest_0_Transform->Translate(-CH0_x, -CH0_y, 0);
-			mRenderWindow->Render();
-		}
-
-		void animateSM_RUA(int A, int x, int y, int z)
-		{
-			//stickModel_rightUpperArm_Transform->Identity();
-			stickModel_rightUpperArm_Transform->Translate(smUA_x, smUA_y, 0);
-			stickModel_rightUpperArm_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_rightUpperArm_Transform->Translate(-smUA_x, -smUA_y, 0);
-			mRenderWindow->Render();
-
-		}
-		void animateSM_RLA(int A, int x, int y, int z)
-		{
-			//stickModel_rightLowerArm_Transform->Identity();
-			stickModel_rightLowerArm_Transform->Translate(smLA_x, smLA_y, 0);
-			stickModel_rightLowerArm_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_rightLowerArm_Transform->Translate(-smLA_x, -smLA_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateSM_ikRH(double ruaA, double rlaA, int x, int y, int z)
-		{
-			//stickModel_rightUpperArm_Transform->Identity();
-			//stickModel_rightUpperArm_Transform->Translate(smUA_x, smUA_y, 0);
-			//stickModel_rightUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
-			//stickModel_rightUpperArm_Transform->Translate(-smUA_x, -smUA_y, 0);
-			//mRenderWindow->Render();
-
-			//stickModel_rightLowerArm_Transform->Identity();
-			//stickModel_rightLowerArm_Transform->Translate(smLA_x, smLA_y, 0);
-			//stickModel_rightLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
-			//stickModel_rightLowerArm_Transform->Translate(-smLA_x, -smLA_y, 0);
-			//mRenderWindow->Render();
-
-			RarmTransform->Identity();
-			RarmTransform->Translate(smUA_x, smUA_y, 0);
-			RarmTransform->RotateWXYZ(ruaA, x, y, z);
-			RarmTransform->Translate(-smUA_x, -smUA_y, 0);
-			mRenderWindow->Render();
-
-			RforearmTransform->Identity();
-			RforearmTransform->Translate(smLA_x, smLA_y, 0);
-			RforearmTransform->RotateWXYZ(rlaA, x, y, z);
-			RforearmTransform->Translate(-smLA_x, -smLA_y, 0);
-			mRenderWindow->Render();
-
-
-		}
-		void animateSM_RH(int X)
-		{
-			stickModel_rightHand_Transform->Identity();
-			stickModel_rightHand_Transform->Translate(smH_x, smH_y, 0);
-			stickModel_rightHand_Transform->RotateWXYZ(X, 1, 0, 0);
-
-			mRenderWindow->Render();
-		}
-
-		void animateSM_LUA(int A, int x, int y, int z)
-		{
-			//stickModel_leftUpperArm_Transform->Identity();
-			stickModel_leftUpperArm_Transform->Translate(-smUA_x, smUA_y, 0);
-			stickModel_leftUpperArm_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_leftUpperArm_Transform->Translate(smUA_x, -smUA_y, 0);
-			mRenderWindow->Render();
-
-		}
-		void animateSM_LLA(int A, int x, int y, int z)
-		{
-			//stickModel_leftLowerArm_Transform->Identity();
-			stickModel_leftLowerArm_Transform->Translate(-smLA_x, smLA_y, 0);
-			stickModel_leftLowerArm_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_leftLowerArm_Transform->Translate(smLA_x, -smLA_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateSM_ikLH(double luaA, double llaA, int x, int y, int z)
-		{
-			stickModel_leftUpperArm_Transform->Identity();
-			stickModel_leftUpperArm_Transform->Translate(-smUA_x, smUA_y, 0);
-			stickModel_leftUpperArm_Transform->RotateWXYZ(luaA, x, y, z);
-			stickModel_leftUpperArm_Transform->Translate(smUA_x, -smUA_y, 0);
-			mRenderWindow->Render();
-
-			stickModel_leftLowerArm_Transform->Identity();
-			stickModel_leftLowerArm_Transform->Translate(-smLA_x, smLA_y, 0);
-			stickModel_leftLowerArm_Transform->RotateWXYZ(llaA, x, y, z);
-			stickModel_leftLowerArm_Transform->Translate(smLA_x, -smLA_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateSM_LH(int X)
-		{
-			stickModel_leftHand_Transform->Identity();
-			stickModel_leftHand_Transform->Translate(-smH_x, smH_y, 0);
-			stickModel_leftHand_Transform->RotateWXYZ(X, 1, 0, 0);
-
-			mRenderWindow->Render();
-		}
-
-		void animateSM_RUL(int A, int x, int y, int z)
-		{
-			//stickModel_rightUpperLeg_Transform->Identity();
-			stickModel_rightUpperLeg_Transform->Translate(smUL_x, smUL_y, 0);
-			stickModel_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_rightUpperLeg_Transform->Translate(-smUL_x, -smUL_y, 0);
-			mRenderWindow->Render();
-
-		}
-		void animateSM_RLL(int A, int x, int y, int z)
-		{
-			//stickModel_rightLowerLeg_Transform->Identity();
-			stickModel_rightLowerLeg_Transform->Translate(smLL_x, smLL_y, 0);
-			stickModel_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_rightLowerLeg_Transform->Translate(-smLL_x, -smLL_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateSM_ikRF(double ruaA, double rlaA, int x, int y, int z)
-		{
-			stickModel_rightUpperLeg_Transform->Identity();
-			stickModel_rightUpperLeg_Transform->Translate(smUL_x, smUL_y, 0);
-			stickModel_rightUpperLeg_Transform->RotateWXYZ(ruaA, x, y, z);
-			stickModel_rightUpperLeg_Transform->Translate(-smUL_x, -smUL_y, 0);
-			mRenderWindow->Render();
-
-			stickModel_rightLowerLeg_Transform->Identity();
-			stickModel_rightLowerLeg_Transform->Translate(smLL_x, smLL_y, 0);
-			stickModel_rightLowerLeg_Transform->RotateWXYZ(rlaA, x, y, z);
-			stickModel_rightLowerLeg_Transform->Translate(-smLL_x, -smLL_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateSM_RF(int X)
-		{
-			stickModel_rightFoot_Transform->Identity();
-			stickModel_rightFoot_Transform->Translate(smF_x, smF_y, 0);
-			stickModel_rightFoot_Transform->RotateWXYZ(X, 1, 0, 0);
-			mRenderWindow->Render();
-		}
-
-		void animateSM_LUL(int A, int x, int y, int z)
-		{
-			//stickModel_leftUpperLeg_Transform->Identity();
-			stickModel_leftUpperLeg_Transform->Translate(-smUL_x, smUL_y, 0);
-			stickModel_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_leftUpperLeg_Transform->Translate(smUL_x, -smUL_y, 0);
-			mRenderWindow->Render();
-
-		}
-		void animateSM_LLL(int A, int x, int y, int z)
-		{
-			//stickModel_leftLowerLeg_Transform->Identity();
-			stickModel_leftLowerLeg_Transform->Translate(-smLL_x, smLL_y, 0);
-			stickModel_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-			stickModel_leftLowerLeg_Transform->Translate(smLL_x, -smLL_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateSM_ikLF(double ruaA, double rlaA, int x, int y, int z)
-		{
-			stickModel_leftUpperLeg_Transform->Identity();
-			stickModel_leftUpperLeg_Transform->Translate(-smUL_x, smUL_y, 0);
-			stickModel_leftUpperLeg_Transform->RotateWXYZ(ruaA, x, y, z);
-			stickModel_leftUpperLeg_Transform->Translate(smUL_x, -smUL_y, 0);
-			mRenderWindow->Render();
-
-			stickModel_leftLowerLeg_Transform->Identity();
-			stickModel_leftLowerLeg_Transform->Translate(-smLL_x, smLL_y, 0);
-			stickModel_leftLowerLeg_Transform->RotateWXYZ(rlaA, x, y, z);
-			stickModel_leftLowerLeg_Transform->Translate(smLL_x, -smLL_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateSM_LF(int X)
-		{
-			stickModel_leftFoot_Transform->Identity();
-			stickModel_leftFoot_Transform->Translate(-smF_x, smF_y, 0);
-			stickModel_leftFoot_Transform->RotateWXYZ(X, 1, 0, 0);
-			mRenderWindow->Render();
-		}
-
-
-		// animation for FixedFoot IK model
-		void animateffIK_xPL(double ULangle, double LLangle, int x, int y, int z)
-		{
-
-			mRenderWindow->Render();
-			IK_rightLowerLeg_Transform->Identity();
-			IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
-			IK_rightLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
-			IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
-
-			IK_rightUpperLeg_Transform->Identity();
-			IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
-			IK_rightUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
-			IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
-
-
-			IK_leftLowerLeg_Transform->Identity();
-			IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
-			IK_leftLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
-			IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
-
-			IK_leftUpperLeg_Transform->Identity();
-			IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
-			IK_leftUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
-			IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
-
-
-		}
-		void animateffIK_PL(double ULangle, double LLangle, int x, int y, int z)
-		{
-
-			/*mRenderWindow->Render();*/
-			IK_chest_0_Transform->Identity();
-			IK_chest_0_Transform->Translate(ffIK_CH0_x, ffIK_CH0_y, 0);
-			IK_chest_0_Transform->RotateWXYZ(ULangle * 2.5, x, y, z);
-			IK_chest_0_Transform->Translate(-ffIK_CH0_x, -ffIK_CH0_y, 0);
-
-			IK_rightLowerLeg_Transform->Identity();
-			IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
-			IK_rightLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
-			IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
-
-			IK_rightUpperLeg_Transform->Identity();
-			IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
-			IK_rightUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
-			IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
-
-
-			IK_leftLowerLeg_Transform->Identity();
-			IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
-			IK_leftLowerLeg_Transform->RotateWXYZ(ULangle, x, y, z);
-			IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
-
-			IK_leftUpperLeg_Transform->Identity();
-			IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
-			IK_leftUpperLeg_Transform->RotateWXYZ(LLangle, x, y, z);
-			IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
-
-			mRenderWindow->Render();
-
-		}
-		void animateffIK_CH0(int A, int x, int y, int z)
-		{
-			//IK_chest_0_Transform->Identity();
-			IK_chest_0_Transform->Translate(ffIK_CH0_x, ffIK_CH0_y, 0);
-			IK_chest_0_Transform->RotateWXYZ(A, x, y, z);
-			IK_chest_0_Transform->Translate(-ffIK_CH0_x, -ffIK_CH0_y, 0);
-			mRenderWindow->Render();
-		}
-
-		void animateffIK_RUA(int A, int x, int y, int z)
-		{
-			//IK_rightUpperArm_Transform->Identity();
-			IK_rightUpperArm_Transform->Translate(ffIK_UA_x, ffIK_UA_y, 0);
-			IK_rightUpperArm_Transform->RotateWXYZ(A, x, y, z);
-			IK_rightUpperArm_Transform->Translate(-ffIK_UA_x, -ffIK_UA_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateffIK_RLA(int A, int x, int y, int z)
-		{
-			//IK_rightLowerArm_Transform->Identity();
-			IK_rightLowerArm_Transform->Translate(ffIK_LA_x, ffIK_LA_y, 0);
-			IK_rightLowerArm_Transform->RotateWXYZ(A, x, y, z);
-			IK_rightLowerArm_Transform->Translate(-ffIK_LA_x, -ffIK_LA_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateffIK_RH(double ruaA, double rlaA, int x, int y, int z)
-		{
-
-			IK_rightUpperArm_Transform->Identity();
-			IK_rightUpperArm_Transform->Translate(ffIK_UA_x, ffIK_UA_y, 0);
-			IK_rightUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
-			IK_rightUpperArm_Transform->Translate(-ffIK_UA_x, -ffIK_UA_y, 0);
-
-
-			IK_rightLowerArm_Transform->Identity();
-			IK_rightLowerArm_Transform->Translate(ffIK_LA_x, ffIK_LA_y, 0);
-			IK_rightLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
-			IK_rightLowerArm_Transform->Translate(-ffIK_LA_x, -ffIK_LA_y, 0);
-			mRenderWindow->Render();
-
-
-		}
-
-		void animateffIK_LUA(int A, int x, int y, int z)
-		{
-			//IK_leftUpperArm_Transform->Identity();
-			IK_leftUpperArm_Transform->Translate(ffIK_LUA_x, ffIK_LUA_y, 0);
-			IK_leftUpperArm_Transform->RotateWXYZ(A, x, y, z);
-			IK_leftUpperArm_Transform->Translate(-ffIK_LUA_x, -ffIK_LUA_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateffIK_LLA(int A, int x, int y, int z)
-		{
-			//IK_leftLowerArm_Transform->Identity();
-			IK_leftLowerArm_Transform->Translate(ffIK_LLA_x, ffIK_LLA_y, 0);
-			IK_leftLowerArm_Transform->RotateWXYZ(A, x, y, z);
-			IK_leftLowerArm_Transform->Translate(-ffIK_LLA_x, -ffIK_LLA_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateffIK_LH(double ruaA, double rlaA, int x, int y, int z)
-		{
-			IK_leftUpperArm_Transform->Identity();
-			IK_leftUpperArm_Transform->Translate(ffIK_UA_x, ffIK_UA_y, 0);
-			IK_leftUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
-			IK_leftUpperArm_Transform->Translate(-ffIK_UA_x, -ffIK_UA_y, 0);
-
-
-			IK_leftLowerArm_Transform->Identity();
-			IK_leftLowerArm_Transform->Translate(ffIK_LA_x, ffIK_LA_y, 0);
-			IK_leftLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
-			IK_leftLowerArm_Transform->Translate(-ffIK_LA_x, -ffIK_LA_y, 0);
-			mRenderWindow->Render();
-		}
-
-
-		void animateffIK_RUL(int A, int x, int y, int z)
-		{
-
-			if (ffIK_both == 1)
-			{
-				//IK_rightUpperLeg_Transform->Identity();
-				IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
-				IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
-
-				IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
-				IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
-				mRenderWindow->Render();
-
-			}
-			if (ffIK_RF == 1)
-			{
-				//IK_rightUpperLeg_Transform->Identity();
-				IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
-				IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
-			}
-			if (ffIK_LF == 1)
-			{
-				IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, ffIK_UL_y, 0);
-				IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, -ffIK_UL_y, 0);
-				mRenderWindow->Render();
-			}
-		}
-		void animateffIK_RLL(int A, int x, int y, int z)
-		{
-			if (ffIK_both == 1)
-			{
-				//IK_leftLowerLeg_Transform->Identity();
-				IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
-
-				IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
-
-				mRenderWindow->Render();
-			}
-			if (ffIK_RF == 1)
-			{
-				//IK_leftLowerLeg_Transform->Identity();
-				IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
-
-				mRenderWindow->Render();
-			}
-			if (ffIK_LF == 1)
-			{
-				IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, ffIK_LL_y, 0);
-
-				mRenderWindow->Render();
-			}
-
-		}
-
-
-		void animateffIK_LUL(int A, int x, int y, int z)
-		{
-
-			if (ffIK_both == 1)
-			{
-				//IK_leftUpperLeg_Transform->Identity();
-				IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
-				IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
-
-				//IK_rightUpperLeg_Transform->Identity();
-				IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
-				IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
-
-				mRenderWindow->Render();
-			}
-			if (ffIK_RF == 1)
-			{
-				//IK_rightUpperLeg_Transform->Identity();
-				IK_rightUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
-				IK_rightUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
-
-				mRenderWindow->Render();
-
-			}
-			if (ffIK_LF == 1)
-			{
-				//IK_leftUpperLeg_Transform->Identity();
-				IK_leftUpperLeg_Transform->Translate(ffIK_UL_x, ffIK_UL_y, 0);
-				IK_leftUpperLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftUpperLeg_Transform->Translate(-ffIK_UL_x, -ffIK_UL_y, 0);
-
-				mRenderWindow->Render();
-			}
-
-		}
-		void animateffIK_LLL(int A, int x, int y, int z)
-		{
-
-			if (ffIK_both == 1)
-			{
-				//IK_leftLowerLeg_Transform->Identity();
-				IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
-
-				//IK_leftLowerLeg_Transform->Identity();
-				IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
-
-				mRenderWindow->Render();
-			}
-			if (ffIK_RF == 1)
-			{
-				//IK_leftLowerLeg_Transform->Identity();
-				IK_rightLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_rightLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_rightLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
-
-				mRenderWindow->Render();
-			}
-			if (ffIK_LF == 1)
-			{
-				//IK_leftLowerLeg_Transform->Identity();
-				IK_leftLowerLeg_Transform->Translate(-ffIK_LL_x, -ffIK_LL_y, 0);
-				IK_leftLowerLeg_Transform->RotateWXYZ(A, x, y, z);
-				IK_leftLowerLeg_Transform->Translate(ffIK_LL_x, ffIK_LL_y, 0);
-
-				mRenderWindow->Render();
-
-			}
-
-		}
-
-		// To animate Free Left Foot and Free Right Foot
-		void animateFreeLF(double lulA, double lllA, int x, int y, int z)
-		{
-			IK_freeLeftUpperLeg_Transform->Identity();
-			IK_freeLeftUpperLeg_Transform->Translate(-freefootLUL_x, freefootLUL_y, 0);
-			IK_freeLeftUpperLeg_Transform->RotateWXYZ(lulA, x, y, z);
-			IK_freeLeftUpperLeg_Transform->Translate(freefootLUL_x, -freefootLUL_y, 0);
-
-
-			IK_freeLeftLowerLeg_Transform->Identity();
-			IK_freeLeftLowerLeg_Transform->Translate(-freefootLLL_x, freefootLLL_y, 0);
-			IK_freeLeftLowerLeg_Transform->RotateWXYZ(lllA, x, y, z);
-			IK_freeLeftLowerLeg_Transform->Translate(freefootLLL_x, -freefootLLL_y, 0);
-			mRenderWindow->Render();
-		}
-		void animateFreeRF(double rulA, double rllA, int x, int y, int z)
-		{
-			IK_freeRightUpperLeg_Transform->Identity();
-			IK_freeRightUpperLeg_Transform->Translate(-freefootRUL_x, freefootRUL_y, 0);
-			IK_freeRightUpperLeg_Transform->RotateWXYZ(rulA, x, y, z);
-			IK_freeRightUpperLeg_Transform->Translate(freefootRUL_x, -freefootRUL_y, 0);
-
-
-			IK_freeRightLowerLeg_Transform->Identity();
-			IK_freeRightLowerLeg_Transform->Translate(-freefootRLL_x, freefootRLL_y, 0);
-			IK_freeRightLowerLeg_Transform->RotateWXYZ(rllA, x, y, z);
-			IK_freeRightLowerLeg_Transform->Translate(freefootRLL_x, -freefootRLL_y, 0);
-			mRenderWindow->Render();
-		}
 
 
 		void moveSphereProp(int x, int y, int z)
@@ -2237,827 +3060,6 @@ namespace {
 			yaxisQP_IK[5] = yaxisQP[5];
 			qzIK[5] = qz[5];
 			zaxisQP_IK[5] = zaxisQP[5];
-
-		}
-
-		void computeSM_ikRH(int temptarget_X, int temptarget_Y, int x, int y, int z, int boneID)
-		{
-			rhIK_target_X = temptarget_X;
-			rhIK_target_Y = temptarget_Y;
-			rhIK_targetDistSqr = (rhIK_target_X * rhIK_target_X + rhIK_target_Y * rhIK_target_Y);
-			rhIK_cosAngle2_denom = 2 * rhIK_length1 * rhIK_length2;
-			std::cout << "rhIK_cosAngle2_denom "<<rhIK_cosAngle2_denom << std::endl;
-			std::cout << "rhIK_targetDistSqr "<<rhIK_targetDistSqr << std::endl;
-
-			if (rhIK_cosAngle2_denom > epsilon)
-			{
-				rhIK_cosAngle2 = (rhIK_targetDistSqr - rhIK_length1 * rhIK_length1 - rhIK_length2 * rhIK_length2) / (rhIK_cosAngle2_denom);
-				if ((rhIK_cosAngle2 < -1.0) || (rhIK_cosAngle2 > 1.0))
-				{
-					rhIK_foundValidSolution = false;
-				}
-				double rhIK_tempMin;
-				rhIK_tempMin = min(1.0, rhIK_cosAngle2);
-				rhIK_cosAngle2 = max(-1.0, rhIK_tempMin);
-				rhIK_angle2 = acos(rhIK_cosAngle2);
-				if (!rhIK_solvePosAngle2)
-				{
-					rhIK_angle2 = -rhIK_angle2;
-				}
-				rhIK_sinAngle2 = sin(rhIK_angle2);
-
-			}
-			else
-			{
-				double rhIK_totalLenSqr = (rhIK_length1 + rhIK_length2) * (rhIK_length1 + rhIK_length2);
-				if (rhIK_targetDistSqr < (rhIK_totalLenSqr - epsilon) || rhIK_targetDistSqr >(rhIK_totalLenSqr + epsilon))
-				{
-					rhIK_foundValidSolution = false;
-				}
-				rhIK_angle2 = 0.0;
-				rhIK_cosAngle2 = 1.0;
-				rhIK_sinAngle2 = 0.0;
-			}
-
-			double rhIK_triAdjacent = rhIK_length1 + rhIK_length2 * rhIK_cosAngle2;
-			double rhIK_triOpposite = rhIK_length2 * rhIK_sinAngle2;
-
-			double rhIK_tanY = rhIK_target_Y * rhIK_triAdjacent - rhIK_target_X * rhIK_triOpposite;
-			double rhIK_tanX = rhIK_target_X * rhIK_triAdjacent + rhIK_target_Y * rhIK_triOpposite;
-			rhIK_angle1 = atan2(rhIK_tanY, rhIK_tanX);
-
-
-			double rhIK_theta1 = rhIK_angle1 * 180 / PI;
-			double rhIK_theta2 = rhIK_angle2 * 180 / PI;
-
-			double rhIK_theta0 = atan((double)((double)rhIK_Targetz / (double)rhIK_Targetx)) * 180 / PI;
-
-			cout << rhIK_theta0 <<"  theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
-			cout << rhIK_Targetz<<"testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
-
-			if (boneID == 10)
-			{
-				//animateSM_ikRH(rhIK_theta1, rhIK_theta2, x, y, z);
-
-
-				std::cout << "inverse Kinematices In " <<x<<" "<<y <<" "<<z << std::endl;
-				inverseKinematicesRH(rhIK_theta1, rhIK_theta2,x, y, z);
-				
-				// rightUpperArm
-				qxIK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[2].setX(0);
-				xaxisQY_IK[2].setY(sin(0 / 2));
-				xaxisQY_IK[2].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[2].setX(0);
-				xaxisQZ_IK[2].setY(sin(0 / 2));
-				xaxisQZ_IK[2].setZ(sin(0 / 2));
-
-				xaxisQP_IK[2] = xaxisQX_IK[2].multiply(xaxisQY_IK[2].multiply(xaxisQZ_IK[2]));
-
-				//rightLowerArm
-				qxIK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[3].setX(0);
-				xaxisQY_IK[3].setY(sin(0 / 2));
-				xaxisQY_IK[3].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[3].setX(0);
-				xaxisQZ_IK[3].setY(sin(0 / 2));
-				xaxisQZ_IK[3].setZ(sin(0 / 2));
-
-				xaxisQP_IK[3] = xaxisQX_IK[3].multiply(xaxisQY_IK[3].multiply(xaxisQZ_IK[3]));
-			}
-			if (boneID == 15)
-			{
-				animateSM_ikLH(rhIK_theta1, rhIK_theta2, x, y, z);
-
-				// leftUpperArm
-				qxIK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[4].setX(0);
-				xaxisQY_IK[4].setY(sin(0 / 2));
-				xaxisQY_IK[4].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[4].setX(0);
-				xaxisQZ_IK[4].setY(sin(0 / 2));
-				xaxisQZ_IK[4].setZ(sin(0 / 2));
-
-				xaxisQP_IK[4] = xaxisQX_IK[4].multiply(xaxisQY_IK[4].multiply(xaxisQZ_IK[4]));
-
-				//LeftLowerArm
-				qxIK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[5].setX(0);
-				xaxisQY_IK[5].setY(sin(0 / 2));
-				xaxisQY_IK[5].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[5].setX(0);
-				xaxisQZ_IK[5].setY(sin(0 / 2));
-				xaxisQZ_IK[5].setZ(sin(0 / 2));
-
-				xaxisQP_IK[5] = xaxisQX_IK[5].multiply(xaxisQY_IK[5].multiply(xaxisQZ_IK[5]));
-
-			}
-			if (boneID == 16)
-			{
-				animateSM_ikRF(-rhIK_theta1, -rhIK_theta2, x, y, z);
-
-				// rightUpperLeg
-				qxIK[6].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[6].setW(cos(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[6].setX(0);
-				xaxisQY_IK[6].setY(sin(0 / 2));
-				xaxisQY_IK[6].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[6].setX(0);
-				xaxisQZ_IK[6].setY(sin(0 / 2));
-				xaxisQZ_IK[6].setZ(sin(0 / 2));
-
-				xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
-
-				//rightLowerLeg
-				qxIK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				qxIK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[7].setX(0);
-				xaxisQY_IK[7].setY(sin(0 / 2));
-				xaxisQY_IK[7].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[7].setX(0);
-				xaxisQZ_IK[7].setY(sin(0 / 2));
-				xaxisQZ_IK[7].setZ(sin(0 / 2));
-
-				xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
-
-			}
-			if (boneID == 21)
-			{
-				animateSM_ikLF(-rhIK_theta1, -rhIK_theta2, x, y, z);
-
-				// leftUpperLeg
-				qxIK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
-				qxIK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[8].setX(0);
-				xaxisQY_IK[8].setY(sin(0 / 2));
-				xaxisQY_IK[8].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[8].setX(0);
-				xaxisQZ_IK[8].setY(sin(0 / 2));
-				xaxisQZ_IK[8].setZ(sin(0 / 2));
-
-				xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
-
-				//leftLowerLeg
-				qxIK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				qxIK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[9].setX(0);
-				xaxisQY_IK[9].setY(sin(0 / 2));
-				xaxisQY_IK[9].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[9].setX(0);
-				xaxisQZ_IK[9].setY(sin(0 / 2));
-				xaxisQZ_IK[9].setZ(sin(0 / 2));
-
-				xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
-			}
-
-
-
-			//=======================================================================================================================================================================
-			if (boneID == 500)
-			{
-				if (flag == 1)
-				{
-					animateffIK_PL(rhIK_theta1, rhIK_theta2, x, y, z);
-
-
-					// rightUpperLeg
-					qxIK[1].setW(cos((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-					qxIK[1].setX(1 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-					qxIK[1].setY(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-					qxIK[1].setZ(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-
-					xaxisQX_IK[1].setW(cos((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-					xaxisQX_IK[1].setX(1 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-					xaxisQX_IK[1].setY(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-					xaxisQX_IK[1].setZ(0 * sin((-rhIK_theta1 * 2.5) * PI / 180 / 2));
-
-					xaxisQY_IK[1].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQY_IK[1].setX(0);
-					xaxisQY_IK[1].setY(sin(0 / 2));
-					xaxisQY_IK[1].setZ(sin(0 / 2));
-
-					xaxisQZ_IK[1].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQZ_IK[1].setX(0);
-					xaxisQZ_IK[1].setY(sin(0 / 2));
-					xaxisQZ_IK[1].setZ(sin(0 / 2));
-
-					xaxisQP_IK[1] = xaxisQX_IK[1].multiply(xaxisQY_IK[1].multiply(xaxisQZ_IK[1]));
-
-					if (ffIK_both == 1)
-					{
-
-						// rightUpperLeg
-						qxIK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQX_IK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[6].setX(0);
-						xaxisQY_IK[6].setY(sin(0 / 2));
-						xaxisQY_IK[6].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[6].setX(0);
-						xaxisQZ_IK[6].setY(sin(0 / 2));
-						xaxisQZ_IK[6].setZ(sin(0 / 2));
-
-						xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
-
-						//rightLowerLeg
-						qxIK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQX_IK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[7].setX(0);
-						xaxisQY_IK[7].setY(sin(0 / 2));
-						xaxisQY_IK[7].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[7].setX(0);
-						xaxisQZ_IK[7].setY(sin(0 / 2));
-						xaxisQZ_IK[7].setZ(sin(0 / 2));
-
-						xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
-
-
-						// leftUpperLeg
-						qxIK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQX_IK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[8].setX(0);
-						xaxisQY_IK[8].setY(sin(0 / 2));
-						xaxisQY_IK[8].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[8].setX(0);
-						xaxisQZ_IK[8].setY(sin(0 / 2));
-						xaxisQZ_IK[8].setZ(sin(0 / 2));
-
-						xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
-
-						//leftLowerLeg
-						qxIK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQX_IK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[9].setX(0);
-						xaxisQY_IK[9].setY(sin(0 / 2));
-						xaxisQY_IK[9].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[9].setX(0);
-						xaxisQZ_IK[9].setY(sin(0 / 2));
-						xaxisQZ_IK[9].setZ(sin(0 / 2));
-
-						xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
-					}
-					if (ffIK_RF == 1)
-					{
-
-						// rightUpperLeg
-						qxIK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQX_IK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[6].setX(0);
-						xaxisQY_IK[6].setY(sin(0 / 2));
-						xaxisQY_IK[6].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[6].setX(0);
-						xaxisQZ_IK[6].setY(sin(0 / 2));
-						xaxisQZ_IK[6].setZ(sin(0 / 2));
-
-						xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
-
-						//rightLowerLeg
-						qxIK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQX_IK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[7].setX(0);
-						xaxisQY_IK[7].setY(sin(0 / 2));
-						xaxisQY_IK[7].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[7].setX(0);
-						xaxisQZ_IK[7].setY(sin(0 / 2));
-						xaxisQZ_IK[7].setZ(sin(0 / 2));
-
-						xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
-
-					}
-					if (ffIK_LF == 1)
-					{
-						// leftUpperLeg
-						qxIK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						qxIK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQX_IK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-						xaxisQX_IK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-						xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[8].setX(0);
-						xaxisQY_IK[8].setY(sin(0 / 2));
-						xaxisQY_IK[8].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[8].setX(0);
-						xaxisQZ_IK[8].setY(sin(0 / 2));
-						xaxisQZ_IK[8].setZ(sin(0 / 2));
-
-						xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
-
-						//leftLowerLeg
-						qxIK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						qxIK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQX_IK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-						xaxisQX_IK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-						xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQY_IK[9].setX(0);
-						xaxisQY_IK[9].setY(sin(0 / 2));
-						xaxisQY_IK[9].setZ(sin(0 / 2));
-
-						xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-						xaxisQZ_IK[9].setX(0);
-						xaxisQZ_IK[9].setY(sin(0 / 2));
-						xaxisQZ_IK[9].setZ(sin(0 / 2));
-
-						xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
-					}
-
-
-
-
-
-				}
-				if (flag == 2)
-				{
-					animateffIK_xPL(rhIK_theta1, rhIK_theta2, x, y, z);
-
-
-					// rightUpperLeg
-					qxIK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-					qxIK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-					qxIK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-					qxIK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-					xaxisQX_IK[6].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-					xaxisQX_IK[6].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-					xaxisQX_IK[6].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-					xaxisQX_IK[6].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-					xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQY_IK[6].setX(0);
-					xaxisQY_IK[6].setY(sin(0 / 2));
-					xaxisQY_IK[6].setZ(sin(0 / 2));
-
-					xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQZ_IK[6].setX(0);
-					xaxisQZ_IK[6].setY(sin(0 / 2));
-					xaxisQZ_IK[6].setZ(sin(0 / 2));
-
-					xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
-
-					//rightLowerLeg
-					qxIK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-					qxIK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-					qxIK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-					qxIK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-					xaxisQX_IK[7].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-					xaxisQX_IK[7].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-					xaxisQX_IK[7].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-					xaxisQX_IK[7].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-					xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQY_IK[7].setX(0);
-					xaxisQY_IK[7].setY(sin(0 / 2));
-					xaxisQY_IK[7].setZ(sin(0 / 2));
-
-					xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQZ_IK[7].setX(0);
-					xaxisQZ_IK[7].setY(sin(0 / 2));
-					xaxisQZ_IK[7].setZ(sin(0 / 2));
-
-					xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
-
-
-					// leftUpperLeg
-					qxIK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-					qxIK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-					qxIK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-					qxIK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-					xaxisQX_IK[8].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-					xaxisQX_IK[8].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-					xaxisQX_IK[8].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-					xaxisQX_IK[8].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-					xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQY_IK[8].setX(0);
-					xaxisQY_IK[8].setY(sin(0 / 2));
-					xaxisQY_IK[8].setZ(sin(0 / 2));
-
-					xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQZ_IK[8].setX(0);
-					xaxisQZ_IK[8].setY(sin(0 / 2));
-					xaxisQZ_IK[8].setZ(sin(0 / 2));
-
-					xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
-
-					//leftLowerLeg
-					qxIK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-					qxIK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-					qxIK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-					qxIK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-					xaxisQX_IK[9].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-					xaxisQX_IK[9].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-					xaxisQX_IK[9].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-					xaxisQX_IK[9].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-					xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQY_IK[9].setX(0);
-					xaxisQY_IK[9].setY(sin(0 / 2));
-					xaxisQY_IK[9].setZ(sin(0 / 2));
-
-					xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-					xaxisQZ_IK[9].setX(0);
-					xaxisQZ_IK[9].setY(sin(0 / 2));
-					xaxisQZ_IK[9].setZ(sin(0 / 2));
-
-					xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
-				}
-
-			}
-
-			if (boneID == 510)
-			{
-				animateffIK_RH(rhIK_theta1, rhIK_theta2, x, y, z);
-				// rightUpperArm
-				qxIK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[2].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[2].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[2].setX(0);
-				xaxisQY_IK[2].setY(sin(0 / 2));
-				xaxisQY_IK[2].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[2].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[2].setX(0);
-				xaxisQZ_IK[2].setY(sin(0 / 2));
-				xaxisQZ_IK[2].setZ(sin(0 / 2));
-
-				xaxisQP_IK[2] = xaxisQX_IK[2].multiply(xaxisQY_IK[2].multiply(xaxisQZ_IK[2]));
-
-				//rightLowerArm
-				qxIK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[3].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[3].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[3].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[3].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[3].setX(0);
-				xaxisQY_IK[3].setY(sin(0 / 2));
-				xaxisQY_IK[3].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[3].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[3].setX(0);
-				xaxisQZ_IK[3].setY(sin(0 / 2));
-				xaxisQZ_IK[3].setZ(sin(0 / 2));
-
-				xaxisQP_IK[3] = xaxisQX_IK[3].multiply(xaxisQY_IK[3].multiply(xaxisQZ_IK[3]));
-
-
-			}
-			if (boneID == 511)
-			{
-				animateffIK_LH(rhIK_theta1, rhIK_theta2, x, y, z);
-
-				// leftUpperArm
-				qxIK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				qxIK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[4].setW(cos(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[4].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[4].setY(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[4].setZ(0 * sin(-rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[4].setX(0);
-				xaxisQY_IK[4].setY(sin(0 / 2));
-				xaxisQY_IK[4].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[4].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[4].setX(0);
-				xaxisQZ_IK[4].setY(sin(0 / 2));
-				xaxisQZ_IK[4].setZ(sin(0 / 2));
-
-				xaxisQP_IK[4] = xaxisQX_IK[4].multiply(xaxisQY_IK[4].multiply(xaxisQZ_IK[4]));
-
-				//LeftLowerArm
-				qxIK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				qxIK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[5].setW(cos(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[5].setX(1 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[5].setY(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[5].setZ(0 * sin(-rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[5].setX(0);
-				xaxisQY_IK[5].setY(sin(0 / 2));
-				xaxisQY_IK[5].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[5].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[5].setX(0);
-				xaxisQZ_IK[5].setY(sin(0 / 2));
-				xaxisQZ_IK[5].setZ(sin(0 / 2));
-
-				xaxisQP_IK[5] = xaxisQX_IK[5].multiply(xaxisQY_IK[5].multiply(xaxisQZ_IK[5]));
-			}
-
-			//========================================================================================================================================================================
-
-
-
-			if (boneID == 1003)
-			{
-				animateFreeLF(-rhIK_theta1, -rhIK_theta2, x, y, z);
-
-				// leftUpperLeg
-				qxIK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
-				qxIK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[8].setW(cos(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[8].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[8].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[8].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[8].setX(0);
-				xaxisQY_IK[8].setY(sin(0 / 2));
-				xaxisQY_IK[8].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[8].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[8].setX(0);
-				xaxisQZ_IK[8].setY(sin(0 / 2));
-				xaxisQZ_IK[8].setZ(sin(0 / 2));
-
-				xaxisQP_IK[8] = xaxisQX_IK[8].multiply(xaxisQY_IK[8].multiply(xaxisQZ_IK[8]));
-
-				//leftLowerLeg
-				qxIK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				qxIK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[9].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[9].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[9].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[9].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[9].setX(0);
-				xaxisQY_IK[9].setY(sin(0 / 2));
-				xaxisQY_IK[9].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[9].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[9].setX(0);
-				xaxisQZ_IK[9].setY(sin(0 / 2));
-				xaxisQZ_IK[9].setZ(sin(0 / 2));
-
-				xaxisQP_IK[9] = xaxisQX_IK[9].multiply(xaxisQY_IK[9].multiply(xaxisQZ_IK[9]));
-			}
-			if (boneID == 2003)
-			{
-				animateFreeRF(-rhIK_theta1, -rhIK_theta2, x, y, z);
-
-				// rightUpperLeg
-				qxIK[6].setW(cos(rhIK_theta1 * PI / 180 / 2));
-				qxIK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				qxIK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQX_IK[6].setW(cos(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[6].setX(1 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[6].setY(0 * sin(rhIK_theta1 * PI / 180 / 2));
-				xaxisQX_IK[6].setZ(0 * sin(rhIK_theta1 * PI / 180 / 2));
-
-				xaxisQY_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[6].setX(0);
-				xaxisQY_IK[6].setY(sin(0 / 2));
-				xaxisQY_IK[6].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[6].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[6].setX(0);
-				xaxisQZ_IK[6].setY(sin(0 / 2));
-				xaxisQZ_IK[6].setZ(sin(0 / 2));
-
-				xaxisQP_IK[6] = xaxisQX_IK[6].multiply(xaxisQY_IK[6].multiply(xaxisQZ_IK[6]));
-
-				//rightLowerLeg
-				qxIK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				qxIK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				qxIK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQX_IK[7].setW(cos(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[7].setX(1 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[7].setY(0 * sin(rhIK_theta2 * PI / 180 / 2));
-				xaxisQX_IK[7].setZ(0 * sin(rhIK_theta2 * PI / 180 / 2));
-
-				xaxisQY_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQY_IK[7].setX(0);
-				xaxisQY_IK[7].setY(sin(0 / 2));
-				xaxisQY_IK[7].setZ(sin(0 / 2));
-
-				xaxisQZ_IK[7].setW(cos(0.000000000000001 / 2 * PI / 180));
-				xaxisQZ_IK[7].setX(0);
-				xaxisQZ_IK[7].setY(sin(0 / 2));
-				xaxisQZ_IK[7].setZ(sin(0 / 2));
-
-				xaxisQP_IK[7] = xaxisQX_IK[7].multiply(xaxisQY_IK[7].multiply(xaxisQZ_IK[7]));
-
-			}
-			//========================================================================================================================================================================
-
-
-
-			if (ffIK_both == 0 && ffIK_RF == 0 && ffIK_LF == 0)
-			{
-				qxIK[1] = qx[1];
-				xaxisQP_IK[1] = xaxisQP[1];
-
-
-				/*	qxIK[2] = qx[2];
-					xaxisQP_IK[2] = xaxisQP[2];*/
-			}
-
-
 
 		}
 
@@ -3925,10 +3927,7 @@ namespace {
 
 				
 					std::cout << "  rhIK_Targetx = " << rhIK_Targetx << "  rhIK_Targety = " << rhIK_Targety << "  rhIK_Targetz = " << rhIK_Targetz << std::endl;
-
 					mRenderer->Render();
-
-
 					prevY = diff;
 				}
 
@@ -12669,124 +12668,123 @@ void MainWindow::displayRobot_Model(int rotate)
 	RightHand_ObjReader_Transform->GetPosition(rightData);
 	//targetTransform->Translate(rightData[0], rightData[1] - 8, rightData[2]);
 
-	targetSphere->SetCenter(rhIK_Targetx, 0, rhIK_Targety);
-	//targetSphere->SetCenter(31, 0, 0);
+	targetSphere->SetCenter(0, 0, 0);
 	targetSphere->SetRadius(3);
 	targetSphere->SetPhiResolution(100);
 	targetSphere->SetThetaResolution(100);
 
-	targetTransform->RotateZ(270);
-	targetTransform->Translate(-100, -15, 0);
+
 	targetMapper->SetInputConnection(targetSphere->GetOutputPort());
+	targetTransform->SetInput(RightHand_ObjReader_Transform);
 	targetActor->SetUserTransform(targetTransform);
 	targetActor->SetMapper(targetMapper);
 	targetActor->GetProperty()->SetColor(colors->GetColor3d("DarkGreen").GetData());
 
 
 
-	vtkNew<vtkNamedColors> colors;
-
-	// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
-
-	vtkNew<vtkSphereSource> sphereSource;
-	sphereSource->SetCenter(.5, 0, 0);
-
-	unsigned int res = 18;
-	sphereSource->SetThetaResolution(res * 2);
-	sphereSource->SetPhiResolution(res);
-	sphereSource->Update();
-
-	vtkNew<vtkIdFilter> cellIdFilter;
-	cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
-	cellIdFilter->SetCellIds(true);
-	cellIdFilter->SetPointIds(false);
-#if VTK890
-	cellIdFilter->SetCellIdsArrayName("CellIds");
-#else
-	cellIdFilter->SetIdsArrayName("CellIds");
-#endif
-	cellIdFilter->Update();
-
-	//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
-
-	vtkNew<vtkIdFilter> pointIdFilter;
-	pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
-	pointIdFilter->SetCellIds(false);
-	pointIdFilter->SetPointIds(true);
-#if VTK890
-	pointIdFilter->SetPointIdsArrayName("PointIds");
-#else
-	pointIdFilter->SetIdsArrayName("PointIds");
-#endif
-	pointIdFilter->Update();
-
-	vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
-
-	//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
-
-	vtkNew<vtkCubeSource> cubeSource;
-	cubeSource->Update();
-
-	vtkNew<vtkBox> implicitCube;
-	implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
-
-	vtkNew<vtkClipPolyData> clipper;
-	clipper->SetClipFunction(implicitCube);
-	clipper->SetInputData(sphereWithIds);
-	clipper->InsideOutOn();
-	clipper->Update();
-
-	//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
-
-	// Get the clipped cell ids
-	vtkPolyData* clipped = clipper->GetOutput();
-
-	std::cout << "There are " << clipped->GetNumberOfPoints()
-		<< " clipped points." << std::endl;
-	std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
-		<< std::endl;
-
-	//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
-
-	//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
-	//{
-	//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
-	//		<< std::endl;
-	//}
-
-	// Create a mapper and actor for clipped sphere
-
-	vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
-	translation->Translate(-12.0, 70.0, +30.0);
-
-	vtkNew<vtkPolyDataMapper> clippedMapper;
-	clippedMapper->SetInputConnection(clipper->GetOutputPort());
-	clippedMapper->ScalarVisibilityOff();
-
-
-	vtkNew<vtkActor> clippedActor;
-	clippedActor->SetMapper(clippedMapper);
-	clippedActor->RotateZ(90);
-	clippedActor->RotateY(90);
-	clippedActor->SetScale(60);
-	clippedActor->SetUserTransform(translation);
-	clippedActor->GetProperty()->SetOpacity(0.5);
-	clippedActor->GetProperty()->SetRepresentationToWireframe();
-	clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
-
-	// Create a mapper and actor for cube
-	vtkNew<vtkPolyDataMapper> cubeMapper;
-	cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
-
-	vtkNew<vtkActor> cubeActor;
-	cubeActor->SetMapper(cubeMapper);
-
-	cubeActor->GetProperty()->SetRepresentationToWireframe();
-	cubeActor->GetProperty()->SetOpacity(0.5);
-	cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
-
-	mRenderer->UseHiddenLineRemovalOn();
-	mRenderer->AddActor(clippedActor);
+//	vtkNew<vtkNamedColors> colors;
+//
+//	// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
+//
+//	vtkNew<vtkSphereSource> sphereSource;
+//	sphereSource->SetCenter(.5, 0, 0);
+//
+//	unsigned int res = 18;
+//	sphereSource->SetThetaResolution(res * 2);
+//	sphereSource->SetPhiResolution(res);
+//	sphereSource->Update();
+//
+//	vtkNew<vtkIdFilter> cellIdFilter;
+//	cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
+//	cellIdFilter->SetCellIds(true);
+//	cellIdFilter->SetPointIds(false);
+//#if VTK890
+//	cellIdFilter->SetCellIdsArrayName("CellIds");
+//#else
+//	cellIdFilter->SetIdsArrayName("CellIds");
+//#endif
+//	cellIdFilter->Update();
+//
+//	//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
+//
+//	vtkNew<vtkIdFilter> pointIdFilter;
+//	pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
+//	pointIdFilter->SetCellIds(false);
+//	pointIdFilter->SetPointIds(true);
+//#if VTK890
+//	pointIdFilter->SetPointIdsArrayName("PointIds");
+//#else
+//	pointIdFilter->SetIdsArrayName("PointIds");
+//#endif
+//	pointIdFilter->Update();
+//
+//	vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
+//
+//	//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
+//
+//	vtkNew<vtkCubeSource> cubeSource;
+//	cubeSource->Update();
+//
+//	vtkNew<vtkBox> implicitCube;
+//	implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
+//
+//	vtkNew<vtkClipPolyData> clipper;
+//	clipper->SetClipFunction(implicitCube);
+//	clipper->SetInputData(sphereWithIds);
+//	clipper->InsideOutOn();
+//	clipper->Update();
+//
+//	//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
+//
+//	// Get the clipped cell ids
+//	vtkPolyData* clipped = clipper->GetOutput();
+//
+//	std::cout << "There are " << clipped->GetNumberOfPoints()
+//		<< " clipped points." << std::endl;
+//	std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
+//		<< std::endl;
+//
+//	//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
+//
+//	//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
+//	//{
+//	//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
+//	//		<< std::endl;
+//	//}
+//
+//	// Create a mapper and actor for clipped sphere
+//
+//	vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
+//	translation->Translate(-12.0, 70.0, +30.0);
+//
+//	vtkNew<vtkPolyDataMapper> clippedMapper;
+//	clippedMapper->SetInputConnection(clipper->GetOutputPort());
+//	clippedMapper->ScalarVisibilityOff();
+//
+//
+//	vtkNew<vtkActor> clippedActor;
+//	clippedActor->SetMapper(clippedMapper);
+//	clippedActor->RotateZ(90);
+//	clippedActor->RotateY(90);
+//	clippedActor->SetScale(60);
+//	clippedActor->SetUserTransform(translation);
+//	clippedActor->GetProperty()->SetOpacity(0.5);
+//	clippedActor->GetProperty()->SetRepresentationToWireframe();
+//	clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
+//
+//	// Create a mapper and actor for cube
+//	vtkNew<vtkPolyDataMapper> cubeMapper;
+//	cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
+//
+//	vtkNew<vtkActor> cubeActor;
+//	cubeActor->SetMapper(cubeMapper);
+//
+//	cubeActor->GetProperty()->SetRepresentationToWireframe();
+//	cubeActor->GetProperty()->SetOpacity(0.5);
+//	cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
+//
+//	mRenderer->UseHiddenLineRemovalOn();
+//	mRenderer->AddActor(clippedActor);
 
 
 
@@ -13828,6 +13826,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 	savedPoses.clear();
+	savedTarget.clear();
 
 
     ui->setupUi(this);
@@ -13911,11 +13910,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	//QObject::connect(ui->btnRadioFixed, &QPushButton::clicked, this, &MainWindow::enableFixedFoots);
 	QObject::connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(selectModel(int)));
 	QObject::connect(ui->listWidget, &QListWidget::itemClicked, this, &MainWindow::selectList);
+	QObject::connect(ui->listWidget_2, &QListWidget::itemClicked, this, &MainWindow::selectTarget);
 
 	QObject::connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::saveImage);
 	QObject::connect(ui->btnTrajectory, &QPushButton::clicked, this, &MainWindow::drawTrajectory);
 
 	QObject::connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::drawThetaPhi);
+	QObject::connect(ui->targetAddBtn, &QPushButton::clicked, this, &MainWindow::targetAdd);
 
 
 	//vtkNew<vtkSphereSource> sphereSource;
@@ -15153,6 +15154,7 @@ void MainWindow::drawTrajectory()
 	std::cout << "drawTrajectory" << std::endl;
 	colorSetting(1, "Gray");
 }
+
 void MainWindow::onDrawSphereClick() {
 
 	std::cout << "button Clicked" << std::endl;
@@ -15316,14 +15318,323 @@ void MainWindow::onDrawSphereClick() {
 
 void MainWindow::drawThetaPhi()
 {
+	/**********************************************************/
+	male_biped = 1;
+	vitruvian_biped = 0;
+	skeleton_biped = 0;
+	cout << "Male Biped Selected" << endl;
 
-	std::cout << "theta phi" << std::endl;
+	Pelvis_objFilename = "../BodyGestureGenerator/data/Pelvis.obj";
+	Chest_objFilename = "../BodyGestureGenerator/data/Chest.obj";
+	headNeck_objFilename = "../BodyGestureGenerator/data/humanHead1.obj";
+	LUA_objFilename = "../BodyGestureGenerator/data/LUA.obj";
+	LLA_objFilename = "../BodyGestureGenerator/data/LLA.obj";
+	LH_objFilename = "../BodyGestureGenerator/data/LH_G.obj";
+	RUA_objFilename = "../BodyGestureGenerator/data/RUA.obj";
+	RLA_objFilename = "../BodyGestureGenerator/data/RLA.obj";
+	RH_objFilename = "../BodyGestureGenerator/data/RH_G.obj";
+	LUL_objFilename = "../BodyGestureGenerator/data/LUL.obj";
+	LLL_objFilename = "../BodyGestureGenerator/data/LLL.obj";
+	LF_objFilename = "../BodyGestureGenerator/data/LF.obj";
+	RUL_objFilename = "../BodyGestureGenerator/data/RUL.obj";
+	RLL_objFilename = "../BodyGestureGenerator/data/RLL.obj";
+	RF_objFilename = "../BodyGestureGenerator/data/RF.obj";
+
+	PlconeTransform->Identity();
+	CUconeTransform->Identity();
+	Head_ObjReader_Transform->Identity();
+	RarmTransform->Identity();
+	RforearmTransform->Identity();
+	RightHand_ObjReader_Transform->Identity();
+	LarmTransform->Identity();
+	LforearmTransform->Identity();
+	LeftHand_ObjReader_Transform->Identity();
+	RlulegTransform->Identity();
+	RllegTransform->Identity();
+	RF_ObjReader_Transform->Identity();
+	LlulegTransform->Identity();
+	LllegTransform->Identity();
+	LF_ObjReader_Transform->Identity();
+
+	RUA_JS_Transform->Identity();
+	RLA_JS_Transform->Identity();
+	LUA_JS_Transform->Identity();
+	LLA_JS_Transform->Identity();
+	RUL_JS_Transform->Identity();
+	RLL_JS_Transform->Identity();
+	LUL_JS_Transform->Identity();
+	LLL_JS_Transform->Identity();
+
+	pelvisObj_xpos = 0;
+	pelvisObj_ypos = 47.875;
+	pelvisObj_zpos = 0;
+	pelvisObj_scale = 50;
+
+	chestObj_xpos = 0;
+	chestObj_ypos = 2.5;
+	chestObj_zpos = 0;
+	chestObj_scale = 50;
+
+	head_NeckObj_xpos = 0;
+	head_NeckObj_ypos = 26.0;
+	head_NeckObj_zpos = -1.0;
+	head_NeckObj_scale = 8;
+
+
+	ruaObj_xpos = -10.5;
+	ruaObj_ypos = 20.0;
+	ruaObj_zpos = -2.5;
+	ruaObj_scale = 50;
+
+	rlaObj_xpos = 0.0;
+	rlaObj_ypos = -14.0;
+	rlaObj_zpos = 1.0;
+	rlaObj_scale = 50;
+
+	RHObj_xpos = -0.5;
+	RHObj_ypos = -12.75;
+	RHObj_zpos = 0.5;
+	RHObj_scale = 40;
+
+	luaObj_xpos = 10.50;
+	luaObj_ypos = 20.0;
+	luaObj_zpos = -2.5;
+	luaObj_scale = 50;
+
+	llaObj_xpos = 0.5;
+	llaObj_ypos = -14.0;
+	llaObj_zpos = 0.5;
+	llaObj_scale = 50;
+
+	LHObj_xpos = -0.5;
+	LHObj_ypos = -12.75;
+	LHObj_zpos = 0.5;
+	LHObj_scale = 40;
+
+
+	rulObj_xpos = -3.40;
+	rulObj_ypos = 0; //-2.125
+	rulObj_zpos = 0.0;
+	rulObj_scale = 50;
+
+	rllObj_xpos = -0.25;
+	rllObj_ypos = -21.0;
+	rllObj_zpos = 0.0;
+	rllObj_scale = 50;
+
+	RFObj_xpos = 0.7;
+	RFObj_ypos = -19.25;
+	RFObj_zpos = -2.10;
+	RFObj_scale = 50;
+	RF_xaxis_actor_Zpos = 20;
+
+	lulObj_xpos = 3.90;
+	lulObj_ypos = 0; //-2.125
+	lulObj_zpos = 0.0;
+	lulObj_scale = 50;
+
+	lllObj_xpos = 1.0;
+	lllObj_ypos = -21.0;
+	lllObj_zpos = -0.75;
+	lllObj_scale = 50;
+
+	LFObj_xpos = 0.0;
+	LFObj_ypos = -19.25;
+	LFObj_zpos = -2.10;
+	LFObj_scale = 50;
+
+
+
+	mRenderer->RemoveActor(stickModel_pelvisActor);
+
+	mRenderer->RemoveActor(stickModel_chest_0_Actor);
+	mRenderer->RemoveActor(stickModel_chest_1_Actor);
+	mRenderer->RemoveActor(stickModel_chest_2_Actor);
+	mRenderer->RemoveActor(stickModel_chest_3_Actor);
+
+	mRenderer->RemoveActor(stickModel_head_Actor);
+
+	mRenderer->RemoveActor(stickModel_rightShoulderJoint_Actor);
+	mRenderer->RemoveActor(stickModel_rightUpperArm_Actor);
+	mRenderer->RemoveActor(stickModel_rightElbow_Actor);
+	mRenderer->RemoveActor(stickModel_rightLowerArm_Actor);
+	mRenderer->RemoveActor(stickModel_rightHand_Actor);
+
+	mRenderer->RemoveActor(stickModel_leftShoulderJoint_Actor);
+	mRenderer->RemoveActor(stickModel_leftUpperArm_Actor);
+	mRenderer->RemoveActor(stickModel_leftElbow_Actor);
+	mRenderer->RemoveActor(stickModel_leftLowerArm_Actor);
+	mRenderer->RemoveActor(stickModel_leftHand_Actor);
+
+	mRenderer->RemoveActor(stickModel_rightLegJoint_Actor);
+	mRenderer->RemoveActor(stickModel_rightUpperLeg_Actor);
+	mRenderer->RemoveActor(stickModel_rightKnee_Actor);
+	mRenderer->RemoveActor(stickModel_rightLowerLeg_Actor);
+	mRenderer->RemoveActor(stickModel_rightFoot_Actor);
+
+	mRenderer->RemoveActor(stickModel_leftLegJoint_Actor);
+	mRenderer->RemoveActor(stickModel_leftUpperLeg_Actor);
+	mRenderer->RemoveActor(stickModel_leftKnee_Actor);
+	mRenderer->RemoveActor(stickModel_leftLowerLeg_Actor);
+	mRenderer->RemoveActor(stickModel_leftFoot_Actor);
+
+	mRenderer->RemoveActor(none_xaxis_actor);
+	mRenderer->RemoveActor(none_yaxis_actor);
+	mRenderer->RemoveActor(none_zaxis_actor);
+
+	//this->fullbodyIK_checkBox->setChecked(0);
+	//this->rhIK_checkBox->setChecked(0);
+	//this->lhIK_checkBox->setChecked(0);
+	//this->rfIK_checkBox->setChecked(0);
+	//this->lfIK_checkBox->setChecked(0);
+
+	mRenderer->RemoveActor(rh_outlineActor);
+	rhIK_flag = 0;
+	mRenderer->RemoveActor(lh_outlineActor);
+	lhIK_flag = 0;
+	mRenderer->RemoveActor(rf_outlineActor);
+	rfIK_flag = 0;
+	mRenderer->RemoveActor(lf_outlineActor);
+	lfIK_flag = 0;
+
+	mRenderer->RemoveActor(pelvisJS_actor);
+	mRenderer->RemoveActor(chestJS_actor);
+	mRenderer->RemoveActor(LUA_JS_actor);
+	mRenderer->RemoveActor(LLA_JS_actor);
+	mRenderer->RemoveActor(RUA_JS_actor);
+	mRenderer->RemoveActor(RLA_JS_actor);
+	mRenderer->RemoveActor(LUL_JS_actor);
+	mRenderer->RemoveActor(LLL_JS_actor);
+	mRenderer->RemoveActor(RUL_JS_actor);
+	mRenderer->RemoveActor(RLL_JS_actor);
+	mRenderer->RemoveActor(targetActor);
+
+	//vtkActorCollection* actors = vtkActorCollection::New();
+	//int NumberOfActors = renderer->VisibleActorCount();
+	//actors = mRenderer->GetActors();
+	//actors->InitTraversal();
+	//for (int i = 0; i < NumberOfActors; i++) {
+	//	mRenderer->RemoveActor(actors->GetNextActor());
+	//}
+	//actors->Delete();
+
+
+
+	//this->freeFoots_radioButton->setChecked(true);
+	//this->fixedFoots_radioButton->setChecked(false);
+	//this->fixedRF_radioButton->setChecked(false);
+	//this->fixedLF_radioButton->setChecked(false);
+	//this->freeFoots_radioButton->setEnabled(false);
+	//this->fixedFoots_radioButton->setEnabled(false);
+	//this->fixedRF_radioButton->setEnabled(false);
+	//this->fixedLF_radioButton->setEnabled(false);
+
+
+	displayRobot_Model(1);
+
+	mRenderWindow->Render();
+
+
+	customMouseInteractorStyle* style = new customMouseInteractorStyle();
+
+
+	mInteractor->SetInteractorStyle(style);
+	style->SetDefaultRenderer(mRenderer);
+	style->pelvisActor = PlconeActor;
+	style->headActor = Head_objActor;
+	style->chestActor = CUconeActor;
+	style->Upper_chestActor = CUconeActor_upper;
+	style->RUA = RarmActor;
+	style->RLA = RforearmActor;
+	style->LUA = LarmActor;
+	style->LLA = LforearmActor;
+	style->RUL = RlulegActor;
+	style->RLL = RllegActor;
+	style->LUL = LlulegActor;
+	style->LLL = LllegActor;
+	style->LH_Actor = LeftHand_objActor;
+	style->RH_Actor = RightHand_objActor;
+	style->LL_Actor = LF_objActor;
+	style->RL_Actor = RF_objActor;
+
+
+	style->SM_pelvisActor = stickModel_pelvisActor;
+	style->SM_CH0 = stickModel_chest_0_Actor;
+	style->SM_CH1 = stickModel_chest_1_Actor;
+	style->SM_CH2 = stickModel_chest_2_Actor;
+	style->SM_CH3 = stickModel_chest_3_Actor;
+	style->SM_headActor = stickModel_head_Actor;
+	style->SM_RUA = stickModel_rightUpperArm_Actor;
+	style->SM_RLA = stickModel_rightLowerArm_Actor;
+	style->SM_RH_Actor = stickModel_rightHand_Actor;
+	style->SM_LUA = stickModel_leftUpperArm_Actor;
+	style->SM_LLA = stickModel_leftLowerArm_Actor;
+	style->SM_LH_Actor = stickModel_leftHand_Actor;
+	style->SM_RUL = stickModel_rightUpperLeg_Actor;
+	style->SM_RLL = stickModel_rightLowerLeg_Actor;
+	style->SM_RF_Actor = stickModel_rightFoot_Actor;
+	style->SM_LUL = stickModel_leftUpperLeg_Actor;
+	style->SM_LLL = stickModel_leftLowerLeg_Actor;
+	style->SM_LF_Actor = stickModel_leftFoot_Actor;
+
+
+	style->ffIK_pelvisActor = IK_pelvisActor;
+	style->ffIK_CH0 = IK_chest_0_Actor;
+	style->ffIK_CH1 = IK_chest_1_Actor;
+	style->ffIK_CH2 = IK_chest_2_Actor;
+	style->ffIK_CH3 = IK_chest_3_Actor;
+	style->ffIK_headActor = IK_head_Actor;;
+	style->ffIK_RUA = IK_rightUpperArm_Actor;
+	style->ffIK_RLA = IK_rightLowerArm_Actor;
+	style->ffIK_RH = IK_rightHand_Actor;
+	style->ffIK_LUA = IK_leftUpperArm_Actor;
+	style->ffIK_LLA = IK_leftLowerArm_Actor;
+	style->ffIK_LH = IK_leftHand_Actor;
+	style->ffIK_RUL = IK_rightUpperLeg_Actor;
+	style->ffIK_RLL = IK_rightLowerLeg_Actor;
+	style->ffIK_RF_Actor = IK_rightFoot_Actor;
+	style->ffIK_LUL = IK_leftUpperLeg_Actor;
+	style->ffIK_LLL = IK_leftLowerLeg_Actor;
+	style->ffIK_LF_Actor = IK_leftFoot_Actor;
+
+	style->freeRightUL_Actor = IK_freeRightUpperLeg_Actor;
+	style->freeRightLL_Actor = IK_freeRightLowerLeg_Actor;
+	style->freeRightFoot_Actor = IK_freeRightFoot_Actor;
+
+	style->freeLeftUL_Actor = IK_freeLeftUpperLeg_Actor;
+	style->freeLeftLL_Actor = IK_freeLeftLowerLeg_Actor;
+	style->freeLeftFoot_Actor = IK_freeLeftFoot_Actor;
+
+
+	style->ConsProp_sphere_actor = ConstraintProp_sphere_actor;
+	style->TConsProp_sphere_actor = TConstraintProp_sphere_actor;
+	style->TConsProp_sphere_actor2 = TConstraintProp_sphere_actor2;
+	style->TConsProp_sphere_actor3 = TConstraintProp_sphere_actor3;
+
+	//style->ConsProp_line_actor = ConstraintProp_line_actor;
+	style->ConsProp_line_actor = ConstraintProp_line_actor1;
+	style->TConsProp_line_actor = TConstraintProp_line_actor1;
+	style->TConsProp_line_actor2 = TConstraintProp_line_actor2;
+	style->TConsProp_line_actor3 = TConstraintProp_line_actor3;
+
+	style->ConsProp_plane_actor = ConstraintProp_plane_actor;
+	style->ConsProp_cube_actor = ConstraintProp_cube_actor;
+	style->tartget = targetActor;
+
+
+	mInteractor->SetInteractorStyle(style);
+	mInteractor->SetRenderWindow(mRenderWindow);
+
+	/**************************************************************/
+	rhIK_solvePosAngle2 = true;
 
 	QString q_theta = ui->edit_theta->text();
 	QString q_phi = ui->edit_phi->text();
+	QString q_z = ui->edit_z->text();
 
 	int getTheta = 0;
 	int getPhi = 0;
+	int getZ = 0;
 
 
 	if(q_theta.toStdString().size()>0)
@@ -15333,8 +15644,77 @@ void MainWindow::drawThetaPhi()
 	if (q_phi.toStdString().size() > 0)
 		getPhi = stoi(q_phi.toStdString());
 
+	if (q_z.toStdString().size() > 0)
+		getZ = stoi(q_z.toStdString());
 
-	std::cout << getTheta << "  " << getPhi << std::endl;
+	double angle_z = 0;
+	angle_z = atan((double)((double)getZ / (double)getTheta)) * 180 / PI;
+	
+	computeSM_ikRH(getTheta, getPhi, -1, 0, 0, 10);
+	rua(angle_z, 0, 0, 1);
 
+	double position[3] = { 0,0,0 };
+	RightHand_ObjReader_Transform->GetPosition(position);
+
+	std::cout << position[0] << "   " << position[1] << "   " << position[2] << std::endl;
+
+	std::cout << "XYZ : " << getTheta << "  " << getPhi << "  " << getZ << std::endl;
+
+	targetTransform->SetInput(RightHand_ObjReader_Transform);
+	mRenderer->Render();
+
+}
+
+void MainWindow::selectTarget()
+{
+	int selectidx = ui->listWidget_2->currentRow();
+
+	if (selectidx >= 0)
+	{
+		std::cout <<" targetPoint    " << savedTarget[selectidx].pos_x << "  " << savedTarget[selectidx].pos_y << "   " << savedTarget[selectidx].pos_z << std::endl;
+
+		ui->edit_theta->setText(to_string(savedTarget[selectidx].pos_x).c_str());
+		ui->edit_phi->setText(to_string(savedTarget[selectidx].pos_y).c_str());
+		ui->edit_z->setText(to_string(savedTarget[selectidx].pos_z).c_str());
+
+	}
+
+	drawThetaPhi();
+
+}
+void MainWindow::targetAdd()
+{
+	QString q_theta = ui->edit_theta->text();
+	QString q_phi = ui->edit_phi->text();
+	QString q_z = ui->edit_z->text();
+
+	int getTheta = 0;
+	int getPhi = 0;
+	int getZ = 0;
+
+
+	if (q_theta.toStdString().size() > 0)
+		getTheta = stoi(q_theta.toStdString());
+
+
+	if (q_phi.toStdString().size() > 0)
+		getPhi = stoi(q_phi.toStdString());
+
+	if (q_z.toStdString().size() > 0)
+		getZ = stoi(q_z.toStdString());
+
+
+	targetPoint temp;
+	temp.pos_x = getTheta;
+	temp.pos_y = getPhi;
+	temp.pos_z = getZ;
+
+
+	string currentName = "targetPoint ";
+	currentName += to_string(savedTarget.size());
+
+	ui->listWidget_2->addItem(currentName.c_str());
+
+	savedTarget.push_back(temp);
 
 }
