@@ -66,6 +66,12 @@ string COLOR_TConstraintProp_line_actor3 = "SandyBrown";
 
 
 
+
+double inverseKinematices_Theta_0 = 0;
+double inverseKinematices_Theta_1 = 0;
+double inverseKinematices_Theta_2 = 0;
+
+void calculate3Angle(int p1, int p2, int p3);
 // To animate Free Left Foot and Free Right Foot
 void animateFreeLF(double lulA, double lllA, int x, int y, int z)
 {
@@ -608,9 +614,10 @@ void computeSM_ikRH(int temptarget_X, int temptarget_Y, int x, int y, int z, int
 	double rhIK_theta1 = rhIK_angle1 * 180 / PI;
 	double rhIK_theta2 = rhIK_angle2 * 180 / PI;
 
-
-	cout <<"  theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
-	cout << rhIK_Targetz << "testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+	inverseKinematices_Theta_1 = rhIK_theta1;
+	inverseKinematices_Theta_2 = rhIK_theta2;
+	//cout <<"  theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+	//cout << rhIK_Targetz << "testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
 
 	if (boneID == 10)
 	{
@@ -3840,20 +3847,12 @@ namespace {
 						if (diff > prevY)
 						{
 							rhIK_Targetx++;
-
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
+							
 						}
 
 						if (diff < prevY)
 						{
 							rhIK_Targetx--;
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, -anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
 						}
 
 						
@@ -3864,22 +3863,12 @@ namespace {
 						if (diff > prevY)
 						{
 							rhIK_Targety++;
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
 						}
 
 						if (diff < prevY)
 						{
 							rhIK_Targety--;
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, -anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
 						}
-
-						
 					}
 
 
@@ -3896,36 +3885,9 @@ namespace {
 							rhIK_Targetz--;
 						}
 
-						int angle_z = 0;
-						int moveAngle = 0;
-						angle_z = atan((double)((double)rhIK_Targetz / (double)rhIK_Targetx)) * 180 / PI;
-
-						if (angle_z > totalAngleOfRUA_z)
-						{
-							moveAngle = angle_z - totalAngleOfRUA_z;
-
-							totalAngleOfRUA_z += moveAngle;
-						}
-
-						if (angle_z < totalAngleOfRUA_z)
-						{
-							moveAngle = totalAngleOfRUA_z - angle_z;
-
-							totalAngleOfRUA_z -= moveAngle;
-
-							moveAngle *= -1;
-						}
-
-						std::cout << "rhIK_Targetz = " << rhIK_Targetz << "  angle_z = " << angle_z << "  moveAngle = " << moveAngle << std::endl;
-
-						rua(moveAngle, anim_rul_x, anim_rul_y, anim_rul_z);
-						//computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-						//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-						targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-						mRenderWindow->Render();
 					}
 
-				
+					calculate3Angle(rhIK_Targetx, rhIK_Targety, rhIK_Targetz);
 					std::cout << "  rhIK_Targetx = " << rhIK_Targetx << "  rhIK_Targety = " << rhIK_Targety << "  rhIK_Targetz = " << rhIK_Targetz << std::endl;
 					mRenderer->Render();
 					prevY = diff;
@@ -5014,10 +4976,14 @@ namespace {
 		}
 		virtual void 	OnMiddleButtonUp() override
 		{
-			boneID = 0;
 			vtkInteractorStyleTrackballActor::OnMiddleButtonUp();
+
 			std::cout << this->Move << "	,	" << boneID << std::endl;
 			this->Move = false;
+
+			
+
+
 		}
 		virtual void OnMiddleButtonDown() override
 		{
@@ -5036,11 +5002,6 @@ namespace {
 				b_targetSelect = true;
 				boneID = 10;
 				this->Move = true;
-
-				anim_rul_x = 0;
-				anim_rul_y = 0;
-				anim_rul_z = 1;
-
 			}
 
 			if (this->InteractionProp == this->RH_Actor)
@@ -5536,9 +5497,6 @@ namespace {
 				boneID = 10;
 				this->Move = true;
 
-				anim_rul_x = 1;
-				anim_rul_y = 0;
-				anim_rul_z = 0;
 
 			}
 
@@ -8074,10 +8032,6 @@ namespace {
 				b_targetSelect = true;
 				boneID = 10;
 				this->Move = true;
-
-				anim_rul_x = 1;
-				anim_rul_y = 0;
-				anim_rul_z = 0;
 			}
 
 
@@ -12355,7 +12309,7 @@ namespace {
 
 } // namespace
 
-void MainWindow::displayRobot_Model(int rotate)
+void robotModel(int rotate)
 {
 	colorSetting(1, "Gray");
 
@@ -12556,7 +12510,7 @@ void MainWindow::displayRobot_Model(int rotate)
 	RightHand_ObjReader_Transform->SetInput(RforearmTransform);
 	RightHand_objActor->SetUserTransform(RightHand_ObjReader_Transform);
 	RightHand_objActor->SetMapper(RightHand_ObjReader_mapper);
-	if(rotate ==10)
+	if (rotate == 10)
 		RightHand_objActor->RotateY(50);
 	RightHand_objActor->GetProperty()->SetColor(colors->GetColor3d(COLOR_RightHand_objActor).GetData());
 	//RightHand_objActor->SetScale(RHObj_scale);
@@ -12571,7 +12525,7 @@ void MainWindow::displayRobot_Model(int rotate)
 	LarmActor->GetProperty()->SetColor(colors->GetColor3d(COLOR_LarmActor).GetData());
 	LarmActor->SetScale(luaObj_scale);
 
-	
+
 	LLA_ObjReader->SetFileName(LLA_objFilename.c_str());
 	LforearmMapper->SetInputConnection(LLA_ObjReader->GetOutputPort());
 	LforearmTransform->Translate(llaObj_xpos, llaObj_ypos, llaObj_zpos); //-0.2125, 0.080, -0.045
@@ -12582,7 +12536,7 @@ void MainWindow::displayRobot_Model(int rotate)
 	LforearmActor->SetScale(llaObj_scale);
 
 
-	
+
 
 	LH_ObjReader->SetFileName(LH_objFilename.c_str());
 	LeftHand_ObjReader_mapper->SetInputConnection(LH_ObjReader->GetOutputPort());
@@ -12593,7 +12547,7 @@ void MainWindow::displayRobot_Model(int rotate)
 	LeftHand_objActor->GetProperty()->SetColor(colors->GetColor3d(COLOR_LeftHand_objActor).GetData());
 	//LeftHand_objActor->SetScale(LHObj_scale);
 
-	
+
 	RUL_ObjReader->SetFileName(RUL_objFilename.c_str());
 	RlulegMapper->SetInputConnection(RUL_ObjReader->GetOutputPort());
 	RlulegTransform->Translate(rulObj_xpos, rulObj_ypos, rulObj_zpos);
@@ -12604,7 +12558,7 @@ void MainWindow::displayRobot_Model(int rotate)
 	RlulegActor->SetScale(rulObj_scale);
 
 
-	
+
 	RLL_ObjReader->SetFileName(RLL_objFilename.c_str());
 	RllegMapper->SetInputConnection(RLL_ObjReader->GetOutputPort());
 	RllegTransform->Translate(rllObj_xpos, rllObj_ypos, rllObj_zpos);
@@ -12616,7 +12570,7 @@ void MainWindow::displayRobot_Model(int rotate)
 
 
 
-	
+
 	RF_ObjReader->SetFileName(RF_objFilename.c_str());
 	RF_ObjReader_mapper->SetInputConnection(RF_ObjReader->GetOutputPort());
 	RF_ObjReader_Transform->Translate(RFObj_xpos, RFObj_ypos, RFObj_zpos);
@@ -12626,7 +12580,7 @@ void MainWindow::displayRobot_Model(int rotate)
 	RF_objActor->GetProperty()->SetColor(colors->GetColor3d(COLOR_RF_objActor).GetData());
 	RF_objActor->SetScale(RFObj_scale);
 
-	
+
 	LUL_ObjReader->SetFileName(LUL_objFilename.c_str());
 	LlulegMapper->SetInputConnection(LUL_ObjReader->GetOutputPort());
 	LlulegTransform->Translate(lulObj_xpos, lulObj_ypos, lulObj_zpos); //-0.055, 0.0125, -0.01
@@ -12682,113 +12636,113 @@ void MainWindow::displayRobot_Model(int rotate)
 
 
 
-//	vtkNew<vtkNamedColors> colors;
-//
-//	// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
-//
-//	vtkNew<vtkSphereSource> sphereSource;
-//	sphereSource->SetCenter(.5, 0, 0);
-//
-//	unsigned int res = 18;
-//	sphereSource->SetThetaResolution(res * 2);
-//	sphereSource->SetPhiResolution(res);
-//	sphereSource->Update();
-//
-//	vtkNew<vtkIdFilter> cellIdFilter;
-//	cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
-//	cellIdFilter->SetCellIds(true);
-//	cellIdFilter->SetPointIds(false);
-//#if VTK890
-//	cellIdFilter->SetCellIdsArrayName("CellIds");
-//#else
-//	cellIdFilter->SetIdsArrayName("CellIds");
-//#endif
-//	cellIdFilter->Update();
-//
-//	//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
-//
-//	vtkNew<vtkIdFilter> pointIdFilter;
-//	pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
-//	pointIdFilter->SetCellIds(false);
-//	pointIdFilter->SetPointIds(true);
-//#if VTK890
-//	pointIdFilter->SetPointIdsArrayName("PointIds");
-//#else
-//	pointIdFilter->SetIdsArrayName("PointIds");
-//#endif
-//	pointIdFilter->Update();
-//
-//	vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
-//
-//	//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
-//
-//	vtkNew<vtkCubeSource> cubeSource;
-//	cubeSource->Update();
-//
-//	vtkNew<vtkBox> implicitCube;
-//	implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
-//
-//	vtkNew<vtkClipPolyData> clipper;
-//	clipper->SetClipFunction(implicitCube);
-//	clipper->SetInputData(sphereWithIds);
-//	clipper->InsideOutOn();
-//	clipper->Update();
-//
-//	//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
-//
-//	// Get the clipped cell ids
-//	vtkPolyData* clipped = clipper->GetOutput();
-//
-//	std::cout << "There are " << clipped->GetNumberOfPoints()
-//		<< " clipped points." << std::endl;
-//	std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
-//		<< std::endl;
-//
-//	//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
-//
-//	//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
-//	//{
-//	//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
-//	//		<< std::endl;
-//	//}
-//
-//	// Create a mapper and actor for clipped sphere
-//
-//	vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
-//	translation->Translate(-12.0, 70.0, +30.0);
-//
-//	vtkNew<vtkPolyDataMapper> clippedMapper;
-//	clippedMapper->SetInputConnection(clipper->GetOutputPort());
-//	clippedMapper->ScalarVisibilityOff();
-//
-//
-//	vtkNew<vtkActor> clippedActor;
-//	clippedActor->SetMapper(clippedMapper);
-//	clippedActor->RotateZ(90);
-//	clippedActor->RotateY(90);
-//	clippedActor->SetScale(60);
-//	clippedActor->SetUserTransform(translation);
-//	clippedActor->GetProperty()->SetOpacity(0.5);
-//	clippedActor->GetProperty()->SetRepresentationToWireframe();
-//	clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
-//
-//	// Create a mapper and actor for cube
-//	vtkNew<vtkPolyDataMapper> cubeMapper;
-//	cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
-//
-//	vtkNew<vtkActor> cubeActor;
-//	cubeActor->SetMapper(cubeMapper);
-//
-//	cubeActor->GetProperty()->SetRepresentationToWireframe();
-//	cubeActor->GetProperty()->SetOpacity(0.5);
-//	cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
-//
-//	mRenderer->UseHiddenLineRemovalOn();
-//	mRenderer->AddActor(clippedActor);
+	//	vtkNew<vtkNamedColors> colors;
+	//
+	//	// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
+	//
+	//	vtkNew<vtkSphereSource> sphereSource;
+	//	sphereSource->SetCenter(.5, 0, 0);
+	//
+	//	unsigned int res = 18;
+	//	sphereSource->SetThetaResolution(res * 2);
+	//	sphereSource->SetPhiResolution(res);
+	//	sphereSource->Update();
+	//
+	//	vtkNew<vtkIdFilter> cellIdFilter;
+	//	cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
+	//	cellIdFilter->SetCellIds(true);
+	//	cellIdFilter->SetPointIds(false);
+	//#if VTK890
+	//	cellIdFilter->SetCellIdsArrayName("CellIds");
+	//#else
+	//	cellIdFilter->SetIdsArrayName("CellIds");
+	//#endif
+	//	cellIdFilter->Update();
+	//
+	//	//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
+	//
+	//	vtkNew<vtkIdFilter> pointIdFilter;
+	//	pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
+	//	pointIdFilter->SetCellIds(false);
+	//	pointIdFilter->SetPointIds(true);
+	//#if VTK890
+	//	pointIdFilter->SetPointIdsArrayName("PointIds");
+	//#else
+	//	pointIdFilter->SetIdsArrayName("PointIds");
+	//#endif
+	//	pointIdFilter->Update();
+	//
+	//	vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
+	//
+	//	//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
+	//
+	//	vtkNew<vtkCubeSource> cubeSource;
+	//	cubeSource->Update();
+	//
+	//	vtkNew<vtkBox> implicitCube;
+	//	implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
+	//
+	//	vtkNew<vtkClipPolyData> clipper;
+	//	clipper->SetClipFunction(implicitCube);
+	//	clipper->SetInputData(sphereWithIds);
+	//	clipper->InsideOutOn();
+	//	clipper->Update();
+	//
+	//	//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
+	//
+	//	// Get the clipped cell ids
+	//	vtkPolyData* clipped = clipper->GetOutput();
+	//
+	//	std::cout << "There are " << clipped->GetNumberOfPoints()
+	//		<< " clipped points." << std::endl;
+	//	std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
+	//		<< std::endl;
+	//
+	//	//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
+	//
+	//	//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
+	//	//{
+	//	//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
+	//	//		<< std::endl;
+	//	//}
+	//
+	//	// Create a mapper and actor for clipped sphere
+	//
+	//	vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
+	//	translation->Translate(-12.0, 70.0, +30.0);
+	//
+	//	vtkNew<vtkPolyDataMapper> clippedMapper;
+	//	clippedMapper->SetInputConnection(clipper->GetOutputPort());
+	//	clippedMapper->ScalarVisibilityOff();
+	//
+	//
+	//	vtkNew<vtkActor> clippedActor;
+	//	clippedActor->SetMapper(clippedMapper);
+	//	clippedActor->RotateZ(90);
+	//	clippedActor->RotateY(90);
+	//	clippedActor->SetScale(60);
+	//	clippedActor->SetUserTransform(translation);
+	//	clippedActor->GetProperty()->SetOpacity(0.5);
+	//	clippedActor->GetProperty()->SetRepresentationToWireframe();
+	//	clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
+	//
+	//	// Create a mapper and actor for cube
+	//	vtkNew<vtkPolyDataMapper> cubeMapper;
+	//	cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
+	//
+	//	vtkNew<vtkActor> cubeActor;
+	//	cubeActor->SetMapper(cubeMapper);
+	//
+	//	cubeActor->GetProperty()->SetRepresentationToWireframe();
+	//	cubeActor->GetProperty()->SetOpacity(0.5);
+	//	cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
+	//
+	//	mRenderer->UseHiddenLineRemovalOn();
+	//	mRenderer->AddActor(clippedActor);
 
 
 
-	//renderer->AddActor(planeActor);
+		//renderer->AddActor(planeActor);
 	mRenderer->AddActor(PlconeActor);
 	mRenderer->AddActor(CUconeActor);
 	mRenderer->AddActor(Head_objActor);
@@ -12810,6 +12764,10 @@ void MainWindow::displayRobot_Model(int rotate)
 	mRenderer->AddActor(LF_objActor);
 
 	mRenderer->AddActor(targetActor);
+}
+void MainWindow::displayRobot_Model(int rotate)
+{
+	robotModel(rotate);
 }
 
 void MainWindow::displayFixedFoots_Model()
@@ -13917,7 +13875,53 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	QObject::connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::drawThetaPhi);
 	QObject::connect(ui->targetAddBtn, &QPushButton::clicked, this, &MainWindow::targetAdd);
+	QObject::connect(ui->playBtn, &QPushButton::clicked, this, &MainWindow::playTargets);
 
+
+	fstream ob;
+	ob.open("GestureInterface/targetPosition.txt", ios::in);	//again opening the file but in reading mode
+	int cnt = 0;
+	targetPoint temp;
+	temp.pos_x = 0;
+	temp.pos_y = 0;
+	temp.pos_z = 0;
+
+	while (!ob.eof())
+
+	{
+		string str;
+		ob >> str;	
+
+		//cout << "str : "<<str << "\n";
+		//cout << "str : " <<std::stoi(str) << "\n";
+		cnt++;
+		if (cnt % 3 == 1)
+		{
+			temp.pos_x = std::stoi(str);
+		}
+		if (cnt % 3 == 2)
+		{
+			temp.pos_y = std::stoi(str);
+		}
+		if (cnt % 3 == 0)
+		{
+			temp.pos_z = std::stoi(str);
+			savedTarget.push_back(temp);
+
+			string currentName = "targetPoint ";
+			currentName += to_string(savedTarget.size());
+
+			ui->listWidget_2->addItem(currentName.c_str());
+
+			temp.pos_x = 0;
+			temp.pos_y = 0;
+			temp.pos_z = 0;
+			
+		}
+
+	}
+
+	ob.close();	//closing the file after use
 
 	//vtkNew<vtkSphereSource> sphereSource;
 	//sphereSource->SetCenter(-11.5, -2.5, -77.0);
@@ -15316,7 +15320,8 @@ void MainWindow::onDrawSphereClick() {
 
 }
 
-void MainWindow::drawThetaPhi()
+
+void calculate3Angle(int p1, int p2, int p3)
 {
 	/**********************************************************/
 	male_biped = 1;
@@ -15529,104 +15534,126 @@ void MainWindow::drawThetaPhi()
 	//this->fixedRF_radioButton->setEnabled(false);
 	//this->fixedLF_radioButton->setEnabled(false);
 
-
-	displayRobot_Model(1);
+	robotModel(1);
 
 	mRenderWindow->Render();
 
 
-	customMouseInteractorStyle* style = new customMouseInteractorStyle();
+	//customMouseInteractorStyle* style = new customMouseInteractorStyle();
 
 
-	mInteractor->SetInteractorStyle(style);
-	style->SetDefaultRenderer(mRenderer);
-	style->pelvisActor = PlconeActor;
-	style->headActor = Head_objActor;
-	style->chestActor = CUconeActor;
-	style->Upper_chestActor = CUconeActor_upper;
-	style->RUA = RarmActor;
-	style->RLA = RforearmActor;
-	style->LUA = LarmActor;
-	style->LLA = LforearmActor;
-	style->RUL = RlulegActor;
-	style->RLL = RllegActor;
-	style->LUL = LlulegActor;
-	style->LLL = LllegActor;
-	style->LH_Actor = LeftHand_objActor;
-	style->RH_Actor = RightHand_objActor;
-	style->LL_Actor = LF_objActor;
-	style->RL_Actor = RF_objActor;
+	//mInteractor->SetInteractorStyle(style);
+	//style->SetDefaultRenderer(mRenderer);
+	//style->pelvisActor = PlconeActor;
+	//style->headActor = Head_objActor;
+	//style->chestActor = CUconeActor;
+	//style->Upper_chestActor = CUconeActor_upper;
+	//style->RUA = RarmActor;
+	//style->RLA = RforearmActor;
+	//style->LUA = LarmActor;
+	//style->LLA = LforearmActor;
+	//style->RUL = RlulegActor;
+	//style->RLL = RllegActor;
+	//style->LUL = LlulegActor;
+	//style->LLL = LllegActor;
+	//style->LH_Actor = LeftHand_objActor;
+	//style->RH_Actor = RightHand_objActor;
+	//style->LL_Actor = LF_objActor;
+	//style->RL_Actor = RF_objActor;
 
 
-	style->SM_pelvisActor = stickModel_pelvisActor;
-	style->SM_CH0 = stickModel_chest_0_Actor;
-	style->SM_CH1 = stickModel_chest_1_Actor;
-	style->SM_CH2 = stickModel_chest_2_Actor;
-	style->SM_CH3 = stickModel_chest_3_Actor;
-	style->SM_headActor = stickModel_head_Actor;
-	style->SM_RUA = stickModel_rightUpperArm_Actor;
-	style->SM_RLA = stickModel_rightLowerArm_Actor;
-	style->SM_RH_Actor = stickModel_rightHand_Actor;
-	style->SM_LUA = stickModel_leftUpperArm_Actor;
-	style->SM_LLA = stickModel_leftLowerArm_Actor;
-	style->SM_LH_Actor = stickModel_leftHand_Actor;
-	style->SM_RUL = stickModel_rightUpperLeg_Actor;
-	style->SM_RLL = stickModel_rightLowerLeg_Actor;
-	style->SM_RF_Actor = stickModel_rightFoot_Actor;
-	style->SM_LUL = stickModel_leftUpperLeg_Actor;
-	style->SM_LLL = stickModel_leftLowerLeg_Actor;
-	style->SM_LF_Actor = stickModel_leftFoot_Actor;
+	//style->SM_pelvisActor = stickModel_pelvisActor;
+	//style->SM_CH0 = stickModel_chest_0_Actor;
+	//style->SM_CH1 = stickModel_chest_1_Actor;
+	//style->SM_CH2 = stickModel_chest_2_Actor;
+	//style->SM_CH3 = stickModel_chest_3_Actor;
+	//style->SM_headActor = stickModel_head_Actor;
+	//style->SM_RUA = stickModel_rightUpperArm_Actor;
+	//style->SM_RLA = stickModel_rightLowerArm_Actor;
+	//style->SM_RH_Actor = stickModel_rightHand_Actor;
+	//style->SM_LUA = stickModel_leftUpperArm_Actor;
+	//style->SM_LLA = stickModel_leftLowerArm_Actor;
+	//style->SM_LH_Actor = stickModel_leftHand_Actor;
+	//style->SM_RUL = stickModel_rightUpperLeg_Actor;
+	//style->SM_RLL = stickModel_rightLowerLeg_Actor;
+	//style->SM_RF_Actor = stickModel_rightFoot_Actor;
+	//style->SM_LUL = stickModel_leftUpperLeg_Actor;
+	//style->SM_LLL = stickModel_leftLowerLeg_Actor;
+	//style->SM_LF_Actor = stickModel_leftFoot_Actor;
 
 
-	style->ffIK_pelvisActor = IK_pelvisActor;
-	style->ffIK_CH0 = IK_chest_0_Actor;
-	style->ffIK_CH1 = IK_chest_1_Actor;
-	style->ffIK_CH2 = IK_chest_2_Actor;
-	style->ffIK_CH3 = IK_chest_3_Actor;
-	style->ffIK_headActor = IK_head_Actor;;
-	style->ffIK_RUA = IK_rightUpperArm_Actor;
-	style->ffIK_RLA = IK_rightLowerArm_Actor;
-	style->ffIK_RH = IK_rightHand_Actor;
-	style->ffIK_LUA = IK_leftUpperArm_Actor;
-	style->ffIK_LLA = IK_leftLowerArm_Actor;
-	style->ffIK_LH = IK_leftHand_Actor;
-	style->ffIK_RUL = IK_rightUpperLeg_Actor;
-	style->ffIK_RLL = IK_rightLowerLeg_Actor;
-	style->ffIK_RF_Actor = IK_rightFoot_Actor;
-	style->ffIK_LUL = IK_leftUpperLeg_Actor;
-	style->ffIK_LLL = IK_leftLowerLeg_Actor;
-	style->ffIK_LF_Actor = IK_leftFoot_Actor;
+	//style->ffIK_pelvisActor = IK_pelvisActor;
+	//style->ffIK_CH0 = IK_chest_0_Actor;
+	//style->ffIK_CH1 = IK_chest_1_Actor;
+	//style->ffIK_CH2 = IK_chest_2_Actor;
+	//style->ffIK_CH3 = IK_chest_3_Actor;
+	//style->ffIK_headActor = IK_head_Actor;;
+	//style->ffIK_RUA = IK_rightUpperArm_Actor;
+	//style->ffIK_RLA = IK_rightLowerArm_Actor;
+	//style->ffIK_RH = IK_rightHand_Actor;
+	//style->ffIK_LUA = IK_leftUpperArm_Actor;
+	//style->ffIK_LLA = IK_leftLowerArm_Actor;
+	//style->ffIK_LH = IK_leftHand_Actor;
+	//style->ffIK_RUL = IK_rightUpperLeg_Actor;
+	//style->ffIK_RLL = IK_rightLowerLeg_Actor;
+	//style->ffIK_RF_Actor = IK_rightFoot_Actor;
+	//style->ffIK_LUL = IK_leftUpperLeg_Actor;
+	//style->ffIK_LLL = IK_leftLowerLeg_Actor;
+	//style->ffIK_LF_Actor = IK_leftFoot_Actor;
 
-	style->freeRightUL_Actor = IK_freeRightUpperLeg_Actor;
-	style->freeRightLL_Actor = IK_freeRightLowerLeg_Actor;
-	style->freeRightFoot_Actor = IK_freeRightFoot_Actor;
+	//style->freeRightUL_Actor = IK_freeRightUpperLeg_Actor;
+	//style->freeRightLL_Actor = IK_freeRightLowerLeg_Actor;
+	//style->freeRightFoot_Actor = IK_freeRightFoot_Actor;
 
-	style->freeLeftUL_Actor = IK_freeLeftUpperLeg_Actor;
-	style->freeLeftLL_Actor = IK_freeLeftLowerLeg_Actor;
-	style->freeLeftFoot_Actor = IK_freeLeftFoot_Actor;
-
-
-	style->ConsProp_sphere_actor = ConstraintProp_sphere_actor;
-	style->TConsProp_sphere_actor = TConstraintProp_sphere_actor;
-	style->TConsProp_sphere_actor2 = TConstraintProp_sphere_actor2;
-	style->TConsProp_sphere_actor3 = TConstraintProp_sphere_actor3;
-
-	//style->ConsProp_line_actor = ConstraintProp_line_actor;
-	style->ConsProp_line_actor = ConstraintProp_line_actor1;
-	style->TConsProp_line_actor = TConstraintProp_line_actor1;
-	style->TConsProp_line_actor2 = TConstraintProp_line_actor2;
-	style->TConsProp_line_actor3 = TConstraintProp_line_actor3;
-
-	style->ConsProp_plane_actor = ConstraintProp_plane_actor;
-	style->ConsProp_cube_actor = ConstraintProp_cube_actor;
-	style->tartget = targetActor;
+	//style->freeLeftUL_Actor = IK_freeLeftUpperLeg_Actor;
+	//style->freeLeftLL_Actor = IK_freeLeftLowerLeg_Actor;
+	//style->freeLeftFoot_Actor = IK_freeLeftFoot_Actor;
 
 
-	mInteractor->SetInteractorStyle(style);
-	mInteractor->SetRenderWindow(mRenderWindow);
+	//style->ConsProp_sphere_actor = ConstraintProp_sphere_actor;
+	//style->TConsProp_sphere_actor = TConstraintProp_sphere_actor;
+	//style->TConsProp_sphere_actor2 = TConstraintProp_sphere_actor2;
+	//style->TConsProp_sphere_actor3 = TConstraintProp_sphere_actor3;
+
+	////style->ConsProp_line_actor = ConstraintProp_line_actor;
+	//style->ConsProp_line_actor = ConstraintProp_line_actor1;
+	//style->TConsProp_line_actor = TConstraintProp_line_actor1;
+	//style->TConsProp_line_actor2 = TConstraintProp_line_actor2;
+	//style->TConsProp_line_actor3 = TConstraintProp_line_actor3;
+
+	//style->ConsProp_plane_actor = ConstraintProp_plane_actor;
+	//style->ConsProp_cube_actor = ConstraintProp_cube_actor;
+	//style->tartget = targetActor;
+
+
+	//mInteractor->SetInteractorStyle(style);
+	//mInteractor->SetRenderWindow(mRenderWindow);
 
 	/**************************************************************/
 	rhIK_solvePosAngle2 = true;
+
+	double angle_z = 0;
+	angle_z = atan((double)((double)p3 / (double)p1)) * 180 / PI;
+
+
+	inverseKinematices_Theta_0 = angle_z;
+	computeSM_ikRH(p1, p2, -1, 0, 0, 10);
+	rua(angle_z, 0, 0, 1);
+
+	double position[3] = { 0,0,0 };
+	RightHand_ObjReader_Transform->GetPosition(position);
+
+	//std::cout << position[0] << "   " << position[1] << "   " << position[2] << std::endl;
+
+	//std::cout << "XYZ : " << getTheta << "  " << getPhi << "  " << getZ << std::endl;
+
+	targetTransform->SetInput(RightHand_ObjReader_Transform);
+	mRenderer->Render();
+	mRenderWindow->Render();
+}
+
+void MainWindow::drawThetaPhi()
+{
 
 	QString q_theta = ui->edit_theta->text();
 	QString q_phi = ui->edit_phi->text();
@@ -15637,9 +15664,9 @@ void MainWindow::drawThetaPhi()
 	int getZ = 0;
 
 
-	if(q_theta.toStdString().size()>0)
+	if (q_theta.toStdString().size() > 0)
 		getTheta = stoi(q_theta.toStdString());
-	
+
 
 	if (q_phi.toStdString().size() > 0)
 		getPhi = stoi(q_phi.toStdString());
@@ -15647,23 +15674,10 @@ void MainWindow::drawThetaPhi()
 	if (q_z.toStdString().size() > 0)
 		getZ = stoi(q_z.toStdString());
 
-	double angle_z = 0;
-	angle_z = atan((double)((double)getZ / (double)getTheta)) * 180 / PI;
-	
-	computeSM_ikRH(getTheta, getPhi, -1, 0, 0, 10);
-	rua(angle_z, 0, 0, 1);
-
-	double position[3] = { 0,0,0 };
-	RightHand_ObjReader_Transform->GetPosition(position);
-
-	std::cout << position[0] << "   " << position[1] << "   " << position[2] << std::endl;
-
-	std::cout << "XYZ : " << getTheta << "  " << getPhi << "  " << getZ << std::endl;
-
-	targetTransform->SetInput(RightHand_ObjReader_Transform);
-	mRenderer->Render();
+	calculate3Angle(getTheta, getPhi, getZ);
 
 }
+
 
 void MainWindow::selectTarget()
 {
@@ -15716,5 +15730,175 @@ void MainWindow::targetAdd()
 	ui->listWidget_2->addItem(currentName.c_str());
 
 	savedTarget.push_back(temp);
+
+}
+
+
+void MainWindow::playTargets()
+{
+	//GestureInterface
+	std::cout << "Play Targets" << std::endl;
+	string savedName = "GestureInterface/";
+	string savedName_csv = "GestureInterface/";
+	string temp = "";
+	double prev_theta0 = 0;
+	double prev_theta1 = 0;
+	double prev_theta2 = 0;
+
+
+
+	for (int i = 0; i < savedTarget.size(); i++)
+	{
+		savedName = "GestureInterface/";
+		savedName += "Posture";
+		savedName += std::to_string(i);
+		savedName += ".png";
+
+		std::cout << " targetPoint    " << savedTarget[i].pos_x << "  " << savedTarget[i].pos_y << "   " << savedTarget[i].pos_z << std::endl;
+
+		ui->edit_theta->setText(to_string(savedTarget[i].pos_x).c_str());
+		ui->edit_phi->setText(to_string(savedTarget[i].pos_y).c_str());
+		ui->edit_z->setText(to_string(savedTarget[i].pos_z).c_str());
+
+
+		drawThetaPhi();
+		mRenderer->Render();
+		mRenderWindow->Render();
+
+
+		vtkNew<vtkWindowToImageFilter> w2if;
+		w2if->SetInput(mRenderWindow);
+		w2if->SetInputBufferTypeToRGBA();
+		w2if->Update();
+
+		vtkNew<vtkPNGWriter> writer;
+		writer->SetFileName(savedName.c_str());
+		writer->SetInputConnection(w2if->GetOutputPort());
+		writer->Write();
+
+
+		mRenderer->Render();
+		mRenderWindow->Render();
+		QApplication::processEvents();
+		Sleep(1000);
+
+
+		std::cout << i << "   inverseKinematices_Theta 0 1 2 = " << inverseKinematices_Theta_0 << " , " << inverseKinematices_Theta_1 << " , " << inverseKinematices_Theta_2 << std::endl;
+
+
+		if (i > 0)
+		{
+			savedName_csv = "GestureInterface/";
+			savedName_csv += "Gesture";
+			savedName_csv += std::to_string(i);
+			savedName_csv += ".csv";
+
+
+			std::ofstream csvFile;
+			csvFile.open(savedName_csv);
+			csvFile.clear();
+			
+
+
+			if (inverseKinematices_Theta_0 > -22)
+			{
+				if (prev_theta1 < inverseKinematices_Theta_1)
+				{
+					//±ÁÈû
+					temp = "Rs,Flexion,";
+					temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
+					temp += "\n";
+					csvFile << temp;
+				}
+				else
+				{
+					if (inverseKinematices_Theta_1 - prev_theta1 != 0)
+					{
+						//Æï
+						temp = "Rs,Extension,";
+						temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
+						temp += "\n";
+						csvFile << temp;
+					}
+
+				}
+			}
+			else
+			{
+				if (prev_theta1 < inverseKinematices_Theta_1)
+				{
+					//¹ú¸²
+					temp = "Rs,Abduction,";
+					temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
+					temp += "\n";
+					csvFile << temp;
+				}
+				else
+				{
+					if (inverseKinematices_Theta_1 - prev_theta1 != 0)
+					{
+						//¸ðÀ½
+						temp = "Rs,Adduction,";
+						temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
+						temp += "\n";
+						csvFile << temp;
+					}
+
+				}
+			}
+
+			if (prev_theta0 < inverseKinematices_Theta_0)
+			{
+				//¼öÆò¸ðÀ½
+				temp = "Rs,Horizontal Adduction,";
+				temp += to_string(abs(inverseKinematices_Theta_0 - prev_theta0));
+				temp += "\n";
+				csvFile << temp;
+			}
+			else
+			{
+				if (inverseKinematices_Theta_0 - prev_theta0 != 0)
+				{
+					//¼öÆò¹ú¸²
+					temp = "Rs,Horizontal Abduction,";
+					temp += to_string(abs(inverseKinematices_Theta_0 - prev_theta0));
+					temp += "\n";
+					csvFile << temp;
+				}
+			}
+
+			if (prev_theta2 < inverseKinematices_Theta_2)
+			{
+				//±ÁÈû
+				temp = "Re,Flexion,";
+				temp += to_string(abs(inverseKinematices_Theta_2 - prev_theta2));
+				temp += "\n";
+				csvFile << temp;
+			}
+			else
+			{
+				if (inverseKinematices_Theta_2 - prev_theta2 != 0)
+				{
+					//Æï
+					temp = "Re,Extension,";
+					temp += to_string(abs(inverseKinematices_Theta_2 - prev_theta2));
+					temp += "\n";
+					csvFile << temp;
+				}
+			}
+			csvFile.close();
+
+		}
+		
+
+		prev_theta0 = inverseKinematices_Theta_0;
+		prev_theta1 = inverseKinematices_Theta_1;
+		prev_theta2 = inverseKinematices_Theta_2;
+
+
+
+
+	}
+
 
 }

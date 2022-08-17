@@ -83,6 +83,7 @@ public slots:
 	void targetAdd();
 	
 	void drawThetaPhi();
+	void playTargets();
 
 
 };

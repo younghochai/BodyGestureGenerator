@@ -124,6 +124,13 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="12">
+     <widget class="QPushButton" name="playBtn">
+      <property name="text">
+       <string>Play</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
