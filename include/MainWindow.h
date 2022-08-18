@@ -62,7 +62,7 @@ public:
 	std::vector<JointMove> savedPoses;
 	std::vector<targetPoint> savedTarget;
 	void moveToward(std::vector<double> target);
-
+	int nextBtncnt;
 
 
 	
@@ -84,7 +84,7 @@ public slots:
 	
 	void drawThetaPhi();
 	void playTargets();
-
+	void nextPosition();
 
 };
 

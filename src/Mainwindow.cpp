@@ -13,6 +13,8 @@
 #include <vtkIdFilter.h>
 #include <vtkBox.h>
 #include <vtkClipPolyData.h>
+#include <vtkCellArray.h>
+#include <vtkLine.h>
 
 using namespace std;
 bool b_saveImage = false;
@@ -22,12 +24,13 @@ float global_theta = 0;
 float global_phi = 0;
 
 std::vector<vtkSmartPointer<vtkActor>> actors;
-
+vtkNew<vtkActor> sphere2Actor;
 
 int drawIdx = 1;
 bool b_leftHand = true;
 bool b_rightHand = true;
 bool b_rightFoot = true;
+bool b_draw_endPose = true;
 
 
 string COLOR_PlconeActor = "Moccasin";
@@ -66,7 +69,7 @@ string COLOR_TConstraintProp_line_actor3 = "SandyBrown";
 
 
 
-
+vtkSmartPointer<vtkPoints> targetLinePoints;
 double inverseKinematices_Theta_0 = 0;
 double inverseKinematices_Theta_1 = 0;
 double inverseKinematices_Theta_2 = 0;
@@ -625,7 +628,9 @@ void computeSM_ikRH(int temptarget_X, int temptarget_Y, int x, int y, int z, int
 
 
 		std::cout << "inverse Kinematices In " << x << " " << y << " " << z << std::endl;
-		inverseKinematicesRH(rhIK_theta1, rhIK_theta2, x, y, z);
+
+		if (b_draw_endPose)
+			inverseKinematicesRH(rhIK_theta1, rhIK_theta2, x, y, z);
 
 		// rightUpperArm
 		qxIK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
@@ -1450,6 +1455,104 @@ void colorSetting(int flag, string color)
 	}
 
 }
+
+class vtkTimerCallback_target : public vtkCommand
+{
+public:
+	vtkTimerCallback_target() = default;
+	~vtkTimerCallback_target() = default;
+
+	int timerId = 0;
+	static vtkTimerCallback_target* New()
+	{
+		vtkTimerCallback_target* cb = new vtkTimerCallback_target;
+		cb->TimerCount = 0;
+		return cb;
+	}
+
+	virtual void Execute(vtkObject* caller, unsigned long eventId,
+		void* vtkNotUsed(callData))
+	{
+		vtkRenderWindowInteractor* iren =
+			dynamic_cast<vtkRenderWindowInteractor*>(caller);
+		if (vtkCommand::TimerEvent == eventId)
+		{
+			++this->TimerCount;
+		}
+		if (TimerCount < frameCnt)
+		{
+			if (first)
+			{
+				add_angle_rua_x = (float)rua_x / (float)frameCnt;
+				add_angle_rua_z = (float)rua_z / (float)frameCnt;
+				add_angle_rla = (float)rla_x / (float)frameCnt;
+
+				first = false;
+			}
+			
+			mRenderWindow->Render();
+			//RarmTransform->Identity();
+			RarmTransform->Translate(-arm_X, arm_Y, 0);
+			RarmTransform->RotateWXYZ(add_angle_rua_x, -1, 0, 0);
+			RarmTransform->Translate(arm_X, -arm_Y, 0);
+			//RarmTransform->Identity();
+			mRenderWindow->Render();
+
+
+			mRenderWindow->Render();
+			//RforearmTransform->Identity();
+			RforearmTransform->Translate(-arm_X, arm_Y2, 0);
+			RforearmTransform->RotateWXYZ(add_angle_rla, -1, 0, 0);
+			RforearmTransform->Translate(arm_X, -arm_Y2, 0);
+			//RforearmTransform->Identity();
+			mRenderWindow->Render();
+
+
+			mRenderWindow->Render();
+			//RarmTransform->Identity();
+			RarmTransform->Translate(-arm_X, arm_Y, 0);
+			RarmTransform->RotateWXYZ(add_angle_rua_z, 0, 0, 1);
+			RarmTransform->Translate(arm_X, -arm_Y, 0);
+			//RarmTransform->Identity();
+			mRenderWindow->Render();
+
+		}
+	}
+
+private:
+	int TimerCount = 0;
+	int TotalCnt = 100;
+
+
+	bool first = true;
+
+public:
+	int frameCnt = 10;
+	int x = 0;
+	int y = 0;
+	int z = 0;
+
+	float rua_x = 0;
+	float rua_z = 0;
+	float rla_x = 0;
+
+	float add_angle_rua_x = 0;
+	float add_angle_rua_z = 0;
+	float add_angle_rla = 0;
+
+	int currntIdx = 0;
+
+};
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3846,13 +3949,15 @@ namespace {
 					{
 						if (diff > prevY)
 						{
-							rhIK_Targetx++;
+							if(rhIK_Targetx<32)
+								rhIK_Targetx++;
 							
 						}
 
 						if (diff < prevY)
 						{
-							rhIK_Targetx--;
+							if (rhIK_Targetx > -32)
+								rhIK_Targetx--;
 						}
 
 						
@@ -3862,12 +3967,14 @@ namespace {
 					{
 						if (diff > prevY)
 						{
-							rhIK_Targety++;
+							if (rhIK_Targety < 32)
+								rhIK_Targety++;
 						}
 
 						if (diff < prevY)
 						{
-							rhIK_Targety--;
+							if (rhIK_Targety > -32)
+								rhIK_Targety--;
 						}
 					}
 
@@ -3877,12 +3984,14 @@ namespace {
 					{
 						if (diff > prevY)
 						{
-							rhIK_Targetz++;
+							if (rhIK_Targetz < 32)
+								rhIK_Targetz++;
 						}
 
 						if (diff < prevY)
 						{
-							rhIK_Targetz--;
+							if (rhIK_Targetz > -32)
+								rhIK_Targetz--;
 						}
 
 					}
@@ -13876,10 +13985,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	QObject::connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::drawThetaPhi);
 	QObject::connect(ui->targetAddBtn, &QPushButton::clicked, this, &MainWindow::targetAdd);
 	QObject::connect(ui->playBtn, &QPushButton::clicked, this, &MainWindow::playTargets);
+	QObject::connect(ui->nextBtn, &QPushButton::clicked, this, &MainWindow::nextPosition);
 
-
+	nextBtncnt = 0;
+	savedTarget.clear();
 	fstream ob;
-	ob.open("GestureInterface/targetPosition.txt", ios::in);	//again opening the file but in reading mode
+	ui->listWidget_2->clear();
+	ob.open("GestureInterface/targetPosition_0.txt", ios::in);	//again opening the file but in reading mode
 	int cnt = 0;
 	targetPoint temp;
 	temp.pos_x = 0;
@@ -13918,7 +14030,6 @@ MainWindow::MainWindow(QWidget *parent) :
 			temp.pos_z = 0;
 			
 		}
-
 	}
 
 	ob.close();	//closing the file after use
@@ -14602,6 +14713,8 @@ void MainWindow::enableFixedFoots()
 
 void MainWindow::authoring_mode()
 {
+	targetLinePoints = vtkSmartPointer<vtkPoints>::New();
+
 	std::cout << "Authoring Mode Enabled " << endl;
 	customMouseInteractorStyle* style = new customMouseInteractorStyle();
 
@@ -14977,8 +15090,6 @@ void MainWindow::selectList()
 
 
 	customMouseInteractorStyle* style = new customMouseInteractorStyle();
-
-
 	mInteractor->SetInteractorStyle(style);
 	style->SetDefaultRenderer(mRenderer);
 	style->pelvisActor = PlconeActor;
@@ -15513,7 +15624,8 @@ void calculate3Angle(int p1, int p2, int p3)
 	mRenderer->RemoveActor(RUL_JS_actor);
 	mRenderer->RemoveActor(RLL_JS_actor);
 	mRenderer->RemoveActor(targetActor);
-
+	mRenderer->RemoveActor(sphere2Actor);
+	
 	//vtkActorCollection* actors = vtkActorCollection::New();
 	//int NumberOfActors = renderer->VisibleActorCount();
 	//actors = mRenderer->GetActors();
@@ -15638,11 +15750,13 @@ void calculate3Angle(int p1, int p2, int p3)
 
 	inverseKinematices_Theta_0 = angle_z;
 	computeSM_ikRH(p1, p2, -1, 0, 0, 10);
-	rua(angle_z, 0, 0, 1);
+
+	if(b_draw_endPose)
+		rua(angle_z, 0, 0, 1);
 
 	double position[3] = { 0,0,0 };
 	RightHand_ObjReader_Transform->GetPosition(position);
-
+	targetLinePoints->InsertNextPoint(position);
 	//std::cout << position[0] << "   " << position[1] << "   " << position[2] << std::endl;
 
 	//std::cout << "XYZ : " << getTheta << "  " << getPhi << "  " << getZ << std::endl;
@@ -15740,12 +15854,17 @@ void MainWindow::playTargets()
 	std::cout << "Play Targets" << std::endl;
 	string savedName = "GestureInterface/";
 	string savedName_csv = "GestureInterface/";
-	string temp = "";
+	wstring temp = L"";
 	double prev_theta0 = 0;
 	double prev_theta1 = 0;
 	double prev_theta2 = 0;
+	string strTemp = "";
 
+	targetLinePoints = vtkSmartPointer<vtkPoints>::New();
 
+	string strGestureTemp = "";
+	std::vector<string> gestureStr;
+	gestureStr.clear();
 
 	for (int i = 0; i < savedTarget.size(); i++)
 	{
@@ -15759,7 +15878,6 @@ void MainWindow::playTargets()
 		ui->edit_theta->setText(to_string(savedTarget[i].pos_x).c_str());
 		ui->edit_phi->setText(to_string(savedTarget[i].pos_y).c_str());
 		ui->edit_z->setText(to_string(savedTarget[i].pos_z).c_str());
-
 
 		drawThetaPhi();
 		mRenderer->Render();
@@ -15788,6 +15906,9 @@ void MainWindow::playTargets()
 
 		if (i > 0)
 		{
+			strGestureTemp = "Gesture ";
+			strGestureTemp += to_string(i);
+			strGestureTemp += "\n\n";
 			savedName_csv = "GestureInterface/";
 			savedName_csv += "Gesture";
 			savedName_csv += std::to_string(i);
@@ -15799,27 +15920,35 @@ void MainWindow::playTargets()
 			csvFile.clear();
 			
 
-
 			if (inverseKinematices_Theta_0 > -22)
 			{
 				if (prev_theta1 < inverseKinematices_Theta_1)
 				{
 					//±ÁÈû
-					temp = "Rs,Flexion,";
-					temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
-					temp += "\n";
-					csvFile << temp;
+					temp = L"Rs,Flexion,";
+					temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
+					temp += L"\n";
+					strTemp = "";
+					strTemp.assign(temp.begin(), temp.end());
+					csvFile << strTemp;
+
+					strGestureTemp += strTemp;
 				}
 				else
 				{
 					if (inverseKinematices_Theta_1 - prev_theta1 != 0)
 					{
 						//Æï
-						temp = "Rs,Extension,";
-						temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
-						temp += "\n";
-						csvFile << temp;
+						temp = L"Rs,Extension,";
+						temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
+						temp += L"\n";
+						strTemp = "";
+						strTemp.assign(temp.begin(), temp.end());
+						csvFile << strTemp;
+
+						strGestureTemp += strTemp;
 					}
+
 
 				}
 			}
@@ -15828,20 +15957,28 @@ void MainWindow::playTargets()
 				if (prev_theta1 < inverseKinematices_Theta_1)
 				{
 					//¹ú¸²
-					temp = "Rs,Abduction,";
-					temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
-					temp += "\n";
-					csvFile << temp;
+					temp = L"Rs,Abduction,";
+					temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
+					temp += L"\n";
+					strTemp = "";
+					strTemp.assign(temp.begin(), temp.end());
+					csvFile << strTemp;
+
+					strGestureTemp += strTemp;
 				}
 				else
 				{
 					if (inverseKinematices_Theta_1 - prev_theta1 != 0)
 					{
 						//¸ðÀ½
-						temp = "Rs,Adduction,";
-						temp += to_string(abs(inverseKinematices_Theta_1 - prev_theta1));
-						temp += "\n";
-						csvFile << temp;
+						temp = L"Rs,Adduction,";
+						temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
+						temp += L"\n";
+						strTemp = "";
+						strTemp.assign(temp.begin(), temp.end());
+						csvFile << strTemp;
+
+						strGestureTemp += strTemp;
 					}
 
 				}
@@ -15850,43 +15987,64 @@ void MainWindow::playTargets()
 			if (prev_theta0 < inverseKinematices_Theta_0)
 			{
 				//¼öÆò¸ðÀ½
-				temp = "Rs,Horizontal Adduction,";
-				temp += to_string(abs(inverseKinematices_Theta_0 - prev_theta0));
-				temp += "\n";
-				csvFile << temp;
+				temp = L"Rs,Horizontal Adduction,";
+				temp += to_wstring(abs(inverseKinematices_Theta_0 - prev_theta0));
+				temp += L"\n";
+				strTemp = "";
+				strTemp.assign(temp.begin(), temp.end());
+				csvFile << strTemp;
+
+				strGestureTemp += strTemp;
 			}
 			else
 			{
 				if (inverseKinematices_Theta_0 - prev_theta0 != 0)
 				{
 					//¼öÆò¹ú¸²
-					temp = "Rs,Horizontal Abduction,";
-					temp += to_string(abs(inverseKinematices_Theta_0 - prev_theta0));
-					temp += "\n";
-					csvFile << temp;
+					temp = L"Rs,Horizontal Abduction,";
+					temp += to_wstring(abs(inverseKinematices_Theta_0 - prev_theta0));
+					temp += L"\n";
+					strTemp = "";
+					strTemp.assign(temp.begin(), temp.end());
+					csvFile << strTemp;
+
+					strGestureTemp += strTemp;
 				}
 			}
 
 			if (prev_theta2 < inverseKinematices_Theta_2)
 			{
 				//±ÁÈû
-				temp = "Re,Flexion,";
-				temp += to_string(abs(inverseKinematices_Theta_2 - prev_theta2));
-				temp += "\n";
-				csvFile << temp;
+				temp = L"Re,Flexion,";
+				temp += to_wstring(abs(inverseKinematices_Theta_2 - prev_theta2));
+				temp += L"\n";
+				strTemp = "";
+				strTemp.assign(temp.begin(), temp.end());
+				csvFile << strTemp;
+
+				strGestureTemp += strTemp;
 			}
 			else
 			{
 				if (inverseKinematices_Theta_2 - prev_theta2 != 0)
 				{
 					//Æï
-					temp = "Re,Extension,";
-					temp += to_string(abs(inverseKinematices_Theta_2 - prev_theta2));
-					temp += "\n";
-					csvFile << temp;
+					temp = L"Re,Extension,";
+					temp += to_wstring(abs(inverseKinematices_Theta_2 - prev_theta2));
+					temp += L"\n";
+					strTemp = "";
+					strTemp.assign(temp.begin(), temp.end());
+					csvFile << strTemp;
+
+					strGestureTemp += strTemp;
 				}
 			}
 			csvFile.close();
+
+			if (strGestureTemp.size() > 0)
+			{
+				gestureStr.push_back(strGestureTemp);
+			}
 
 		}
 		
@@ -15899,6 +16057,200 @@ void MainWindow::playTargets()
 
 
 	}
+
+	for (int i = 0; i < savedTarget.size(); i++)
+	{
+		savedName = "GestureInterface/";
+		savedName += "Posture";
+		savedName += std::to_string(i);
+		savedName += ".png";
+
+		QPixmap m_img;
+		m_img.load(savedName.c_str());
+
+		int w = 200;
+		int h = 50;
+
+
+		if(i==0)
+		{
+			ui->lbl_posture0->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_0->setText("Posture0");
+
+			ui->lbl_posture0->setFrameShape(QFrame::Box);
+			ui->lbl_name_0->setFrameShape(QFrame::Box);
+			
+		}
+			
+		if (i == 1)
+		{
+			ui->lbl_posture1->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_1->setText("Posture1");
+			ui->lbl_gesture1->setText(gestureStr[i-1].c_str());
+
+			ui->lbl_posture1->setFrameShape(QFrame::Box);
+			ui->lbl_name_1->setFrameShape(QFrame::Box);
+			ui->lbl_gesture1->setFrameShape(QFrame::Box);
+		}
+			
+		if (i == 2)
+		{
+			ui->lbl_posture2->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_2->setText("Posture2");
+			ui->lbl_gesture2->setText(gestureStr[i-1].c_str());
+
+			ui->lbl_posture2->setFrameShape(QFrame::Box);
+			ui->lbl_name_2->setFrameShape(QFrame::Box);
+			ui->lbl_gesture2->setFrameShape(QFrame::Box);
+		}
+			
+		if (i == 3)
+		{
+			ui->lbl_posture3->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_3->setText("Posture3");
+			ui->lbl_gesture3->setText(gestureStr[i-1].c_str());
+
+			ui->lbl_posture3->setFrameShape(QFrame::Box);
+			ui->lbl_name_3->setFrameShape(QFrame::Box);
+			ui->lbl_gesture3->setFrameShape(QFrame::Box);
+		}
+			
+		if (i == 4)
+		{
+			ui->lbl_posture4->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_4->setText("Posture4");
+			ui->lbl_gesture4->setText(gestureStr[i-1].c_str());
+
+			ui->lbl_posture4->setFrameShape(QFrame::Box);
+			ui->lbl_name_4->setFrameShape(QFrame::Box);
+			ui->lbl_gesture4->setFrameShape(QFrame::Box);
+		}
+			
+		if (i == 5)
+		{
+			ui->lbl_posture5->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_5->setText("Posture5");
+			ui->lbl_gesture5->setText(gestureStr[i-1].c_str());
+
+			ui->lbl_posture5->setFrameShape(QFrame::Box);
+			ui->lbl_name_5->setFrameShape(QFrame::Box);
+			ui->lbl_gesture5->setFrameShape(QFrame::Box);
+		}
+			
+		if (i == 6)
+		{
+			ui->lbl_posture6->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_6->setText("Posture6");
+			ui->lbl_gesture6->setText(gestureStr[i-1].c_str());
+
+			ui->lbl_posture6->setFrameShape(QFrame::Box);
+			ui->lbl_name_6->setFrameShape(QFrame::Box);
+			ui->lbl_gesture6->setFrameShape(QFrame::Box);
+		}
+		if (i == 7)
+		{
+			ui->lbl_posture7->setPixmap(m_img.scaled(w, h, Qt::KeepAspectRatioByExpanding));
+			ui->lbl_name_7->setText("Posture7");
+			ui->lbl_gesture7->setText(gestureStr[i - 1].c_str());
+
+			ui->lbl_posture7->setFrameShape(QFrame::Box);
+			ui->lbl_name_7->setFrameShape(QFrame::Box);
+			ui->lbl_gesture7->setFrameShape(QFrame::Box);
+		}
+		
+	}
+
+	vtkNew<vtkCellArray> lines;
+	vtkNew<vtkPolyData> linesPolyData;
+	vtkNew<vtkPolyDataMapper> sphere2Mapper;
+	sphere2Actor->RemoveAllObservers();
+	lines->RemoveAllObservers();
+	linesPolyData->RemoveAllObservers();
+	sphere2Mapper->RemoveAllInputs();
+
+	// Create four lines
+	for (unsigned int i = 0; i < savedTarget.size()-1; i++)
+	{
+		vtkNew<vtkLine> line;
+		line->GetPointIds()->SetId(0, i);
+		line->GetPointIds()->SetId(1, i + 1);
+		lines->InsertNextCell(line);
+	}
+
+	
+
+	// Add the points to the dataset
+	linesPolyData->SetPoints(targetLinePoints);
+
+	// Add the lines to the dataset
+	linesPolyData->SetLines(lines);
+
+	
+	sphere2Mapper->SetInputData(linesPolyData);
+
+	
+	sphere2Actor->SetMapper(sphere2Mapper);
+	sphere2Actor->GetProperty()->SetColor(colors->GetColor3d("Lime").GetData());
+	sphere2Actor->GetProperty()->SetLineWidth(2.5);
+
+	mRenderer->AddActor(sphere2Actor);
+	
+	mRenderer->Render();
+	mRenderWindow->Render();
+}
+
+void MainWindow::nextPosition()
+{
+	nextBtncnt++;
+
+	fstream ob;
+	ui->listWidget_2->clear();
+	savedTarget.clear();
+	if(nextBtncnt%2==0)
+		ob.open("GestureInterface/targetPosition_0.txt", ios::in);	
+	else
+		ob.open("GestureInterface/targetPosition_1.txt", ios::in);
+	int cnt = 0;
+	targetPoint temp;
+	temp.pos_x = 0;
+	temp.pos_y = 0;
+	temp.pos_z = 0;
+
+	while (!ob.eof())
+
+	{
+		string str;
+		ob >> str;
+
+		//cout << "str : "<<str << "\n";
+		//cout << "str : " <<std::stoi(str) << "\n";
+		cnt++;
+		if (cnt % 3 == 1)
+		{
+			temp.pos_x = std::stoi(str);
+		}
+		if (cnt % 3 == 2)
+		{
+			temp.pos_y = std::stoi(str);
+		}
+		if (cnt % 3 == 0)
+		{
+			temp.pos_z = std::stoi(str);
+			savedTarget.push_back(temp);
+
+			string currentName = "targetPoint ";
+			currentName += to_string(savedTarget.size());
+
+			ui->listWidget_2->addItem(currentName.c_str());
+
+			temp.pos_x = 0;
+			temp.pos_y = 0;
+			temp.pos_z = 0;
+
+		}
+	}
+
+	ob.close();	//closing the file after use
 
 
 }
