@@ -15,8 +15,49 @@
 #include <vtkClipPolyData.h>
 #include <vtkCellArray.h>
 #include <vtkLine.h>
+#include <cmath>
+#include <io.h>
+
+
+
+struct Quaternion_VAR {
+	double w, x, y, z;
+};
+
+struct EulerAngles_VAR {
+	double roll, pitch, yaw;
+};
+
+EulerAngles_VAR ToEulerAngles(Quaternion_VAR q) {
+	EulerAngles_VAR angles;
+
+	// roll (x-axis rotation)
+	double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+	double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+	angles.roll = std::atan2(sinr_cosp, cosr_cosp);
+
+	// pitch (y-axis rotation)
+	double sinp = 2 * (q.w * q.y - q.z * q.x);
+	if (std::abs(sinp) >= 1)
+		angles.pitch = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
+	else
+		angles.pitch = std::asin(sinp);
+
+	// yaw (z-axis rotation)
+	double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+	double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+	angles.yaw = std::atan2(siny_cosp, cosy_cosp);
+
+	return angles;
+}
 
 using namespace std;
+
+
+std::vector<string> senserDataFileName;
+std::vector<Quaternion_VAR> readSensingQuaternion;
+
+
 bool b_saveImage = false;
 bool b_drawTrajectory = false;
 
@@ -14089,7 +14130,112 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
+	std::vector<string> senserDataFileName;
+	senserDataFileName.clear();
 
+
+	string path = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\16-*.*";	
+	struct _finddata_t fd;	
+	intptr_t handle;	
+	if ((handle = _findfirst(path.c_str(), &fd)) == -1L)		
+		cout << "No file in directory!" << endl;	
+	do 
+	{ 
+		cout << fd.name << endl; 
+		senserDataFileName.push_back(fd.name);
+	} 
+	while (_findnext(handle, &fd) == 0);	
+	_findclose(handle);
+
+	std::cout << senserDataFileName.size() << std::endl;
+
+
+
+
+	for (int i = 0; i < senserDataFileName.size(); i++)
+	{
+		std::cout << senserDataFileName[i] << std::endl;
+	}
+
+	vector<vector<string>> content;
+	vector<string> row;
+	string line, word;
+
+	string fname = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\"+ senserDataFileName[1];
+	std::cout << fname << std::endl;
+	fstream file(fname, ios::in);
+	if (file.is_open())
+	{
+		while (getline(file, line))
+		{
+			row.clear();
+
+			stringstream str(line);
+
+			while (getline(str, word, ','))
+				row.push_back(word);
+			content.push_back(row);
+		}
+	}
+	else
+		cout << "Could not open the file\n";
+
+
+	
+	readSensingQuaternion.clear();
+
+	for (int i = 0; i < content.size(); i++)
+	{
+		//for (int j = 0; j < content[i].size(); j++)
+		//{
+		//	cout << content[i][j] << " ";
+		//}
+
+		if (content[i].size() > 0)
+		{
+			
+			//cout << content[i][17] << " " << content[i][18] << " " << content[i][19] << " " << content[i][20];
+			if (i == 0) continue;
+			Quaternion_VAR temp;
+			temp.w = std::stod(content[i][17]);
+			temp.x = std::stod(content[i][18]);
+			temp.y = std::stod(content[i][19]);
+			temp.z = std::stod(content[i][20]);
+
+			readSensingQuaternion.push_back(temp);
+
+		}
+	}
+
+	std::cout << "readSensingQuaternion.size() = " << readSensingQuaternion.size() << std::endl;
+
+	double totalx = 0;
+	double totaly = 0;
+	double totalz = 0;
+
+
+	for (int i = 0; i < readSensingQuaternion.size(); i++)
+	{
+		EulerAngles_VAR temp;
+
+		temp = ToEulerAngles(readSensingQuaternion[i]);
+		
+		if (i == 0)
+		{
+			totalx = temp.roll;
+			totaly = temp.pitch;
+			totalz = temp.yaw;
+
+		}
+		else
+		{
+			totalx += temp.roll;
+			totaly += temp.pitch;
+			totalz += temp.yaw;
+		}
+		
+		std::cout << " x: " << totalx << " y: " << totaly << " z: " << totalz << std::endl;
+	}
 }
 
 MainWindow::~MainWindow() {
@@ -15894,18 +16040,12 @@ void MainWindow::playTargets()
 		writer->SetInputConnection(w2if->GetOutputPort());
 		writer->Write();
 
-
-		mRenderer->Render();
-		mRenderWindow->Render();
-		QApplication::processEvents();
-		Sleep(1000);
-
-
 		std::cout << i << "   inverseKinematices_Theta 0 1 2 = " << inverseKinematices_Theta_0 << " , " << inverseKinematices_Theta_1 << " , " << inverseKinematices_Theta_2 << std::endl;
 
 
 		if (i > 0)
 		{
+
 			strGestureTemp = "Gesture ";
 			strGestureTemp += to_string(i);
 			strGestureTemp += "\n\n";
@@ -16048,13 +16188,36 @@ void MainWindow::playTargets()
 
 		}
 		
+		vtkNew<vtkActor> lineActor;
+		if (i > 0)
+		{
+			vtkNew<vtkLineSource> lineSource;
+			lineSource->SetPoint1(targetLinePoints->GetPoint(i - 1));
+			lineSource->SetPoint2(targetLinePoints->GetPoint(i));
+
+			vtkNew<vtkPolyDataMapper> lineMapper;
+			lineMapper->SetInputConnection(lineSource->GetOutputPort());
+			
+			lineActor->SetMapper(lineMapper);
+			lineActor->GetProperty()->SetColor(colors->GetColor3d("Red").GetData());
+			lineActor->GetProperty()->SetLineWidth(2.5);
+
+
+			mRenderer->AddActor(lineActor);
+		}
+
+
+		mRenderer->Render();
+		mRenderWindow->Render();
+		QApplication::processEvents();
+		Sleep(1000);
 
 		prev_theta0 = inverseKinematices_Theta_0;
 		prev_theta1 = inverseKinematices_Theta_1;
 		prev_theta2 = inverseKinematices_Theta_2;
 
 
-
+		mRenderer->RemoveActor(lineActor);
 
 	}
 
@@ -16201,15 +16364,99 @@ void MainWindow::playTargets()
 
 void MainWindow::nextPosition()
 {
+
+	ui->lbl_posture0->setPixmap(QPixmap());
+	ui->lbl_posture0->setText("");
+	ui->lbl_posture0->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_posture1->setPixmap(QPixmap());
+	ui->lbl_posture1->setText("");
+	ui->lbl_posture1->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_posture2->setPixmap(QPixmap());
+	ui->lbl_posture2->setText("");
+	ui->lbl_posture2->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_posture3->setPixmap(QPixmap());
+	ui->lbl_posture3->setText("");
+	ui->lbl_posture3->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_posture4->setPixmap(QPixmap());
+	ui->lbl_posture4->setText("");
+	ui->lbl_posture4->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_posture5->setPixmap(QPixmap());
+	ui->lbl_posture5->setText("");
+	ui->lbl_posture5->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_posture6->setPixmap(QPixmap());
+	ui->lbl_posture6->setText("");
+	ui->lbl_posture6->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_posture7->setPixmap(QPixmap());
+	ui->lbl_posture7->setText("");
+	ui->lbl_posture7->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_0->setText("");
+	ui->lbl_name_0->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_1->setText("");
+	ui->lbl_name_1->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_2->setText("");
+	ui->lbl_name_2->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_3->setText("");
+	ui->lbl_name_3->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_4->setText("");
+	ui->lbl_name_4->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_5->setText("");
+	ui->lbl_name_5->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_6->setText("");
+	ui->lbl_name_6->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_name_7->setText("");
+	ui->lbl_name_7->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_gesture1->setText("");
+	ui->lbl_gesture1->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_gesture2->setText("");
+	ui->lbl_gesture2->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_gesture3->setText("");
+	ui->lbl_gesture3->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_gesture4->setText("");
+	ui->lbl_gesture4->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_gesture5->setText("");
+	ui->lbl_gesture5->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_gesture6->setText("");
+	ui->lbl_gesture6->setFrameShape(QFrame::NoFrame);
+
+	ui->lbl_gesture7->setText("");
+	ui->lbl_gesture7->setFrameShape(QFrame::NoFrame);
+
+	
+	
+
+
 	nextBtncnt++;
 
 	fstream ob;
 	ui->listWidget_2->clear();
 	savedTarget.clear();
-	if(nextBtncnt%2==0)
+	if(nextBtncnt%3==0)
 		ob.open("GestureInterface/targetPosition_0.txt", ios::in);	
-	else
+	else if(nextBtncnt % 3 == 1)
 		ob.open("GestureInterface/targetPosition_1.txt", ios::in);
+	else
+		ob.open("GestureInterface/targetPosition_2.txt", ios::in);
 	int cnt = 0;
 	targetPoint temp;
 	temp.pos_x = 0;

@@ -101,6 +101,12 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="6">
        <widget class="QLabel" name="lbl_name_6">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -111,6 +117,12 @@
       </item>
       <item row="7" column="5" colspan="2">
        <widget class="QLabel" name="lbl_gesture6">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -121,6 +133,12 @@
       </item>
       <item row="1" column="4">
        <widget class="QLabel" name="lbl_name_4">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -131,6 +149,12 @@
       </item>
       <item row="5" column="3" colspan="2">
        <widget class="QLabel" name="lbl_gesture4">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -141,6 +165,12 @@
       </item>
       <item row="1" column="5">
        <widget class="QLabel" name="lbl_name_5">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -151,6 +181,12 @@
       </item>
       <item row="3" column="1" colspan="2">
        <widget class="QLabel" name="lbl_gesture2">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -168,6 +204,12 @@
       </item>
       <item row="4" column="2" colspan="2">
        <widget class="QLabel" name="lbl_gesture3">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -178,6 +220,12 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_name_0">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -191,6 +239,12 @@
       </item>
       <item row="6" column="4" colspan="2">
        <widget class="QLabel" name="lbl_gesture5">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -208,6 +262,12 @@
       </item>
       <item row="1" column="1">
        <widget class="QLabel" name="lbl_name_1">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -239,6 +299,12 @@
       </item>
       <item row="1" column="7">
        <widget class="QLabel" name="lbl_name_7">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -254,6 +320,12 @@
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -279,6 +351,12 @@
       </item>
       <item row="1" column="2">
        <widget class="QLabel" name="lbl_name_2">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -296,6 +374,12 @@
       </item>
       <item row="1" column="3">
        <widget class="QLabel" name="lbl_name_3">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -306,6 +390,12 @@
       </item>
       <item row="8" column="6" colspan="2">
        <widget class="QLabel" name="lbl_gesture7">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
