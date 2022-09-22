@@ -25,7 +25,7 @@ struct Quaternion_VAR {
 };
 
 struct EulerAngles_VAR {
-	double roll, pitch, yaw;
+	double x_roll, y_pitch, z_yaw;
 };
 
 EulerAngles_VAR ToEulerAngles(Quaternion_VAR q) {
@@ -34,28 +34,51 @@ EulerAngles_VAR ToEulerAngles(Quaternion_VAR q) {
 	// roll (x-axis rotation)
 	double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
 	double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-	angles.roll = std::atan2(sinr_cosp, cosr_cosp);
+	angles.x_roll = std::atan2(sinr_cosp, cosr_cosp);
 
 	// pitch (y-axis rotation)
 	double sinp = 2 * (q.w * q.y - q.z * q.x);
 	if (std::abs(sinp) >= 1)
-		angles.pitch = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
+		angles.y_pitch = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
 	else
-		angles.pitch = std::asin(sinp);
+		angles.y_pitch = std::asin(sinp);
 
 	// yaw (z-axis rotation)
 	double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
 	double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-	angles.yaw = std::atan2(siny_cosp, cosy_cosp);
+	angles.z_yaw = std::atan2(siny_cosp, cosy_cosp);
 
 	return angles;
 }
+
+Quaternion_VAR ToQuaternion(double yaw, double pitch, double roll) // yaw (Z), pitch (Y), roll (X)
+{
+	// Abbreviations for the various angular functions
+	double cy = cos(yaw * 0.5);
+	double sy = sin(yaw * 0.5);
+	double cp = cos(pitch * 0.5);
+	double sp = sin(pitch * 0.5);
+	double cr = cos(roll * 0.5);
+	double sr = sin(roll * 0.5);
+
+	Quaternion_VAR q;
+	q.w = cr * cp * cy + sr * sp * sy;
+	q.x = sr * cp * cy - cr * sp * sy;
+	q.y = cr * sp * cy + sr * cp * sy;
+	q.z = cr * cp * sy - sr * sp * cy;
+
+	return q;
+}
+
+
 
 using namespace std;
 
 
 std::vector<string> senserDataFileName;
-std::vector<Quaternion_VAR> readSensingQuaternion;
+std::vector<Quaternion> readSensingQuaternion;
+std::vector< EulerAngles_VAR> readSensingAngles;
+std::vector< EulerAngles_VAR> readSensingAngles_2;
 
 
 bool b_saveImage = false;
@@ -3516,7 +3539,7 @@ namespace {
 
 						}
 						prevY = diff;
-						//cout << "ruaX_angle=" << rua_angleX << endl;
+						cout << "ruaX_angle=" << rua_angleX << endl;
 					}
 					if (flag == 2)
 					{
@@ -3536,7 +3559,7 @@ namespace {
 							rua(anim_rua_angle, anim_rua_x, anim_rua_y, anim_rua_z);
 						}
 						prevY = diff;
-						//cout << "ruaZ_angle=" << rua_angleZ << endl;
+						cout << "ruaZ_angle=" << rua_angleZ << endl;
 					}
 					if (flag == 3)
 					{
@@ -3553,9 +3576,8 @@ namespace {
 							rua(anim_rua_angle, anim_rua_x, anim_rua_y, anim_rua_z);
 						}
 						prevY = diff;
-						//cout << "ruaZ_angle=" << rua_angleZ << endl;
+						cout << "ruaZ_angle=" << rua_angleZ << endl;
 					}
-
 				}
 				if (boneID == 2223) //RLA
 				{
@@ -3614,6 +3636,8 @@ namespace {
 						prevY = diff;
 					}
 
+					
+
 					if (flag == 3)
 					{
 						if (diff > prevY)
@@ -3627,6 +3651,7 @@ namespace {
 						prevY = diff;
 					}
 
+					std::cout << "anim_rla_angle " << anim_rla_angle << std::endl;
 
 				}
 				if (boneID == 2224)//LUA
@@ -3657,6 +3682,8 @@ namespace {
 							lua(anim_lua_angle, anim_lua_x, anim_lua_y, anim_lua_z);
 						}
 						prevY = diff;
+
+						std::cout<<"lua_angleX "<< lua_angleX<<std::endl;
 					}
 					if (flag == 2)
 					{
@@ -3676,7 +3703,7 @@ namespace {
 							lua(anim_lua_angle, anim_lua_x, anim_lua_y, anim_lua_z);
 						}
 						prevY = diff;
-
+						std::cout << "lua_angleZ " << lua_angleZ << std::endl;
 					}
 
 					if (flag == 3)
@@ -3696,9 +3723,10 @@ namespace {
 						}
 						prevY = diff;
 
+						std::cout << "lua_angleY " << lua_angleY << std::endl;
 					}
 
-
+					
 				}
 				if (boneID == 2225) //LLA
 				{
@@ -12778,6 +12806,7 @@ void robotModel(int rotate)
 	targetSphere->SetThetaResolution(100);
 
 
+	//sspark : inverse Kinematices
 	targetMapper->SetInputConnection(targetSphere->GetOutputPort());
 	targetTransform->SetInput(RightHand_ObjReader_Transform);
 	targetActor->SetUserTransform(targetTransform);
@@ -12892,7 +12921,8 @@ void robotModel(int rotate)
 
 
 
-		//renderer->AddActor(planeActor);
+
+	//renderer->AddActor(planeActor);
 	mRenderer->AddActor(PlconeActor);
 	mRenderer->AddActor(CUconeActor);
 	mRenderer->AddActor(Head_objActor);
@@ -12906,14 +12936,15 @@ void robotModel(int rotate)
 	mRenderer->AddActor(LeftHand_objActor);
 
 	mRenderer->AddActor(RlulegActor);
-	mRenderer->AddActor(RllegActor);
+	mRenderer->AddActor(RllegActor); 
 	mRenderer->AddActor(RF_objActor);
 
 	mRenderer->AddActor(LlulegActor);
 	mRenderer->AddActor(LllegActor);
 	mRenderer->AddActor(LF_objActor);
 
-	mRenderer->AddActor(targetActor);
+	//sspark : inverseKinematices
+	//mRenderer->AddActor(targetActor);
 }
 void MainWindow::displayRobot_Model(int rotate)
 {
@@ -14027,6 +14058,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	QObject::connect(ui->targetAddBtn, &QPushButton::clicked, this, &MainWindow::targetAdd);
 	QObject::connect(ui->playBtn, &QPushButton::clicked, this, &MainWindow::playTargets);
 	QObject::connect(ui->nextBtn, &QPushButton::clicked, this, &MainWindow::nextPosition);
+	QObject::connect(ui->sensingBtn, &QPushButton::clicked, this, &MainWindow::sensingPlay);
 
 	nextBtncnt = 0;
 	savedTarget.clear();
@@ -14134,7 +14166,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	senserDataFileName.clear();
 
 
-	string path = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\16-*.*";	
+	//string path = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\16-*.*";
+
+	string path = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\1-*.csv";
+	//C:\Users\pssil\Desktop\dataset\testQuat
 	struct _finddata_t fd;	
 	intptr_t handle;	
 	if ((handle = _findfirst(path.c_str(), &fd)) == -1L)		
@@ -14161,7 +14196,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	vector<string> row;
 	string line, word;
 
-	string fname = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\"+ senserDataFileName[1];
+	string fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\"+ senserDataFileName[0];
 	std::cout << fname << std::endl;
 	fstream file(fname, ios::in);
 	if (file.is_open())
@@ -14194,16 +14229,17 @@ MainWindow::MainWindow(QWidget *parent) :
 		if (content[i].size() > 0)
 		{
 			
-			//cout << content[i][17] << " " << content[i][18] << " " << content[i][19] << " " << content[i][20];
-			if (i == 0) continue;
-			Quaternion_VAR temp;
-			temp.w = std::stod(content[i][17]);
-			temp.x = std::stod(content[i][18]);
-			temp.y = std::stod(content[i][19]);
-			temp.z = std::stod(content[i][20]);
+			cout << content[i][1] << " " << content[i][2] << " " << content[i][3] << " " << content[i][4];
+			if (i == 0 || i == 1) continue;
+			Quaternion temp;
+			temp.setW(std::stod(content[i][1]));
+			temp.setX(std::stod(content[i][2]));
+			temp.setY(std::stod(content[i][3]));
+			temp.setZ(std::stod(content[i][4]));
 
 			readSensingQuaternion.push_back(temp);
 
+			cout << endl;
 		}
 	}
 
@@ -14213,28 +14249,24 @@ MainWindow::MainWindow(QWidget *parent) :
 	double totaly = 0;
 	double totalz = 0;
 
+	readSensingAngles.clear();
 
 	for (int i = 0; i < readSensingQuaternion.size(); i++)
 	{
+
+		if (i == 0) continue;
+
+		readSensingQuaternion[i] = readSensingQuaternion[i].multiply(readSensingQuaternion[1].inverse());
+		readSensingQuaternion[i].toEulerAngle(totalx, totaly, totalz);
+		
+		std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
+
 		EulerAngles_VAR temp;
+		temp.x_roll = totalx;
+		temp.y_pitch = totaly;
+		temp.z_yaw = totalz;
 
-		temp = ToEulerAngles(readSensingQuaternion[i]);
-		
-		if (i == 0)
-		{
-			totalx = temp.roll;
-			totaly = temp.pitch;
-			totalz = temp.yaw;
-
-		}
-		else
-		{
-			totalx += temp.roll;
-			totaly += temp.pitch;
-			totalz += temp.yaw;
-		}
-		
-		std::cout << " x: " << totalx << " y: " << totaly << " z: " << totalz << std::endl;
+		readSensingAngles.push_back(temp);
 	}
 }
 
@@ -16500,4 +16532,240 @@ void MainWindow::nextPosition()
 	ob.close();	//closing the file after use
 
 
+}
+
+void MainWindow::sensingPlay()
+{
+
+	if (readSensingAngles.size() > 0)
+	{
+		for (int i = 0; i < readSensingAngles.size(); i++)
+		{
+			male_biped = 1;
+			vitruvian_biped = 0;
+			skeleton_biped = 0;
+			//cout << "Male Biped Selected" << endl;
+
+			Pelvis_objFilename = "../BodyGestureGenerator/data/Pelvis.obj";
+			Chest_objFilename = "../BodyGestureGenerator/data/Chest.obj";
+			headNeck_objFilename = "../BodyGestureGenerator/data/humanHead1.obj";
+			LUA_objFilename = "../BodyGestureGenerator/data/LUA.obj";
+			LLA_objFilename = "../BodyGestureGenerator/data/LLA.obj";
+			LH_objFilename = "../BodyGestureGenerator/data/LH_G.obj";
+			RUA_objFilename = "../BodyGestureGenerator/data/RUA.obj";
+			RLA_objFilename = "../BodyGestureGenerator/data/RLA.obj";
+			RH_objFilename = "../BodyGestureGenerator/data/RH_G.obj";
+			LUL_objFilename = "../BodyGestureGenerator/data/LUL.obj";
+			LLL_objFilename = "../BodyGestureGenerator/data/LLL.obj";
+			LF_objFilename = "../BodyGestureGenerator/data/LF.obj";
+			RUL_objFilename = "../BodyGestureGenerator/data/RUL.obj";
+			RLL_objFilename = "../BodyGestureGenerator/data/RLL.obj";
+			RF_objFilename = "../BodyGestureGenerator/data/RF.obj";
+
+			PlconeTransform->Identity();
+			CUconeTransform->Identity();
+			Head_ObjReader_Transform->Identity();
+			RarmTransform->Identity();
+			RforearmTransform->Identity();
+			RightHand_ObjReader_Transform->Identity();
+			LarmTransform->Identity();
+			LforearmTransform->Identity();
+			LeftHand_ObjReader_Transform->Identity();
+			RlulegTransform->Identity();
+			RllegTransform->Identity();
+			RF_ObjReader_Transform->Identity();
+			LlulegTransform->Identity();
+			LllegTransform->Identity();
+			LF_ObjReader_Transform->Identity();
+
+			RUA_JS_Transform->Identity();
+			RLA_JS_Transform->Identity();
+			LUA_JS_Transform->Identity();
+			LLA_JS_Transform->Identity();
+			RUL_JS_Transform->Identity();
+			RLL_JS_Transform->Identity();
+			LUL_JS_Transform->Identity();
+			LLL_JS_Transform->Identity();
+
+			pelvisObj_xpos = 0;
+			pelvisObj_ypos = 47.875;
+			pelvisObj_zpos = 0;
+			pelvisObj_scale = 50;
+
+			chestObj_xpos = 0;
+			chestObj_ypos = 2.5;
+			chestObj_zpos = 0;
+			chestObj_scale = 50;
+
+			head_NeckObj_xpos = 0;
+			head_NeckObj_ypos = 26.0;
+			head_NeckObj_zpos = -1.0;
+			head_NeckObj_scale = 8;
+
+
+			ruaObj_xpos = -10.5;
+			ruaObj_ypos = 20.0;
+			ruaObj_zpos = -2.5;
+			ruaObj_scale = 50;
+
+			rlaObj_xpos = 0.0;
+			rlaObj_ypos = -14.0;
+			rlaObj_zpos = 1.0;
+			rlaObj_scale = 50;
+
+			RHObj_xpos = -0.5;
+			RHObj_ypos = -12.75;
+			RHObj_zpos = 0.5;
+			RHObj_scale = 40;
+
+			luaObj_xpos = 10.50;
+			luaObj_ypos = 20.0;
+			luaObj_zpos = -2.5;
+			luaObj_scale = 50;
+
+			llaObj_xpos = 0.5;
+			llaObj_ypos = -14.0;
+			llaObj_zpos = 0.5;
+			llaObj_scale = 50;
+
+			LHObj_xpos = -0.5;
+			LHObj_ypos = -12.75;
+			LHObj_zpos = 0.5;
+			LHObj_scale = 40;
+
+
+			rulObj_xpos = -3.40;
+			rulObj_ypos = 0; //-2.125
+			rulObj_zpos = 0.0;
+			rulObj_scale = 50;
+
+			rllObj_xpos = -0.25;
+			rllObj_ypos = -21.0;
+			rllObj_zpos = 0.0;
+			rllObj_scale = 50;
+
+			RFObj_xpos = 0.7;
+			RFObj_ypos = -19.25;
+			RFObj_zpos = -2.10;
+			RFObj_scale = 50;
+			RF_xaxis_actor_Zpos = 20;
+
+			lulObj_xpos = 3.90;
+			lulObj_ypos = 0; //-2.125
+			lulObj_zpos = 0.0;
+			lulObj_scale = 50;
+
+			lllObj_xpos = 1.0;
+			lllObj_ypos = -21.0;
+			lllObj_zpos = -0.75;
+			lllObj_scale = 50;
+
+			LFObj_xpos = 0.0;
+			LFObj_ypos = -19.25;
+			LFObj_zpos = -2.10;
+			LFObj_scale = 50;
+
+
+
+			mRenderer->RemoveActor(stickModel_pelvisActor);
+
+			mRenderer->RemoveActor(stickModel_chest_0_Actor);
+			mRenderer->RemoveActor(stickModel_chest_1_Actor);
+			mRenderer->RemoveActor(stickModel_chest_2_Actor);
+			mRenderer->RemoveActor(stickModel_chest_3_Actor);
+
+			mRenderer->RemoveActor(stickModel_head_Actor);
+
+			mRenderer->RemoveActor(stickModel_rightShoulderJoint_Actor);
+			mRenderer->RemoveActor(stickModel_rightUpperArm_Actor);
+			mRenderer->RemoveActor(stickModel_rightElbow_Actor);
+			mRenderer->RemoveActor(stickModel_rightLowerArm_Actor);
+			mRenderer->RemoveActor(stickModel_rightHand_Actor);
+
+			mRenderer->RemoveActor(stickModel_leftShoulderJoint_Actor);
+			mRenderer->RemoveActor(stickModel_leftUpperArm_Actor);
+			mRenderer->RemoveActor(stickModel_leftElbow_Actor);
+			mRenderer->RemoveActor(stickModel_leftLowerArm_Actor);
+			mRenderer->RemoveActor(stickModel_leftHand_Actor);
+
+			mRenderer->RemoveActor(stickModel_rightLegJoint_Actor);
+			mRenderer->RemoveActor(stickModel_rightUpperLeg_Actor);
+			mRenderer->RemoveActor(stickModel_rightKnee_Actor);
+			mRenderer->RemoveActor(stickModel_rightLowerLeg_Actor);
+			mRenderer->RemoveActor(stickModel_rightFoot_Actor);
+
+			mRenderer->RemoveActor(stickModel_leftLegJoint_Actor);
+			mRenderer->RemoveActor(stickModel_leftUpperLeg_Actor);
+			mRenderer->RemoveActor(stickModel_leftKnee_Actor);
+			mRenderer->RemoveActor(stickModel_leftLowerLeg_Actor);
+			mRenderer->RemoveActor(stickModel_leftFoot_Actor);
+
+			mRenderer->RemoveActor(none_xaxis_actor);
+			mRenderer->RemoveActor(none_yaxis_actor);
+			mRenderer->RemoveActor(none_zaxis_actor);
+
+			//this->fullbodyIK_checkBox->setChecked(0);
+			//this->rhIK_checkBox->setChecked(0);
+			//this->lhIK_checkBox->setChecked(0);
+			//this->rfIK_checkBox->setChecked(0);
+			//this->lfIK_checkBox->setChecked(0);
+
+			mRenderer->RemoveActor(rh_outlineActor);
+			rhIK_flag = 0;
+			mRenderer->RemoveActor(lh_outlineActor);
+			lhIK_flag = 0;
+			mRenderer->RemoveActor(rf_outlineActor);
+			rfIK_flag = 0;
+			mRenderer->RemoveActor(lf_outlineActor);
+			lfIK_flag = 0;
+
+			mRenderer->RemoveActor(pelvisJS_actor);
+			mRenderer->RemoveActor(chestJS_actor);
+			mRenderer->RemoveActor(LUA_JS_actor);
+			mRenderer->RemoveActor(LLA_JS_actor);
+			mRenderer->RemoveActor(RUA_JS_actor);
+			mRenderer->RemoveActor(RLA_JS_actor);
+			mRenderer->RemoveActor(LUL_JS_actor);
+			mRenderer->RemoveActor(LLL_JS_actor);
+			mRenderer->RemoveActor(RUL_JS_actor);
+			mRenderer->RemoveActor(RLL_JS_actor);
+			mRenderer->RemoveActor(targetActor);
+			mRenderer->RemoveActor(sphere2Actor);
+
+			//vtkActorCollection* actors = vtkActorCollection::New();
+			//int NumberOfActors = renderer->VisibleActorCount();
+			//actors = mRenderer->GetActors();
+			//actors->InitTraversal();
+			//for (int i = 0; i < NumberOfActors; i++) {
+			//	mRenderer->RemoveActor(actors->GetNextActor());
+			//}
+			//actors->Delete();
+
+
+
+			//this->freeFoots_radioButton->setChecked(true);
+			//this->fixedFoots_radioButton->setChecked(false);
+			//this->fixedRF_radioButton->setChecked(false);
+			//this->fixedLF_radioButton->setChecked(false);
+			//this->freeFoots_radioButton->setEnabled(false);
+			//this->fixedFoots_radioButton->setEnabled(false);
+			//this->fixedRF_radioButton->setEnabled(false);
+			//this->fixedLF_radioButton->setEnabled(false);
+
+			robotModel(1);
+
+			mRenderWindow->Render();
+
+			rul(readSensingAngles[i].x_roll, 1, 0, 0);
+			rul(readSensingAngles[i].y_pitch, 0, 1, 0);
+			rul(readSensingAngles[i].z_yaw, 0, 0, 1);
+
+
+			mRenderer->Render();
+			mRenderWindow->Render();
+			QApplication::processEvents();
+			Sleep(30);
+
+		}
+	}
 }

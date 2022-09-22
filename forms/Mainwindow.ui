@@ -15,16 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="18">
-     <widget class="QLineEdit" name="edit_z"/>
-    </item>
-    <item row="1" column="7">
-     <widget class="QPushButton" name="btnTrajectory">
-      <property name="text">
-       <string>Trajectory</string>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="13">
      <widget class="QLabel" name="label">
       <property name="text">
@@ -38,48 +28,10 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="14" colspan="2">
-     <widget class="QPushButton" name="targetAddBtn">
+    <item row="1" column="7">
+     <widget class="QPushButton" name="btnTrajectory">
       <property name="text">
-       <string>Target Add</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="10" rowspan="2">
-     <widget class="QListWidget" name="listWidget_2">
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="batchSize">
-       <number>10</number>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="17">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Z</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="5">
-     <widget class="QPushButton" name="BtnView">
-      <property name="text">
-       <string>ViewMode</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="15">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Y</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="16">
-     <widget class="QPushButton" name="playBtn">
-      <property name="text">
-       <string>Play</string>
+       <string>Trajectory</string>
       </property>
      </widget>
     </item>
@@ -90,12 +42,8 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="4" rowspan="2" colspan="15">
-     <widget class="QVTKOpenGLWidget" name="openGLWidget">
-      <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
-      </property>
-     </widget>
+    <item row="1" column="14">
+     <widget class="QLineEdit" name="edit_theta"/>
     </item>
     <item row="0" column="19" rowspan="4">
      <layout class="QGridLayout" name="gridLayout_2">
@@ -403,8 +351,12 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="5">
-     <widget class="QComboBox" name="comboBox"/>
+    <item row="1" column="17">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Z</string>
+      </property>
+     </widget>
     </item>
     <item row="0" column="13">
      <widget class="QPushButton" name="nextBtn">
@@ -413,10 +365,64 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="16">
+     <widget class="QPushButton" name="playBtn">
+      <property name="text">
+       <string>Play</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="7">
+     <widget class="QPushButton" name="btnSave">
+      <property name="text">
+       <string>SaveImage</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="4" rowspan="2" colspan="15">
+     <widget class="QVTKOpenGLWidget" name="openGLWidget">
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="18">
+     <widget class="QLineEdit" name="edit_z"/>
+    </item>
+    <item row="1" column="16">
+     <widget class="QLineEdit" name="edit_phi"/>
+    </item>
     <item row="0" column="18">
      <widget class="QPushButton" name="btnDraw">
       <property name="text">
        <string>Draw</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="QComboBox" name="comboBox"/>
+    </item>
+    <item row="1" column="5">
+     <widget class="QPushButton" name="BtnView">
+      <property name="text">
+       <string>ViewMode</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="10" rowspan="2">
+     <widget class="QListWidget" name="listWidget_2">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="batchSize">
+       <number>10</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="15">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Y</string>
       </property>
      </widget>
     </item>
@@ -437,18 +443,19 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="7">
-     <widget class="QPushButton" name="btnSave">
+    <item row="0" column="14" colspan="2">
+     <widget class="QPushButton" name="targetAddBtn">
       <property name="text">
-       <string>SaveImage</string>
+       <string>Target Add</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="14">
-     <widget class="QLineEdit" name="edit_theta"/>
-    </item>
-    <item row="1" column="16">
-     <widget class="QLineEdit" name="edit_phi"/>
+    <item row="1" column="11">
+     <widget class="QPushButton" name="sensingBtn">
+      <property name="text">
+       <string>sensingPlay</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

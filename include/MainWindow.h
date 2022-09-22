@@ -81,7 +81,9 @@ public slots:
 
 	void selectTarget();
 	void targetAdd();
-	
+	void sensingPlay();
+
+
 	void drawThetaPhi();
 	void playTargets();
 	void nextPosition();
