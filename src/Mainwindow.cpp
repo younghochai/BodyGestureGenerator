@@ -78,7 +78,10 @@ using namespace std;
 std::vector<string> senserDataFileName;
 std::vector<Quaternion> readSensingQuaternion;
 std::vector< EulerAngles_VAR> readSensingAngles;
-std::vector< EulerAngles_VAR> readSensingAngles_2;
+std::vector< EulerAngles_VAR> readSensingAngles_RL;
+
+std::vector< EulerAngles_VAR> readSensingAngles_LU;
+std::vector< EulerAngles_VAR> readSensingAngles_LL;
 
 
 bool b_saveImage = false;
@@ -13951,6 +13954,89 @@ void MainWindow::displayStick_Model()
 
 }
 
+
+void multiSensingDataRead(string filePath, std::vector<EulerAngles_VAR>& out)
+{
+	vector<Quaternion> tempQuat;
+	vector<vector<string>> content;
+	vector<string> row;
+	string line, word;
+	//string fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\" + senserDataFileName[0];
+	std::cout << filePath << std::endl;
+	fstream file(filePath, ios::in);
+
+	tempQuat.clear();
+	row.clear();
+	tempQuat.clear();
+
+	if (file.is_open())
+	{
+		while (getline(file, line))
+		{
+			row.clear();
+
+			stringstream str(line);
+
+			while (getline(str, word, ','))
+				row.push_back(word);
+			content.push_back(row);
+		}
+	}
+	else
+		cout << "Could not open the file\n";
+
+
+	for (int i = 0; i < content.size(); i++)
+	{
+		//for (int j = 0; j < content[i].size(); j++)
+		//{
+		//	cout << content[i][j] << " ";
+		//}
+
+		if (content[i].size() > 0)
+		{
+
+			//cout << content[i][1] << " " << content[i][2] << " " << content[i][3] << " " << content[i][4];
+			if (i == 0 || i == 1) continue;
+			Quaternion temp;
+			temp.setW(std::stod(content[i][1]));
+			temp.setX(std::stod(content[i][2]));
+			temp.setY(std::stod(content[i][3]));
+			temp.setZ(std::stod(content[i][4]));
+
+			tempQuat.push_back(temp);
+
+			//cout << endl;
+		}
+	}
+
+
+	double totalx = 0;
+	double totaly = 0;
+	double totalz = 0;
+
+	out.clear();
+
+	for (int i = 0; i < tempQuat.size(); i++)
+	{
+
+		if (i == 0) continue;
+
+		tempQuat[i] = tempQuat[i].multiply(tempQuat[1].inverse());
+		tempQuat[i].toEulerAngle(totalx, totaly, totalz);
+
+		//std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
+
+		EulerAngles_VAR temp;
+		temp.x_roll = totalx;
+		temp.y_pitch = totaly;
+		temp.z_yaw = totalz;
+
+		out.push_back(temp);
+	}
+}
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14168,7 +14254,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	//string path = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\16-*.*";
 
-	string path = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\1-*.csv";
+	string path = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\1-*.csv";
+
+	//C:\Users\SSPARK\Desktop\dataset\testQuat
 	//C:\Users\pssil\Desktop\dataset\testQuat
 	struct _finddata_t fd;	
 	intptr_t handle;	
@@ -14196,78 +14284,97 @@ MainWindow::MainWindow(QWidget *parent) :
 	vector<string> row;
 	string line, word;
 
-	string fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\"+ senserDataFileName[0];
-	std::cout << fname << std::endl;
-	fstream file(fname, ios::in);
-	if (file.is_open())
-	{
-		while (getline(file, line))
-		{
-			row.clear();
 
-			stringstream str(line);
+	string fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\"+ senserDataFileName[1];
+	multiSensingDataRead(fname, readSensingAngles);
 
-			while (getline(str, word, ','))
-				row.push_back(word);
-			content.push_back(row);
-		}
-	}
-	else
-		cout << "Could not open the file\n";
+	fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\" + senserDataFileName[1];
+	multiSensingDataRead(fname, readSensingAngles_LU);
+
+	fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\" + senserDataFileName[3];
+	multiSensingDataRead(fname, readSensingAngles_RL);
+
+	fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\" + senserDataFileName[4];
+	multiSensingDataRead(fname, readSensingAngles_LL);
 
 
-	
-	readSensingQuaternion.clear();
+	//std::vector< EulerAngles_VAR> readSensingAngles;
+	//std::vector< EulerAngles_VAR> readSensingAngles_RL;
 
-	for (int i = 0; i < content.size(); i++)
-	{
-		//for (int j = 0; j < content[i].size(); j++)
-		//{
-		//	cout << content[i][j] << " ";
-		//}
+	//std::vector< EulerAngles_VAR> readSensingAngles_LU;
+	//std::vector< EulerAngles_VAR> readSensingAngles_LL;
 
-		if (content[i].size() > 0)
-		{
-			
-			cout << content[i][1] << " " << content[i][2] << " " << content[i][3] << " " << content[i][4];
-			if (i == 0 || i == 1) continue;
-			Quaternion temp;
-			temp.setW(std::stod(content[i][1]));
-			temp.setX(std::stod(content[i][2]));
-			temp.setY(std::stod(content[i][3]));
-			temp.setZ(std::stod(content[i][4]));
+	//std::cout << fname << std::endl;
+	//fstream file(fname, ios::in);
+	//if (file.is_open())
+	//{
+	//	while (getline(file, line))
+	//	{
+	//		row.clear();
 
-			readSensingQuaternion.push_back(temp);
+	//		stringstream str(line);
 
-			cout << endl;
-		}
-	}
+	//		while (getline(str, word, ','))
+	//			row.push_back(word);
+	//		content.push_back(row);
+	//	}
+	//}
+	//else
+	//	cout << "Could not open the file\n";
 
-	std::cout << "readSensingQuaternion.size() = " << readSensingQuaternion.size() << std::endl;
 
-	double totalx = 0;
-	double totaly = 0;
-	double totalz = 0;
+	//
+	//readSensingQuaternion.clear();
 
-	readSensingAngles.clear();
+	//for (int i = 0; i < content.size(); i++)
+	//{
+	//	//for (int j = 0; j < content[i].size(); j++)
+	//	//{
+	//	//	cout << content[i][j] << " ";
+	//	//}
 
-	for (int i = 0; i < readSensingQuaternion.size(); i++)
-	{
+	//	if (content[i].size() > 0)
+	//	{
+	//		
+	//		cout << content[i][1] << " " << content[i][2] << " " << content[i][3] << " " << content[i][4];
+	//		if (i == 0 || i == 1) continue;
+	//		Quaternion temp;
+	//		temp.setW(std::stod(content[i][1]));
+	//		temp.setX(std::stod(content[i][2]));
+	//		temp.setY(std::stod(content[i][3]));
+	//		temp.setZ(std::stod(content[i][4]));
 
-		if (i == 0) continue;
+	//		readSensingQuaternion.push_back(temp);
 
-		readSensingQuaternion[i] = readSensingQuaternion[i].multiply(readSensingQuaternion[1].inverse());
-		readSensingQuaternion[i].toEulerAngle(totalx, totaly, totalz);
-		
-		std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
+	//		cout << endl;
+	//	}
+	//}
 
-		EulerAngles_VAR temp;
-		temp.x_roll = totalx;
-		temp.y_pitch = totaly;
-		temp.z_yaw = totalz;
+	//std::cout << "readSensingQuaternion.size() = " << readSensingQuaternion.size() << std::endl;
 
-		readSensingAngles.push_back(temp);
-	}
+	//double totalx = 0;
+	//double totaly = 0;
+	//double totalz = 0;
+
+	//readSensingAngles.clear();
+
+	//for (int i = 0; i < readSensingQuaternion.size(); i++)
+	//{
+
+	//	if (i == 0) continue;
+
+	//	readSensingQuaternion[i] = readSensingQuaternion[i].multiply(readSensingQuaternion[1].inverse());
+	//	readSensingQuaternion[i].toEulerAngle(totalx, totaly, totalz);
+	//	
+	//	std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
+
+	//	EulerAngles_VAR temp;
+	//	temp.x_roll = totalx;
+	//	temp.y_pitch = totaly;
+	//	temp.z_yaw = totalz;
+
+	//	readSensingAngles.push_back(temp);
+	//}
 }
 
 MainWindow::~MainWindow() {
@@ -16753,19 +16860,29 @@ void MainWindow::sensingPlay()
 			//this->fixedLF_radioButton->setEnabled(false);
 
 			robotModel(1);
+			int scaleFactor = 5;
+			rul(readSensingAngles[i].x_roll * scaleFactor, 1, 0, 0);
+			rul(readSensingAngles[i].y_pitch* scaleFactor, 0, 1, 0);
+			rul(readSensingAngles[i].z_yaw* scaleFactor, 0, 0, 1);
 
-			mRenderWindow->Render();
+			rll(readSensingAngles_RL[i].x_roll* scaleFactor, 1, 0, 0);
+			rll(readSensingAngles_RL[i].y_pitch* scaleFactor, 0, 1, 0);
+			rll(readSensingAngles_RL[i].z_yaw* scaleFactor, 0, 0, 1);
 
-			rul(readSensingAngles[i].x_roll, 1, 0, 0);
-			rul(readSensingAngles[i].y_pitch, 0, 1, 0);
-			rul(readSensingAngles[i].z_yaw, 0, 0, 1);
+			lul(readSensingAngles_LU[i].x_roll* scaleFactor, 1, 0, 0);
+			lul(readSensingAngles_LU[i].y_pitch* scaleFactor, 0, 1, 0);
+			lul(readSensingAngles_LU[i].z_yaw* scaleFactor, 0, 0, 1);
 
+			lll(readSensingAngles_LL[i].x_roll* scaleFactor, 1, 0, 0);
+			lll(readSensingAngles_LL[i].y_pitch* scaleFactor, 0, 1, 0);
+			lll(readSensingAngles_LL[i].z_yaw* scaleFactor, 0, 0, 1);
 
+			ui->edit_sensing->setText(to_string(i).c_str());
+			//
 			mRenderer->Render();
 			mRenderWindow->Render();
 			QApplication::processEvents();
-			Sleep(30);
-
+	
 		}
 	}
 }

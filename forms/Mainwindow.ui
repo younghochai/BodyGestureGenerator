@@ -450,12 +450,15 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="11">
+    <item row="0" column="12">
      <widget class="QPushButton" name="sensingBtn">
       <property name="text">
        <string>sensingPlay</string>
       </property>
      </widget>
+    </item>
+    <item row="1" column="12">
+     <widget class="QLineEdit" name="edit_sensing"/>
     </item>
    </layout>
   </widget>
@@ -465,7 +468,7 @@
      <x>0</x>
      <y>0</y>
      <width>1215</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
