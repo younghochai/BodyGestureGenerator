@@ -14248,54 +14248,54 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-	std::vector<string> senserDataFileName;
-	senserDataFileName.clear();
+	//std::vector<string> senserDataFileName;
+	//senserDataFileName.clear();
 
 
-	//string path = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\16-*.*";
+	////string path = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\16-*.*";
 
-	string path = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\1-*.csv";
+	//string path = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\1-*.csv";
 
-	//C:\Users\SSPARK\Desktop\dataset\testQuat
-	//C:\Users\pssil\Desktop\dataset\testQuat
-	struct _finddata_t fd;	
-	intptr_t handle;	
-	if ((handle = _findfirst(path.c_str(), &fd)) == -1L)		
-		cout << "No file in directory!" << endl;	
-	do 
-	{ 
-		cout << fd.name << endl; 
-		senserDataFileName.push_back(fd.name);
-	} 
-	while (_findnext(handle, &fd) == 0);	
-	_findclose(handle);
+	////C:\Users\SSPARK\Desktop\dataset\testQuat
+	////C:\Users\pssil\Desktop\dataset\testQuat
+	//struct _finddata_t fd;	
+	//intptr_t handle;	
+	//if ((handle = _findfirst(path.c_str(), &fd)) == -1L)		
+	//	cout << "No file in directory!" << endl;	
+	//do 
+	//{ 
+	//	cout << fd.name << endl; 
+	//	senserDataFileName.push_back(fd.name);
+	//} 
+	//while (_findnext(handle, &fd) == 0);	
+	//_findclose(handle);
 
-	std::cout << senserDataFileName.size() << std::endl;
-
-
+	//std::cout << senserDataFileName.size() << std::endl;
 
 
-	for (int i = 0; i < senserDataFileName.size(); i++)
-	{
-		std::cout << senserDataFileName[i] << std::endl;
-	}
-
-	vector<vector<string>> content;
-	vector<string> row;
-	string line, word;
 
 
-	string fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\"+ senserDataFileName[1];
-	multiSensingDataRead(fname, readSensingAngles);
+	//for (int i = 0; i < senserDataFileName.size(); i++)
+	//{
+	//	std::cout << senserDataFileName[i] << std::endl;
+	//}
 
-	fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\" + senserDataFileName[1];
-	multiSensingDataRead(fname, readSensingAngles_LU);
+	//vector<vector<string>> content;
+	//vector<string> row;
+	//string line, word;
 
-	fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\" + senserDataFileName[3];
-	multiSensingDataRead(fname, readSensingAngles_RL);
 
-	fname = "C:\\Users\\SSPARK\\Desktop\\dataset\\testQuat\\" + senserDataFileName[4];
-	multiSensingDataRead(fname, readSensingAngles_LL);
+	//string fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\"+ senserDataFileName[1];
+	//multiSensingDataRead(fname, readSensingAngles);
+
+	//fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\" + senserDataFileName[0];
+	//multiSensingDataRead(fname, readSensingAngles_LU);
+
+	//fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\" + senserDataFileName[3];
+	//multiSensingDataRead(fname, readSensingAngles_RL);
+
+	//fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\" + senserDataFileName[4];
+	//multiSensingDataRead(fname, readSensingAngles_LL);
 
 
 	//std::vector< EulerAngles_VAR> readSensingAngles;
@@ -16644,6 +16644,30 @@ void MainWindow::nextPosition()
 void MainWindow::sensingPlay()
 {
 
+	readSensingAngles.clear();
+	readSensingAngles_LU.clear();
+	readSensingAngles_RL.clear();
+	readSensingAngles_LL.clear();
+
+
+	//upperRight thigh
+	string fname = "./playSensingData/0_RightThigh.csv";
+	multiSensingDataRead(fname, readSensingAngles);
+
+	fname = "./playSensingData/1_LeftThigh.csv";
+	multiSensingDataRead(fname, readSensingAngles_LU);
+
+	fname = "./playSensingData/2_RightKnee.csv";
+	multiSensingDataRead(fname, readSensingAngles_RL);
+
+	fname = "./playSensingData/3_LeftKnee.csv";
+	multiSensingDataRead(fname, readSensingAngles_LL);
+
+
+
+
+
+
 	if (readSensingAngles.size() > 0)
 	{
 		for (int i = 0; i < readSensingAngles.size(); i++)
@@ -16860,7 +16884,7 @@ void MainWindow::sensingPlay()
 			//this->fixedLF_radioButton->setEnabled(false);
 
 			robotModel(1);
-			int scaleFactor = 5;
+			int scaleFactor = 3;
 			rul(readSensingAngles[i].x_roll * scaleFactor, 1, 0, 0);
 			rul(readSensingAngles[i].y_pitch* scaleFactor, 0, 1, 0);
 			rul(readSensingAngles[i].z_yaw* scaleFactor, 0, 0, 1);
