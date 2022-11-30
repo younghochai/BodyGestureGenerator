@@ -2,17 +2,12 @@
 #include <iostream>
 #include "ui_MainWindow.h"
 
-#include <vtkSphere.h>
+
 #include "allHeaders.h"
 #include <vtkConeSource.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkRenderWindowInteractor.h>
-#include <vtkSampleFunction.h>
-#include <vtkContourFilter.h>
-#include <vtkIdFilter.h>
-#include <vtkBox.h>
-#include <vtkClipPolyData.h>
 
 using namespace std;
 bool b_saveImage = false;
@@ -191,112 +186,6 @@ public:
 					//actor->GetProperty()->SetRepresentationToWireframe();
 					//actor->GetProperty()->SetColor(colors->GetColor3d("Azure").GetData());
 					//mRenderer->AddActor(actor);
-
-
-//					vtkNew<vtkNamedColors> colors;
-//
-//					// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
-//
-//					vtkNew<vtkSphereSource> sphereSource;
-//					sphereSource->SetCenter(.5, 0, 0);
-//
-//					unsigned int res = 18;
-//					sphereSource->SetThetaResolution(res * 2);
-//					sphereSource->SetPhiResolution(res);
-//					sphereSource->Update();
-//
-//					vtkNew<vtkIdFilter> cellIdFilter;
-//					cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
-//					cellIdFilter->SetCellIds(true);
-//					cellIdFilter->SetPointIds(false);
-//#if VTK890
-//					cellIdFilter->SetCellIdsArrayName("CellIds");
-//#else
-//					cellIdFilter->SetIdsArrayName("CellIds");
-//#endif
-//					cellIdFilter->Update();
-//
-//					//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
-//
-//					vtkNew<vtkIdFilter> pointIdFilter;
-//					pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
-//					pointIdFilter->SetCellIds(false);
-//					pointIdFilter->SetPointIds(true);
-//#if VTK890
-//					pointIdFilter->SetPointIdsArrayName("PointIds");
-//#else
-//					pointIdFilter->SetIdsArrayName("PointIds");
-//#endif
-//					pointIdFilter->Update();
-//
-//					vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
-//
-//					//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
-//
-//					vtkNew<vtkCubeSource> cubeSource;
-//					cubeSource->Update();
-//
-//					vtkNew<vtkBox> implicitCube;
-//					implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
-//
-//					vtkNew<vtkClipPolyData> clipper;
-//					clipper->SetClipFunction(implicitCube);
-//					clipper->SetInputData(sphereWithIds);
-//					clipper->InsideOutOn();
-//					clipper->Update();
-//
-//					//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
-//
-//					// Get the clipped cell ids
-//					vtkPolyData* clipped = clipper->GetOutput();
-//
-//					std::cout << "There are " << clipped->GetNumberOfPoints()
-//						<< " clipped points." << std::endl;
-//					std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
-//						<< std::endl;
-//
-//					//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
-//
-//					//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
-//					//{
-//					//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
-//					//		<< std::endl;
-//					//}
-//
-//					// Create a mapper and actor for clipped sphere
-//
-//					vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
-//					translation->Translate(-12.0, 70.0, +20.0);
-//
-//					vtkNew<vtkPolyDataMapper> clippedMapper;
-//					clippedMapper->SetInputConnection(clipper->GetOutputPort());
-//					clippedMapper->ScalarVisibilityOff();
-//
-//
-//					vtkNew<vtkActor> clippedActor;
-//					clippedActor->SetMapper(clippedMapper);
-//					clippedActor->RotateZ(90);
-//					clippedActor->RotateY(90);
-//					clippedActor->SetScale(60);
-//					clippedActor->SetUserTransform(translation);
-//					clippedActor->GetProperty()->SetOpacity(0.5);
-//					clippedActor->GetProperty()->SetRepresentationToWireframe();
-//					clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
-//
-//					// Create a mapper and actor for cube
-//					vtkNew<vtkPolyDataMapper> cubeMapper;
-//					cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
-//
-//					vtkNew<vtkActor> cubeActor;
-//					cubeActor->SetMapper(cubeMapper);
-//
-//					cubeActor->GetProperty()->SetRepresentationToWireframe();
-//					cubeActor->GetProperty()->SetOpacity(0.5);
-//					cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
-//
-//					mRenderer->UseHiddenLineRemovalOn();
-//					mRenderer->AddActor(clippedActor);
-
 
 
 					CHEST(poses[currntIdx - 1].chest[0], -1, 0, 0);
@@ -1246,10 +1135,8 @@ namespace {
 	public:
 		static customMouseInteractorStyle* New(); vtkTypeMacro(customMouseInteractorStyle, vtkInteractorStyleTrackballActor);
 
+
 		
-		bool b_targetSelect = false;
-		int oldX, oldY;
-		vtkActor* tartget;
 		vtkActor* RUA;
 		vtkActor* RLA;
 		vtkActor* LUA;
@@ -1403,31 +1290,17 @@ namespace {
 		}
 		void animateSM_ikRH(double ruaA, double rlaA, int x, int y, int z)
 		{
-			//stickModel_rightUpperArm_Transform->Identity();
-			//stickModel_rightUpperArm_Transform->Translate(smUA_x, smUA_y, 0);
-			//stickModel_rightUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
-			//stickModel_rightUpperArm_Transform->Translate(-smUA_x, -smUA_y, 0);
-			//mRenderWindow->Render();
-
-			//stickModel_rightLowerArm_Transform->Identity();
-			//stickModel_rightLowerArm_Transform->Translate(smLA_x, smLA_y, 0);
-			//stickModel_rightLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
-			//stickModel_rightLowerArm_Transform->Translate(-smLA_x, -smLA_y, 0);
-			//mRenderWindow->Render();
-
-			RarmTransform->Identity();
-			RarmTransform->Translate(smUA_x, smUA_y, 0);
-			RarmTransform->RotateWXYZ(ruaA, x, y, z);
-			RarmTransform->Translate(-smUA_x, -smUA_y, 0);
+			stickModel_rightUpperArm_Transform->Identity();
+			stickModel_rightUpperArm_Transform->Translate(smUA_x, smUA_y, 0);
+			stickModel_rightUpperArm_Transform->RotateWXYZ(ruaA, x, y, z);
+			stickModel_rightUpperArm_Transform->Translate(-smUA_x, -smUA_y, 0);
 			mRenderWindow->Render();
 
-			RforearmTransform->Identity();
-			RforearmTransform->Translate(smLA_x, smLA_y, 0);
-			RforearmTransform->RotateWXYZ(rlaA, x, y, z);
-			RforearmTransform->Translate(-smLA_x, -smLA_y, 0);
+			stickModel_rightLowerArm_Transform->Identity();
+			stickModel_rightLowerArm_Transform->Translate(smLA_x, smLA_y, 0);
+			stickModel_rightLowerArm_Transform->RotateWXYZ(rlaA, x, y, z);
+			stickModel_rightLowerArm_Transform->Translate(-smLA_x, -smLA_y, 0);
 			mRenderWindow->Render();
-
-
 		}
 		void animateSM_RH(int X)
 		{
@@ -2246,9 +2119,6 @@ namespace {
 			rhIK_target_Y = temptarget_Y;
 			rhIK_targetDistSqr = (rhIK_target_X * rhIK_target_X + rhIK_target_Y * rhIK_target_Y);
 			rhIK_cosAngle2_denom = 2 * rhIK_length1 * rhIK_length2;
-			std::cout << "rhIK_cosAngle2_denom "<<rhIK_cosAngle2_denom << std::endl;
-			std::cout << "rhIK_targetDistSqr "<<rhIK_targetDistSqr << std::endl;
-
 			if (rhIK_cosAngle2_denom > epsilon)
 			{
 				rhIK_cosAngle2 = (rhIK_targetDistSqr - rhIK_length1 * rhIK_length1 - rhIK_length2 * rhIK_length2) / (rhIK_cosAngle2_denom);
@@ -2289,20 +2159,13 @@ namespace {
 
 			double rhIK_theta1 = rhIK_angle1 * 180 / PI;
 			double rhIK_theta2 = rhIK_angle2 * 180 / PI;
-
-			double rhIK_theta0 = atan((double)((double)rhIK_Targetz / (double)rhIK_Targetx)) * 180 / PI;
-
-			cout << rhIK_theta0 <<"  theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
-			cout << rhIK_Targetz<<"testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+			cout << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
+			//cout << "testTargetx:" << rhIK_Targetx << "\t" << "testTargety:" << rhIK_Targety << "\t" << "theta1=" << rhIK_theta1 << "\t" << "theta2=" << rhIK_theta2 << endl;
 
 			if (boneID == 10)
 			{
-				//animateSM_ikRH(rhIK_theta1, rhIK_theta2, x, y, z);
+				animateSM_ikRH(rhIK_theta1, rhIK_theta2, x, y, z);
 
-
-				std::cout << "inverse Kinematices In " <<x<<" "<<y <<" "<<z << std::endl;
-				inverseKinematicesRH(rhIK_theta1, rhIK_theta2,x, y, z);
-				
 				// rightUpperArm
 				qxIK[2].setW(cos(-rhIK_theta1 * PI / 180 / 2));
 				qxIK[2].setX(1 * sin(-rhIK_theta1 * PI / 180 / 2));
@@ -3063,8 +2926,6 @@ namespace {
 
 		virtual void OnMouseMove()
 		{	
-
-
 			if (this->Move)
 			{
 				screenX = this->Interactor->GetEventPosition()[0];
@@ -3825,113 +3686,6 @@ namespace {
 					}
 				}
 
-				if (boneID == 10)
-				{
-					x = this->Interactor->GetEventPosition()[0];
-					y = this->Interactor->GetEventPosition()[1];
-
-					diff = temp + y;
-
-
-					if (flag == 1)
-					{
-						if (diff > prevY)
-						{
-							rhIK_Targetx++;
-
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
-						}
-
-						if (diff < prevY)
-						{
-							rhIK_Targetx--;
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, -anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
-						}
-
-						
-					}
-
-					if (flag == 2)
-					{
-						if (diff > prevY)
-						{
-							rhIK_Targety++;
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
-						}
-
-						if (diff < prevY)
-						{
-							rhIK_Targety--;
-							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, -anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-							//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-							targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-							mRenderWindow->Render();
-						}
-
-						
-					}
-
-
-					//totalAngleOfRUA_z
-					if (flag == 3)
-					{
-						if (diff > prevY)
-						{
-							rhIK_Targetz++;
-						}
-
-						if (diff < prevY)
-						{
-							rhIK_Targetz--;
-						}
-
-						int angle_z = 0;
-						int moveAngle = 0;
-						angle_z = atan((double)((double)rhIK_Targetz / (double)rhIK_Targetx)) * 180 / PI;
-
-						if (angle_z > totalAngleOfRUA_z)
-						{
-							moveAngle = angle_z - totalAngleOfRUA_z;
-
-							totalAngleOfRUA_z += moveAngle;
-						}
-
-						if (angle_z < totalAngleOfRUA_z)
-						{
-							moveAngle = totalAngleOfRUA_z - angle_z;
-
-							totalAngleOfRUA_z -= moveAngle;
-
-							moveAngle *= -1;
-						}
-
-						std::cout << "rhIK_Targetz = " << rhIK_Targetz << "  angle_z = " << angle_z << "  moveAngle = " << moveAngle << std::endl;
-
-						rua(moveAngle, anim_rul_x, anim_rul_y, anim_rul_z);
-						//computeSM_ikRH(rhIK_Targetx, rhIK_Targety, anim_rul_x, anim_rul_y, anim_rul_z, boneID);
-						//targetActor->SetPosition(RightHand_ObjReader_Transform->GetPosition());
-						targetActor->SetPosition(rhIK_Targetx, rhIK_Targetz, rhIK_Targety);
-						mRenderWindow->Render();
-					}
-
-				
-					std::cout << "  rhIK_Targetx = " << rhIK_Targetx << "  rhIK_Targety = " << rhIK_Targety << "  rhIK_Targetz = " << rhIK_Targetz << std::endl;
-
-					mRenderer->Render();
-
-
-					prevY = diff;
-				}
-
 
 				if (screenDiff > screenPrev)
 				{
@@ -3979,12 +3733,12 @@ namespace {
 							compute(SMrla_angleX, SMrla_x, SMrla_y, SMrla_z, boneID);
 							mRenderWindow->Render();
 						}
-						//if (boneID == 10)
-						//{
-						//	std::cout << rhIK_Targetx << std::endl;
-						//	computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
-						//	rhIK_Targetx--;
-						//}
+						if (boneID == 10)
+						{
+
+							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
+							rhIK_Targetx--;
+						}
 						if (boneID == 109)
 						{
 							SMrh_angleX -= 4;
@@ -4231,11 +3985,11 @@ namespace {
 							compute(SMrla_angleZ, SMrla_x, SMrla_y, SMrla_z, boneID);
 							mRenderWindow->Render();
 						}
-						//if (boneID == 10)
-						//{
-						//	computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
-						//	rhIK_Targety--;
-						//}
+						if (boneID == 10)
+						{
+							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
+							rhIK_Targety--;
+						}
 						if (boneID == 4)
 						{
 							SMlua_angleZ += 4;
@@ -4417,12 +4171,12 @@ namespace {
 							compute(SMrla_angleX, SMrla_x, SMrla_y, SMrla_z, boneID);
 							mRenderWindow->Render();
 						}
-						//if (boneID == 10)
-						//{
-						//	rhIK_Targetx++;
-						//	computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
+						if (boneID == 10)
+						{
+							rhIK_Targetx++;
+							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
 
-						//}
+						}
 						if (boneID == 109)
 						{
 
@@ -4687,12 +4441,12 @@ namespace {
 							compute(SMrla_angleZ, SMrla_x, SMrla_y, SMrla_z, boneID);
 							mRenderWindow->Render();
 						}
-						//if (boneID == 10)
-						//{
-						//	rhIK_Targety++;
-						//	computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
+						if (boneID == 10)
+						{
+							rhIK_Targety++;
+							computeSM_ikRH(rhIK_Targetx, rhIK_Targety, SMrh_x, SMrh_y, SMrh_z, boneID);
 
-						//}
+						}
 						if (boneID == 4)
 						{
 							animateSM_LUA(SManim_lua_angleZ, -SMlua_x, -SMlua_y, -SMlua_z);
@@ -5030,20 +4784,6 @@ namespace {
 
 			flag = 3;
 			boneID = 0;
-
-			if (this->InteractionProp == this->tartget)
-			{
-
-				b_targetSelect = true;
-				boneID = 10;
-				this->Move = true;
-
-				anim_rul_x = 0;
-				anim_rul_y = 0;
-				anim_rul_z = 1;
-
-			}
-
 			if (this->InteractionProp == this->RH_Actor)
 			{
 				boneID = 3332;
@@ -5474,53 +5214,12 @@ namespace {
 			vtkInteractorStyleTrackballActor::OnLeftButtonUp();
 			std::cout << this->Move << "	,	" << boneID << std::endl;
 			this->Move = false;
-			
 
-			if (this->InteractionProp == this->tartget)
-			{
-				//x = this->Interactor->GetEventPosition()[0];
-				//y = this->Interactor->GetEventPosition()[1];
-
-				//if (b_targetSelect)
-				//{
-				//	targetActor->SetPosition((x - oldX)/10, 0, 0);
-				//	targetActor->SetPosition(0, (y - oldY)/10, 0);
-
-
-				//	mRenderer->Render();
-				//}
-
-				//double targetPosition[3] = {0,0,0};
-				//double handPosition[3] = { 0,0,0 };
-				//double differnce[3] = { 0,0,0 };
-
-				//targetActor->GetPosition(targetPosition);
-				//RightHand_ObjReader_Transform->GetPosition(handPosition);
-				//differnce[0] = targetPosition[0] - handPosition[0];
-				//differnce[1] = targetPosition[1] - handPosition[1];
-				//differnce[2] = targetPosition[2] - handPosition[2];
-
-
-				//double diffLength = sqrt(differnce[0]* differnce[0] + differnce[1]* differnce[1] + differnce[2]* differnce[2]);
-				//if (diffLength > 0.01)
-				//{
-
-				//	
-				//}
-				
-
-
-			}
-
-			b_targetSelect = false;
 		}
 		virtual void OnLeftButtonDown() override
 		{
 			vtkInteractorStyleTrackballActor::OnLeftButtonDown();
 			cout << "Selecting Objects";
-
-			oldX = this->Interactor->GetEventPosition()[0];
-			oldY = this->Interactor->GetEventPosition()[1];
 
 			prevX = this->Interactor->GetEventPosition()[0];
 			prevY = this->Interactor->GetEventPosition()[1];
@@ -5529,21 +5228,6 @@ namespace {
 			boneID = 0;
 
 			//colorSetting(1,"Gray");
-
-			if (this->InteractionProp == this->tartget)
-			{
-				
-				b_targetSelect = true;
-				boneID = 10;
-				this->Move = true;
-
-				anim_rul_x = 1;
-				anim_rul_y = 0;
-				anim_rul_z = 0;
-
-			}
-
-
 
 			// ======================================================================================================//
 			if (this->InteractionProp == this->LH_Actor)
@@ -8067,19 +7751,6 @@ namespace {
 		{
 			vtkInteractorStyleTrackballActor::OnRightButtonDown();
 			flag = 2;
-
-
-			if (this->InteractionProp == this->tartget)
-			{
-
-				b_targetSelect = true;
-				boneID = 10;
-				this->Move = true;
-
-				anim_rul_x = 1;
-				anim_rul_y = 0;
-				anim_rul_z = 0;
-			}
 
 
 			if (this->InteractionProp == this->RH_Actor)
@@ -12415,7 +12086,6 @@ void MainWindow::displayRobot_Model(int rotate)
 	RforearmActor->SetScale(rlaObj_scale);
 
 
-
 	ConstraintProp_sphereSource->SetCenter(0.0, 50.0, 10.0);
 	ConstraintProp_sphereSource->SetRadius(consProp_sphere_size);
 	ConstraintProp_sphereSource->SetPhiResolution(100);
@@ -12663,133 +12333,6 @@ void MainWindow::displayRobot_Model(int rotate)
 	RarmTransform->RotateWXYZ(-4, 0, 0, 1);
 	LarmTransform->RotateWXYZ(4, 0, 0, 1);
 
-
-	//TargetPoint - Sphere
-	double rightData[3] = { 0,0,0 };
-	RightHand_ObjReader_Transform->GetPosition(rightData);
-	//targetTransform->Translate(rightData[0], rightData[1] - 8, rightData[2]);
-
-	targetSphere->SetCenter(rhIK_Targetx, 0, rhIK_Targety);
-	//targetSphere->SetCenter(31, 0, 0);
-	targetSphere->SetRadius(3);
-	targetSphere->SetPhiResolution(100);
-	targetSphere->SetThetaResolution(100);
-
-	targetTransform->RotateZ(270);
-	targetTransform->Translate(-100, -15, 0);
-	targetMapper->SetInputConnection(targetSphere->GetOutputPort());
-	targetActor->SetUserTransform(targetTransform);
-	targetActor->SetMapper(targetMapper);
-	targetActor->GetProperty()->SetColor(colors->GetColor3d("DarkGreen").GetData());
-
-
-
-	vtkNew<vtkNamedColors> colors;
-
-	// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
-
-	vtkNew<vtkSphereSource> sphereSource;
-	sphereSource->SetCenter(.5, 0, 0);
-
-	unsigned int res = 18;
-	sphereSource->SetThetaResolution(res * 2);
-	sphereSource->SetPhiResolution(res);
-	sphereSource->Update();
-
-	vtkNew<vtkIdFilter> cellIdFilter;
-	cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
-	cellIdFilter->SetCellIds(true);
-	cellIdFilter->SetPointIds(false);
-#if VTK890
-	cellIdFilter->SetCellIdsArrayName("CellIds");
-#else
-	cellIdFilter->SetIdsArrayName("CellIds");
-#endif
-	cellIdFilter->Update();
-
-	//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
-
-	vtkNew<vtkIdFilter> pointIdFilter;
-	pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
-	pointIdFilter->SetCellIds(false);
-	pointIdFilter->SetPointIds(true);
-#if VTK890
-	pointIdFilter->SetPointIdsArrayName("PointIds");
-#else
-	pointIdFilter->SetIdsArrayName("PointIds");
-#endif
-	pointIdFilter->Update();
-
-	vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
-
-	//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
-
-	vtkNew<vtkCubeSource> cubeSource;
-	cubeSource->Update();
-
-	vtkNew<vtkBox> implicitCube;
-	implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
-
-	vtkNew<vtkClipPolyData> clipper;
-	clipper->SetClipFunction(implicitCube);
-	clipper->SetInputData(sphereWithIds);
-	clipper->InsideOutOn();
-	clipper->Update();
-
-	//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
-
-	// Get the clipped cell ids
-	vtkPolyData* clipped = clipper->GetOutput();
-
-	std::cout << "There are " << clipped->GetNumberOfPoints()
-		<< " clipped points." << std::endl;
-	std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
-		<< std::endl;
-
-	//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
-
-	//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
-	//{
-	//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
-	//		<< std::endl;
-	//}
-
-	// Create a mapper and actor for clipped sphere
-
-	vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
-	translation->Translate(-12.0, 70.0, +30.0);
-
-	vtkNew<vtkPolyDataMapper> clippedMapper;
-	clippedMapper->SetInputConnection(clipper->GetOutputPort());
-	clippedMapper->ScalarVisibilityOff();
-
-
-	vtkNew<vtkActor> clippedActor;
-	clippedActor->SetMapper(clippedMapper);
-	clippedActor->RotateZ(90);
-	clippedActor->RotateY(90);
-	clippedActor->SetScale(60);
-	clippedActor->SetUserTransform(translation);
-	clippedActor->GetProperty()->SetOpacity(0.5);
-	clippedActor->GetProperty()->SetRepresentationToWireframe();
-	clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
-
-	// Create a mapper and actor for cube
-	vtkNew<vtkPolyDataMapper> cubeMapper;
-	cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
-
-	vtkNew<vtkActor> cubeActor;
-	cubeActor->SetMapper(cubeMapper);
-
-	cubeActor->GetProperty()->SetRepresentationToWireframe();
-	cubeActor->GetProperty()->SetOpacity(0.5);
-	cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
-
-	mRenderer->UseHiddenLineRemovalOn();
-	mRenderer->AddActor(clippedActor);
-
-
-
 	//renderer->AddActor(planeActor);
 	mRenderer->AddActor(PlconeActor);
 	mRenderer->AddActor(CUconeActor);
@@ -12810,13 +12353,11 @@ void MainWindow::displayRobot_Model(int rotate)
 	mRenderer->AddActor(LlulegActor);
 	mRenderer->AddActor(LllegActor);
 	mRenderer->AddActor(LF_objActor);
-
-	mRenderer->AddActor(targetActor);
 }
 
 void MainWindow::displayFixedFoots_Model()
 {
-	IK_rightFoot_Transform->Identity();
+	/*IK_rightFoot_Transform->Identity();
 	ffIK_rf_outlineTransform->Identity();
 	IK_rightLowerLeg_Transform->Identity();
 	IK_rightKnee_Transform->Identity();
@@ -12849,7 +12390,7 @@ void MainWindow::displayFixedFoots_Model()
 	IK_leftUpperArm_Transform->Identity();
 	IK_leftElbow_Transform->Identity();
 	IK_leftLowerArm_Transform->Identity();
-	IK_leftHand_Transform->Identity();
+	IK_leftHand_Transform->Identity();*/
 
 
 	// IK_rightFoot
@@ -13915,73 +13456,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	QObject::connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::saveImage);
 	QObject::connect(ui->btnTrajectory, &QPushButton::clicked, this, &MainWindow::drawTrajectory);
 
-	QObject::connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::drawThetaPhi);
-
-
-	//vtkNew<vtkSphereSource> sphereSource;
-	//sphereSource->SetCenter(-11.5, -2.5, -77.0);
-	//sphereSource->SetRadius(40.0);
-	//// Make the surface smooth.
-	//sphereSource->SetPhiResolution(18);
-	//sphereSource->SetThetaResolution(18);
-
-	//vtkNew<vtkPolyDataMapper> mapper;
-	//mapper->SetInputConnection(sphereSource->GetOutputPort());
-
-	//vtkNew<vtkActor> actor;
-	//actor->SetMapper(mapper);
-	//actor->RotateX(90);
-	//actor->GetProperty()->SetInterpolationToFlat();
-	//actor->GetProperty()->SetOpacity(0.5);
-	//actor->GetProperty()->SetRepresentationToWireframe();
-	//actor->GetProperty()->SetColor(colors->GetColor3d("Azure").GetData());
-	//mRenderer->AddActor(actor);
-	//mRenderer->UseHiddenLineRemovalOn();
-
-	//auto colors = vtkSmartPointer<vtkNamedColors>::New();
-	//vtkColor3d actorColor = colors->GetColor3d("AliceBlue");
-	//vtkColor3d EdgeColour = colors->GetColor3d("SteelBlue");
-	//vtkColor3d BackgroundColour = colors->GetColor3d("Silver");
-
-	//// create a sphere
-	//auto sphere = vtkSmartPointer<vtkSphere>::New();
-	//sphere->SetCenter(0.0, 0.0, 0.0);
-	//sphere->SetRadius(0.5);
-
-	///* The sample function generates a distance function from the implicit
-	//	   function.This is then contoured to get a polygonal surface.*/
-	//auto sample = vtkSmartPointer<vtkSampleFunction>::New();
-	//sample->SetImplicitFunction(sphere);
-	////sample->SetModelBounds(-.5, .5, -.5, .5, -.5, .5);
-	//sample->SetSampleDimensions(20, 20, 20);
-	//sample->ComputeNormalsOff();
-
-	//// contour
-	//auto surface = vtkSmartPointer<vtkContourFilter>::New();
-	//surface->SetInputConnection(sample->GetOutputPort());
-	//surface->SetValue(3, 0.);
-
-	//// Create a mapper and an actor
-	//auto mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-	//mapper->SetInputConnection(surface->GetOutputPort());
-	//mapper->ScalarVisibilityOff();
-	//auto actor = vtkSmartPointer<vtkActor>::New();
-	//actor->SetMapper(mapper);
-	//actor->GetProperty()->EdgeVisibilityOn();
-	//actor->GetProperty()->SetColor(actorColor.GetData());
-	//actor->GetProperty()->SetEdgeColor(EdgeColour.GetData());
-
-
-
-
 }
 
 MainWindow::~MainWindow() {
     delete ui;
-}
-
-void MainWindow::moveToward(std::vector<double> target)
-{
 }
 
 void MainWindow::selectModel(int ID)
@@ -14682,7 +14160,6 @@ void MainWindow::authoring_mode()
 
 	style->ConsProp_plane_actor = ConstraintProp_plane_actor;
 	style->ConsProp_cube_actor = ConstraintProp_cube_actor;
-	style->tartget = targetActor;
 
 	mInteractor->SetInteractorStyle(style);
 	mInteractor->Start();
@@ -15293,14 +14770,13 @@ void MainWindow::onDrawSphereClick() {
 	//// Create the actor where the sphere is rendered
 	//vtkSmartPointer<vtkPolyDataMapper> sphereMapper =
 	//	vtkSmartPointer<vtkPolyDataMapper>::New();
-	//sphereMapper->SetInputData(coneSource->GetOutput());  
+	//sphereMapper->SetInputData(coneSource->GetOutput());
+
 	//vtkSmartPointer<vtkActor> cone = vtkSmartPointer<vtkActor>::New();
 	//cone->SetMapper(sphereMapper);
 
-	//// Add the sphere actor to the OpenGL   
+	//// Add the sphere actor to the OpenGL
 	//mRenderer->AddViewProp(cone);
-
-
 
 	mRenderer->ResetCamera();
 	mRenderWindow->Render();
@@ -15310,31 +14786,6 @@ void MainWindow::onDrawSphereClick() {
 	vtkNew<customMouseInteractorStyle> style;
 	renderWindowInteractor->SetInteractorStyle(style);
 	renderWindowInteractor->Start();
-
-
-}
-
-void MainWindow::drawThetaPhi()
-{
-
-	std::cout << "theta phi" << std::endl;
-
-	QString q_theta = ui->edit_theta->text();
-	QString q_phi = ui->edit_phi->text();
-
-	int getTheta = 0;
-	int getPhi = 0;
-
-
-	if(q_theta.toStdString().size()>0)
-		getTheta = stoi(q_theta.toStdString());
-	
-
-	if (q_phi.toStdString().size() > 0)
-		getPhi = stoi(q_phi.toStdString());
-
-
-	std::cout << getTheta << "  " << getPhi << std::endl;
 
 
 }

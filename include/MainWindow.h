@@ -51,7 +51,6 @@ public:
     ~MainWindow();
 
 	std::vector<JointMove> savedPoses;
-	void moveToward(std::vector<double> target);
 
 
 
@@ -68,8 +67,6 @@ public slots:
 
 	void saveImage();
 	void drawTrajectory();
-
-	void drawThetaPhi();
 
 
 };
