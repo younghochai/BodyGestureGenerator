@@ -16891,7 +16891,7 @@ void MainWindow::sensingPlay()
 
 			rll(readSensingAngles_RL[i].x_roll* scaleFactor, 1, 0, 0);
 			rll(readSensingAngles_RL[i].y_pitch* scaleFactor, 0, 1, 0);
-			rll(readSensingAngles_RL[i].z_yaw* scaleFactor, 0, 0, 1);
+			rll(readSensingAngles_RL[i].z_yaw* scaleFactor, 0, 0, 1); 
 
 			lul(readSensingAngles_LU[i].x_roll* scaleFactor, 1, 0, 0);
 			lul(readSensingAngles_LU[i].y_pitch* scaleFactor, 0, 1, 0);
