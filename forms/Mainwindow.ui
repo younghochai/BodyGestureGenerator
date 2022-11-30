@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1215</width>
-    <height>935</height>
+    <width>1190</width>
+    <height>849</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,32 +15,12 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="3">
-     <widget class="QPushButton" name="btnSave">
+    <item row="0" column="2">
+     <widget class="QPushButton" name="drawSphere_button">
       <property name="text">
-       <string>SaveImage</string>
+       <string>Draw Button</string>
       </property>
      </widget>
-    </item>
-    <item row="1" column="6">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Phi</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="7">
-     <widget class="QLineEdit" name="edit_theta"/>
-    </item>
-    <item row="0" column="6">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Theta</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="7">
-     <widget class="QLineEdit" name="edit_phi"/>
     </item>
     <item row="1" column="2">
      <widget class="QPushButton" name="btnAdd">
@@ -49,17 +29,10 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="3">
-     <widget class="QPushButton" name="btnTrajectory">
-      <property name="text">
-       <string>Trajectory</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QPushButton" name="drawSphere_button">
-      <property name="text">
-       <string>Draw Button</string>
+    <item row="2" column="1" colspan="4">
+     <widget class="QVTKOpenGLWidget" name="openGLWidget">
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
       </property>
      </widget>
     </item>
@@ -73,7 +46,7 @@
     <item row="0" column="1">
      <widget class="QComboBox" name="comboBox"/>
     </item>
-    <item row="0" column="5" rowspan="2">
+    <item row="0" column="4" rowspan="2">
      <widget class="QListWidget" name="listWidget">
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
@@ -83,17 +56,17 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="8">
-     <widget class="QPushButton" name="btnDraw">
+    <item row="0" column="3">
+     <widget class="QPushButton" name="btnSave">
       <property name="text">
-       <string>Draw</string>
+       <string>SaveImage</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1" colspan="8">
-     <widget class="QVTKOpenGLWidget" name="openGLWidget">
-      <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="btnTrajectory">
+      <property name="text">
+       <string>Trajectory</string>
       </property>
      </widget>
     </item>
@@ -104,7 +77,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1215</width>
+     <width>1190</width>
      <height>21</height>
     </rect>
    </property>
