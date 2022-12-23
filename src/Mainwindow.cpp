@@ -14404,8 +14404,6 @@ void MainWindow::nextPosition()
 		string str;
 		ob >> str;
 
-		//cout << "str : "<<str << "\n";
-		//cout << "str : " <<std::stoi(str) << "\n";
 		cnt++;
 		if (cnt % 3 == 1)
 		{
@@ -14440,6 +14438,7 @@ void MainWindow::nextPosition()
 void MainWindow::sensingPlay()
 {
 
+	// 걸음걸이 분석 데이터 로드 
 	readSensingAngles.clear();
 	readSensingAngles_LU.clear();
 	readSensingAngles_RL.clear();
@@ -14458,10 +14457,6 @@ void MainWindow::sensingPlay()
 
 	fname = "./playSensingData/3_LeftKnee.csv";
 	multiSensingDataRead(fname, readSensingAngles_LL);
-
-
-
-
 
 
 	if (readSensingAngles.size() > 0)
