@@ -18,6 +18,7 @@
 #include <cmath>
 #include <io.h>
 
+using namespace std;
 
 
 
@@ -25,14 +26,8 @@ struct EulerAngles {
 	double x_roll, y_pitch, z_yaw;
 };
 
-using namespace std;
-
-
-std::vector<string> senserDataFileName;
-std::vector<Quaternion> readSensingQuaternion;
 std::vector< EulerAngles> readSensingAngles;
 std::vector< EulerAngles> readSensingAngles_RL;
-
 std::vector< EulerAngles> readSensingAngles_LU;
 std::vector< EulerAngles> readSensingAngles_LL;
 
@@ -13990,9 +13985,9 @@ void multiSensingDataRead(string filePath, std::vector<EulerAngles>& out)
 }
 
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget* parent) :
+	QMainWindow(parent),
+	ui(new Ui::MainWindow)
 {
 
 	mRenderWindow = vtkSmartPointer<vtkGenericOpenGLRenderWindow>::New();
@@ -14007,14 +14002,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	savedTarget.clear();
 
 
-    ui->setupUi(this);
+	ui->setupUi(this);
 
 	// Set up the rendering
 	mRenderWindow->AddRenderer(mRenderer);
 
 	mRenderWindow->SetInteractor(mInteractor);
-    //ui->openGLWidget->SetRenderWindow(mRenderWindow);
-    ui->openGLWidget->setRenderWindow(mRenderWindow);
+	//ui->openGLWidget->SetRenderWindow(mRenderWindow);
+	ui->openGLWidget->setRenderWindow(mRenderWindow);
 	mInteractor->SetInteractorStyle(mInteractorStyle);
 	mInteractor->Initialize();
 
@@ -14033,50 +14028,50 @@ MainWindow::MainWindow(QWidget *parent) :
 	for (int i = 0; i < 13; i++)
 	{
 
-	  qp[i].setW(1); qp[i].setX(0); qp[i].setY(0); qp[i].setZ(0);
-	  qx[i].setW(1); qx[i].setX(0); qx[i].setY(0); qx[i].setZ(0);
-	  qy[i].setW(1); qy[i].setX(0); qy[i].setY(0); qy[i].setZ(0);
-	  qz[i].setW(1); qz[i].setX(0); qz[i].setY(0); qz[i].setZ(0);
+		qp[i].setW(1); qp[i].setX(0); qp[i].setY(0); qp[i].setZ(0);
+		qx[i].setW(1); qx[i].setX(0); qx[i].setY(0); qx[i].setZ(0);
+		qy[i].setW(1); qy[i].setX(0); qy[i].setY(0); qy[i].setZ(0);
+		qz[i].setW(1); qz[i].setX(0); qz[i].setY(0); qz[i].setZ(0);
 
-	  xaxisQP[i].setW(1); xaxisQP[i].setX(0); xaxisQP[i].setY(0); xaxisQP[i].setZ(0);
-	  xaxisQX[i].setW(1); xaxisQX[i].setX(0); xaxisQX[i].setY(0); xaxisQX[i].setZ(0);
-	  xaxisQY[i].setW(1); xaxisQY[i].setX(0); xaxisQY[i].setY(0); xaxisQY[i].setZ(0);
-	  xaxisQZ[i].setW(1); xaxisQZ[i].setX(0); xaxisQZ[i].setY(0); xaxisQZ[i].setZ(0);
+		xaxisQP[i].setW(1); xaxisQP[i].setX(0); xaxisQP[i].setY(0); xaxisQP[i].setZ(0);
+		xaxisQX[i].setW(1); xaxisQX[i].setX(0); xaxisQX[i].setY(0); xaxisQX[i].setZ(0);
+		xaxisQY[i].setW(1); xaxisQY[i].setX(0); xaxisQY[i].setY(0); xaxisQY[i].setZ(0);
+		xaxisQZ[i].setW(1); xaxisQZ[i].setX(0); xaxisQZ[i].setY(0); xaxisQZ[i].setZ(0);
 
-	  yaxisQP[i].setW(1); yaxisQP[i].setX(0); zaxisQP[i].setY(0); zaxisQP[i].setZ(0);
-	  yaxisQX[i].setW(1); yaxisQX[i].setX(0); zaxisQX[i].setY(0); zaxisQX[i].setZ(0);
-	  yaxisQY[i].setW(1); yaxisQY[i].setX(0); zaxisQY[i].setY(0); zaxisQY[i].setZ(0);
-	  yaxisQZ[i].setW(1); yaxisQZ[i].setX(0); zaxisQZ[i].setY(0); zaxisQZ[i].setZ(0);
+		yaxisQP[i].setW(1); yaxisQP[i].setX(0); zaxisQP[i].setY(0); zaxisQP[i].setZ(0);
+		yaxisQX[i].setW(1); yaxisQX[i].setX(0); zaxisQX[i].setY(0); zaxisQX[i].setZ(0);
+		yaxisQY[i].setW(1); yaxisQY[i].setX(0); zaxisQY[i].setY(0); zaxisQY[i].setZ(0);
+		yaxisQZ[i].setW(1); yaxisQZ[i].setX(0); zaxisQZ[i].setY(0); zaxisQZ[i].setZ(0);
 
-	  zaxisQP[i].setW(1); zaxisQP[i].setX(0); zaxisQP[i].setY(0); zaxisQP[i].setZ(0);
-	  zaxisQX[i].setW(1); zaxisQX[i].setX(0); zaxisQX[i].setY(0); zaxisQX[i].setZ(0);
-	  zaxisQY[i].setW(1); zaxisQY[i].setX(0); zaxisQY[i].setY(0); zaxisQY[i].setZ(0);
-	  zaxisQZ[i].setW(1); zaxisQZ[i].setX(0); zaxisQZ[i].setY(0); zaxisQZ[i].setZ(0);
+		zaxisQP[i].setW(1); zaxisQP[i].setX(0); zaxisQP[i].setY(0); zaxisQP[i].setZ(0);
+		zaxisQX[i].setW(1); zaxisQX[i].setX(0); zaxisQX[i].setY(0); zaxisQX[i].setZ(0);
+		zaxisQY[i].setW(1); zaxisQY[i].setX(0); zaxisQY[i].setY(0); zaxisQY[i].setZ(0);
+		zaxisQZ[i].setW(1); zaxisQZ[i].setX(0); zaxisQZ[i].setY(0); zaxisQZ[i].setZ(0);
 
-	  // For Inverse kinematics 
-	  qpIK[i].setW(1); qpIK[i].setX(0); qpIK[i].setY(0); qpIK[i].setZ(0);
-	  qxIK[i].setW(1); qxIK[i].setX(0); qxIK[i].setY(0); qxIK[i].setZ(0);
-	  qyIK[i].setW(1); qyIK[i].setX(0); qyIK[i].setY(0); qyIK[i].setZ(0);
-	  qzIK[i].setW(1); qzIK[i].setX(0); qzIK[i].setY(0); qzIK[i].setZ(0);
+		// For Inverse kinematics 
+		qpIK[i].setW(1); qpIK[i].setX(0); qpIK[i].setY(0); qpIK[i].setZ(0);
+		qxIK[i].setW(1); qxIK[i].setX(0); qxIK[i].setY(0); qxIK[i].setZ(0);
+		qyIK[i].setW(1); qyIK[i].setX(0); qyIK[i].setY(0); qyIK[i].setZ(0);
+		qzIK[i].setW(1); qzIK[i].setX(0); qzIK[i].setY(0); qzIK[i].setZ(0);
 
-	  xaxisQP_IK[i].setW(1); xaxisQP_IK[i].setX(0); xaxisQP_IK[i].setY(0); xaxisQP_IK[i].setZ(0);
-	  xaxisQX_IK[i].setW(1); xaxisQX_IK[i].setX(0); xaxisQX_IK[i].setY(0); xaxisQX_IK[i].setZ(0);
-	  xaxisQY_IK[i].setW(1); xaxisQY_IK[i].setX(0); xaxisQY_IK[i].setY(0); xaxisQY_IK[i].setZ(0);
-	  xaxisQZ_IK[i].setW(1); xaxisQZ_IK[i].setX(0); xaxisQZ_IK[i].setY(0); xaxisQZ_IK[i].setZ(0);
-	  yaxisQP_IK[i].setW(1); yaxisQP_IK[i].setX(0); zaxisQP_IK[i].setY(0); zaxisQP_IK[i].setZ(0);
-	  yaxisQX_IK[i].setW(1); yaxisQX_IK[i].setX(0); zaxisQX_IK[i].setY(0); zaxisQX_IK[i].setZ(0);
-	  yaxisQY_IK[i].setW(1); yaxisQY_IK[i].setX(0); zaxisQY_IK[i].setY(0); zaxisQY_IK[i].setZ(0);
-	  yaxisQZ_IK[i].setW(1); yaxisQZ_IK[i].setX(0); zaxisQZ_IK[i].setY(0); zaxisQZ_IK[i].setZ(0);
-	  zaxisQP_IK[i].setW(1); zaxisQP_IK[i].setX(0); zaxisQP_IK[i].setY(0); zaxisQP_IK[i].setZ(0);
-	  zaxisQX_IK[i].setW(1); zaxisQX_IK[i].setX(0); zaxisQX_IK[i].setY(0); zaxisQX_IK[i].setZ(0);
-	  zaxisQY_IK[i].setW(1); zaxisQY_IK[i].setX(0); zaxisQY_IK[i].setY(0); zaxisQY_IK[i].setZ(0);
-	  zaxisQZ_IK[i].setW(1); zaxisQZ_IK[i].setX(0); zaxisQZ_IK[i].setY(0); zaxisQZ_IK[i].setZ(0);
- 
+		xaxisQP_IK[i].setW(1); xaxisQP_IK[i].setX(0); xaxisQP_IK[i].setY(0); xaxisQP_IK[i].setZ(0);
+		xaxisQX_IK[i].setW(1); xaxisQX_IK[i].setX(0); xaxisQX_IK[i].setY(0); xaxisQX_IK[i].setZ(0);
+		xaxisQY_IK[i].setW(1); xaxisQY_IK[i].setX(0); xaxisQY_IK[i].setY(0); xaxisQY_IK[i].setZ(0);
+		xaxisQZ_IK[i].setW(1); xaxisQZ_IK[i].setX(0); xaxisQZ_IK[i].setY(0); xaxisQZ_IK[i].setZ(0);
+		yaxisQP_IK[i].setW(1); yaxisQP_IK[i].setX(0); zaxisQP_IK[i].setY(0); zaxisQP_IK[i].setZ(0);
+		yaxisQX_IK[i].setW(1); yaxisQX_IK[i].setX(0); zaxisQX_IK[i].setY(0); zaxisQX_IK[i].setZ(0);
+		yaxisQY_IK[i].setW(1); yaxisQY_IK[i].setX(0); zaxisQY_IK[i].setY(0); zaxisQY_IK[i].setZ(0);
+		yaxisQZ_IK[i].setW(1); yaxisQZ_IK[i].setX(0); zaxisQZ_IK[i].setY(0); zaxisQZ_IK[i].setZ(0);
+		zaxisQP_IK[i].setW(1); zaxisQP_IK[i].setX(0); zaxisQP_IK[i].setY(0); zaxisQP_IK[i].setZ(0);
+		zaxisQX_IK[i].setW(1); zaxisQX_IK[i].setX(0); zaxisQX_IK[i].setY(0); zaxisQX_IK[i].setZ(0);
+		zaxisQY_IK[i].setW(1); zaxisQY_IK[i].setX(0); zaxisQY_IK[i].setY(0); zaxisQY_IK[i].setZ(0);
+		zaxisQZ_IK[i].setW(1); zaxisQZ_IK[i].setX(0); zaxisQZ_IK[i].setY(0); zaxisQZ_IK[i].setZ(0);
+
 	}
 
 
- quatTo_posFile.open("pos.txt");
- quatTo_posFile << "FULLBODY" << "\t" << "1" << endl;
+	quatTo_posFile.open("pos.txt");
+	quatTo_posFile << "FULLBODY" << "\t" << "1" << endl;
 
 
 
@@ -14114,7 +14109,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	{
 		string str;
-		ob >> str;	
+		ob >> str;
 
 		//cout << "str : "<<str << "\n";
 		//cout << "str : " <<std::stoi(str) << "\n";
@@ -14140,194 +14135,11 @@ MainWindow::MainWindow(QWidget *parent) :
 			temp.pos_x = 0;
 			temp.pos_y = 0;
 			temp.pos_z = 0;
-			
+
 		}
 	}
 
 	ob.close();	//closing the file after use
-
-	//vtkNew<vtkSphereSource> sphereSource;
-	//sphereSource->SetCenter(-11.5, -2.5, -77.0);
-	//sphereSource->SetRadius(40.0);
-	//// Make the surface smooth.
-	//sphereSource->SetPhiResolution(18);
-	//sphereSource->SetThetaResolution(18);
-
-	//vtkNew<vtkPolyDataMapper> mapper;
-	//mapper->SetInputConnection(sphereSource->GetOutputPort());
-
-	//vtkNew<vtkActor> actor;
-	//actor->SetMapper(mapper);
-	//actor->RotateX(90);
-	//actor->GetProperty()->SetInterpolationToFlat();
-	//actor->GetProperty()->SetOpacity(0.5);
-	//actor->GetProperty()->SetRepresentationToWireframe();
-	//actor->GetProperty()->SetColor(colors->GetColor3d("Azure").GetData());
-	//mRenderer->AddActor(actor);
-	//mRenderer->UseHiddenLineRemovalOn();
-
-	//auto colors = vtkSmartPointer<vtkNamedColors>::New();
-	//vtkColor3d actorColor = colors->GetColor3d("AliceBlue");
-	//vtkColor3d EdgeColour = colors->GetColor3d("SteelBlue");
-	//vtkColor3d BackgroundColour = colors->GetColor3d("Silver");
-
-	//// create a sphere
-	//auto sphere = vtkSmartPointer<vtkSphere>::New();
-	//sphere->SetCenter(0.0, 0.0, 0.0);
-	//sphere->SetRadius(0.5);
-
-	///* The sample function generates a distance function from the implicit
-	//	   function.This is then contoured to get a polygonal surface.*/
-	//auto sample = vtkSmartPointer<vtkSampleFunction>::New();
-	//sample->SetImplicitFunction(sphere);
-	////sample->SetModelBounds(-.5, .5, -.5, .5, -.5, .5);
-	//sample->SetSampleDimensions(20, 20, 20);
-	//sample->ComputeNormalsOff();
-
-	//// contour
-	//auto surface = vtkSmartPointer<vtkContourFilter>::New();
-	//surface->SetInputConnection(sample->GetOutputPort());
-	//surface->SetValue(3, 0.);
-
-	//// Create a mapper and an actor
-	//auto mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-	//mapper->SetInputConnection(surface->GetOutputPort());
-	//mapper->ScalarVisibilityOff();
-	//auto actor = vtkSmartPointer<vtkActor>::New();
-	//actor->SetMapper(mapper);
-	//actor->GetProperty()->EdgeVisibilityOn();
-	//actor->GetProperty()->SetColor(actorColor.GetData());
-	//actor->GetProperty()->SetEdgeColor(EdgeColour.GetData());
-
-
-
-	//std::vector<string> senserDataFileName;
-	//senserDataFileName.clear();
-
-
-	////string path = "C:\\Users\\pssil\\Desktop\\dataset\\input data_SD\\input data_SD\\1\\16-*.*";
-
-	//string path = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\1-*.csv";
-
-	////C:\Users\SSPARK\Desktop\dataset\testQuat
-	////C:\Users\pssil\Desktop\dataset\testQuat
-	//struct _finddata_t fd;	
-	//intptr_t handle;	
-	//if ((handle = _findfirst(path.c_str(), &fd)) == -1L)		
-	//	cout << "No file in directory!" << endl;	
-	//do 
-	//{ 
-	//	cout << fd.name << endl; 
-	//	senserDataFileName.push_back(fd.name);
-	//} 
-	//while (_findnext(handle, &fd) == 0);	
-	//_findclose(handle);
-
-	//std::cout << senserDataFileName.size() << std::endl;
-
-
-
-
-	//for (int i = 0; i < senserDataFileName.size(); i++)
-	//{
-	//	std::cout << senserDataFileName[i] << std::endl;
-	//}
-
-	//vector<vector<string>> content;
-	//vector<string> row;
-	//string line, word;
-
-
-	//string fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\"+ senserDataFileName[1];
-	//multiSensingDataRead(fname, readSensingAngles);
-
-	//fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\" + senserDataFileName[0];
-	//multiSensingDataRead(fname, readSensingAngles_LU);
-
-	//fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\" + senserDataFileName[3];
-	//multiSensingDataRead(fname, readSensingAngles_RL);
-
-	//fname = "C:\\Users\\pssil\\Desktop\\dataset\\testQuat\\" + senserDataFileName[4];
-	//multiSensingDataRead(fname, readSensingAngles_LL);
-
-
-	//std::vector< EulerAngles_VAR> readSensingAngles;
-	//std::vector< EulerAngles_VAR> readSensingAngles_RL;
-
-	//std::vector< EulerAngles_VAR> readSensingAngles_LU;
-	//std::vector< EulerAngles_VAR> readSensingAngles_LL;
-
-	//std::cout << fname << std::endl;
-	//fstream file(fname, ios::in);
-	//if (file.is_open())
-	//{
-	//	while (getline(file, line))
-	//	{
-	//		row.clear();
-
-	//		stringstream str(line);
-
-	//		while (getline(str, word, ','))
-	//			row.push_back(word);
-	//		content.push_back(row);
-	//	}
-	//}
-	//else
-	//	cout << "Could not open the file\n";
-
-
-	//
-	//readSensingQuaternion.clear();
-
-	//for (int i = 0; i < content.size(); i++)
-	//{
-	//	//for (int j = 0; j < content[i].size(); j++)
-	//	//{
-	//	//	cout << content[i][j] << " ";
-	//	//}
-
-	//	if (content[i].size() > 0)
-	//	{
-	//		
-	//		cout << content[i][1] << " " << content[i][2] << " " << content[i][3] << " " << content[i][4];
-	//		if (i == 0 || i == 1) continue;
-	//		Quaternion temp;
-	//		temp.setW(std::stod(content[i][1]));
-	//		temp.setX(std::stod(content[i][2]));
-	//		temp.setY(std::stod(content[i][3]));
-	//		temp.setZ(std::stod(content[i][4]));
-
-	//		readSensingQuaternion.push_back(temp);
-
-	//		cout << endl;
-	//	}
-	//}
-
-	//std::cout << "readSensingQuaternion.size() = " << readSensingQuaternion.size() << std::endl;
-
-	//double totalx = 0;
-	//double totaly = 0;
-	//double totalz = 0;
-
-	//readSensingAngles.clear();
-
-	//for (int i = 0; i < readSensingQuaternion.size(); i++)
-	//{
-
-	//	if (i == 0) continue;
-
-	//	readSensingQuaternion[i] = readSensingQuaternion[i].multiply(readSensingQuaternion[1].inverse());
-	//	readSensingQuaternion[i].toEulerAngle(totalx, totaly, totalz);
-	//	
-	//	std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
-
-	//	EulerAngles_VAR temp;
-	//	temp.x_roll = totalx;
-	//	temp.y_pitch = totaly;
-	//	temp.z_yaw = totalz;
-
-	//	readSensingAngles.push_back(temp);
-	//}
 }
 
 MainWindow::~MainWindow() {
@@ -14650,88 +14462,6 @@ void MainWindow::selectModel(int ID)
 		//jointSpheres();
 		mRenderWindow->Render();
 	}
-	//if (ID == 2)
-	//{
-	//	male_biped = 0;
-	//	vitruvian_biped = 1;
-	//	skeleton_biped = 0;
-
-	//	renderer->RemoveActor(stickModel_pelvisActor);
-
-	//	renderer->RemoveActor(stickModel_chest_0_Actor);
-	//	renderer->RemoveActor(stickModel_chest_1_Actor);
-	//	renderer->RemoveActor(stickModel_chest_2_Actor);
-	//	renderer->RemoveActor(stickModel_chest_3_Actor);
-
-	//	renderer->RemoveActor(stickModel_head_Actor);
-
-	//	renderer->RemoveActor(stickModel_rightShoulderJoint_Actor);
-	//	renderer->RemoveActor(stickModel_rightUpperArm_Actor);
-	//	renderer->RemoveActor(stickModel_rightElbow_Actor);
-	//	renderer->RemoveActor(stickModel_rightLowerArm_Actor);
-	//	renderer->RemoveActor(stickModel_rightHand_Actor);
-
-	//	renderer->RemoveActor(stickModel_leftShoulderJoint_Actor);
-	//	renderer->RemoveActor(stickModel_leftUpperArm_Actor);
-	//	renderer->RemoveActor(stickModel_leftElbow_Actor);
-	//	renderer->RemoveActor(stickModel_leftLowerArm_Actor);
-	//	renderer->RemoveActor(stickModel_leftHand_Actor);
-
-	//	renderer->RemoveActor(stickModel_rightLegJoint_Actor);
-	//	renderer->RemoveActor(stickModel_rightUpperLeg_Actor);
-	//	renderer->RemoveActor(stickModel_rightKnee_Actor);
-	//	renderer->RemoveActor(stickModel_rightLowerLeg_Actor);
-	//	renderer->RemoveActor(stickModel_rightFoot_Actor);
-
-	//	renderer->RemoveActor(stickModel_leftLegJoint_Actor);
-	//	renderer->RemoveActor(stickModel_leftUpperLeg_Actor);
-	//	renderer->RemoveActor(stickModel_leftKnee_Actor);
-	//	renderer->RemoveActor(stickModel_leftLowerLeg_Actor);
-	//	renderer->RemoveActor(stickModel_leftFoot_Actor);
-
-	//	renderer->RemoveActor(none_xaxis_actor);
-	//	renderer->RemoveActor(none_yaxis_actor);
-	//	renderer->RemoveActor(none_zaxis_actor);
-
-
-	//	renderer->RemoveActor(PlconeActor);
-	//	renderer->RemoveActor(CUconeActor);
-	//	renderer->RemoveActor(Head_objActor);
-
-	//	renderer->RemoveActor(RarmActor);
-	//	renderer->RemoveActor(RforearmActor);
-	//	renderer->RemoveActor(RightHand_objActor);
-
-
-	//	renderer->RemoveActor(LarmActor);
-	//	renderer->RemoveActor(LforearmActor);
-	//	renderer->RemoveActor(LeftHand_objActor);
-
-
-	//	renderer->RemoveActor(RlulegActor);
-	//	renderer->RemoveActor(RllegActor);
-	//	renderer->RemoveActor(RF_objActor);
-
-	//	renderer->RemoveActor(LlulegActor);
-	//	renderer->RemoveActor(LllegActor);
-	//	renderer->RemoveActor(LF_objActor);
-
-	//	renderer->RemoveActor(pelvisJS_actor);
-	//	renderer->RemoveActor(chestJS_actor);
-	//	renderer->RemoveActor(LUA_JS_actor);
-	//	renderer->RemoveActor(LLA_JS_actor);
-	//	renderer->RemoveActor(RUA_JS_actor);
-	//	renderer->RemoveActor(RLA_JS_actor);
-	//	renderer->RemoveActor(LUL_JS_actor);
-	//	renderer->RemoveActor(LLL_JS_actor);
-	//	renderer->RemoveActor(RUL_JS_actor);
-	//	renderer->RemoveActor(RLL_JS_actor);
-
-
-	//	vAvatar.initializeVetruvianVtkAvatar();
-	//	vAvatar.startVetruvianAvatar();
-	//	renderWindow->Render();
-	//}
 	if (ID == 2)
 	{
 
