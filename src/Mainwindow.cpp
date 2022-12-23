@@ -13083,7 +13083,6 @@ void MainWindow::authoring_mode()
 	style->TConsProp_sphere_actor2 = TConstraintProp_sphere_actor2;
 	style->TConsProp_sphere_actor3 = TConstraintProp_sphere_actor3;
 
-	//style->ConsProp_line_actor = ConstraintProp_line_actor;
 	style->ConsProp_line_actor = ConstraintProp_line_actor1;
 	style->TConsProp_line_actor = TConstraintProp_line_actor1;
 	style->TConsProp_line_actor2 = TConstraintProp_line_actor2;
@@ -13325,12 +13324,6 @@ void MainWindow::selectList()
 	mRenderer->RemoveActor(none_yaxis_actor);
 	mRenderer->RemoveActor(none_zaxis_actor);
 
-	//this->fullbodyIK_checkBox->setChecked(0);
-	//this->rhIK_checkBox->setChecked(0);
-	//this->lhIK_checkBox->setChecked(0);
-	//this->rfIK_checkBox->setChecked(0);
-	//this->lfIK_checkBox->setChecked(0);
-
 	mRenderer->RemoveActor(rh_outlineActor);
 	rhIK_flag = 0;
 	mRenderer->RemoveActor(lh_outlineActor);
@@ -13350,26 +13343,6 @@ void MainWindow::selectList()
 	mRenderer->RemoveActor(LLL_JS_actor);
 	mRenderer->RemoveActor(RUL_JS_actor);
 	mRenderer->RemoveActor(RLL_JS_actor);
-
-	//vtkActorCollection* actors = vtkActorCollection::New();
-	//int NumberOfActors = renderer->VisibleActorCount();
-	//actors = mRenderer->GetActors();
-	//actors->InitTraversal();
-	//for (int i = 0; i < NumberOfActors; i++) {
-	//	mRenderer->RemoveActor(actors->GetNextActor());
-	//}
-	//actors->Delete();
-
-
-
-	//this->freeFoots_radioButton->setChecked(true);
-	//this->fixedFoots_radioButton->setChecked(false);
-	//this->fixedRF_radioButton->setChecked(false);
-	//this->fixedLF_radioButton->setChecked(false);
-	//this->freeFoots_radioButton->setEnabled(false);
-	//this->fixedFoots_radioButton->setEnabled(false);
-	//this->fixedRF_radioButton->setEnabled(false);
-	//this->fixedLF_radioButton->setEnabled(false);
 
 
 	if(selectidx == 3)
@@ -13463,47 +13436,6 @@ void MainWindow::selectList()
 	style->ConsProp_plane_actor = ConstraintProp_plane_actor;
 	style->ConsProp_cube_actor = ConstraintProp_cube_actor;
 
-
-
-	/*
-	style->CHEST(savedPoses[selectidx].chest[0], -1, 0, 0);
-	style->CHEST(savedPoses[selectidx].chest[1], 0, -1, 0);
-	style->CHEST(savedPoses[selectidx].chest[2], 0, 0, 1);
-	
-	style->lla(savedPoses[selectidx].lla[0], -1, 0, 0);
-	style->lla(savedPoses[selectidx].lla[1], 0, 1, 0);
-	style->lla(savedPoses[selectidx].lla[2], 0, 0, 1);
-
-	style->rla(savedPoses[selectidx].rla[0], -1, 0, 0);
-	style->rla(savedPoses[selectidx].rla[1], 0, 1, 0);
-	style->rla(savedPoses[selectidx].rla[2], 0, 0, -1);
-
-	style->rua(savedPoses[selectidx].rua[0], -1, 0, 0);
-	style->rua(savedPoses[selectidx].rua[1], 0, 1, 0);
-	style->rua(savedPoses[selectidx].rua[2], 0, 0, -1);
-
-	style->lua(savedPoses[selectidx].lua[0], -1, 0, 0);
-	style->lua(savedPoses[selectidx].lua[1], 0, 1, 0);
-	style->lua(savedPoses[selectidx].lua[2], 0, 0, 1);
-
-	style->lll(savedPoses[selectidx].lll[0], -1, 0, 0);
-	style->lll(savedPoses[selectidx].lll[1], 0, 1, 0);
-	style->lll(savedPoses[selectidx].lll[2], 0, 0, 1);
-
-	style->lul(savedPoses[selectidx].lul[0], -1, 0, 0);
-	style->lul(savedPoses[selectidx].lul[1], 0, 1, 0);
-	style->lul(savedPoses[selectidx].lul[2], 0, 0, 1);
-
-
-	style->rll(savedPoses[selectidx].rll[0], -1, 0, 0);
-	style->rll(savedPoses[selectidx].rll[1], 0, 1, 0);
-	style->rll(savedPoses[selectidx].rll[2], 0, 0, -1);
-
-	style->rul(savedPoses[selectidx].rul[0], -1, 0, 0);
-	style->rul(savedPoses[selectidx].rul[1], 0, 1, 0);
-	style->rul(savedPoses[selectidx].rul[2], 0, 0, -1);
-
-	*/
 	mInteractor->SetInteractorStyle(style);
 	mInteractor->SetRenderWindow(mRenderWindow);
 
@@ -13691,29 +13623,9 @@ void MainWindow::onDrawSphereClick() {
 
 
 	displayRobot_Model(1);
-	//jointSpheres();
-	//// Create sphere
-	//vtkSmartPointer<vtkConeSource> coneSource =
-	//	vtkSmartPointer<vtkConeSource>::New();
-	////coneSource->SetRadius(5);
-	//coneSource->Update();
-
-	//// Create the actor where the sphere is rendered
-	//vtkSmartPointer<vtkPolyDataMapper> sphereMapper =
-	//	vtkSmartPointer<vtkPolyDataMapper>::New();
-	//sphereMapper->SetInputData(coneSource->GetOutput());  
-	//vtkSmartPointer<vtkActor> cone = vtkSmartPointer<vtkActor>::New();
-	//cone->SetMapper(sphereMapper);
-
-	//// Add the sphere actor to the OpenGL   
-	//mRenderer->AddViewProp(cone);
-
-
 
 	mRenderer->ResetCamera();
 	mRenderWindow->Render();
-
-
 
 	vtkNew<customMouseInteractorStyle> style;
 	renderWindowInteractor->SetInteractorStyle(style);
@@ -13889,12 +13801,6 @@ void calculate3Angle(int p1, int p2, int p3)
 	mRenderer->RemoveActor(none_yaxis_actor);
 	mRenderer->RemoveActor(none_zaxis_actor);
 
-	//this->fullbodyIK_checkBox->setChecked(0);
-	//this->rhIK_checkBox->setChecked(0);
-	//this->lhIK_checkBox->setChecked(0);
-	//this->rfIK_checkBox->setChecked(0);
-	//this->lfIK_checkBox->setChecked(0);
-
 	mRenderer->RemoveActor(rh_outlineActor);
 	rhIK_flag = 0;
 	mRenderer->RemoveActor(lh_outlineActor);
@@ -13917,122 +13823,10 @@ void calculate3Angle(int p1, int p2, int p3)
 	mRenderer->RemoveActor(targetActor);
 	mRenderer->RemoveActor(sphere2Actor);
 	
-	//vtkActorCollection* actors = vtkActorCollection::New();
-	//int NumberOfActors = renderer->VisibleActorCount();
-	//actors = mRenderer->GetActors();
-	//actors->InitTraversal();
-	//for (int i = 0; i < NumberOfActors; i++) {
-	//	mRenderer->RemoveActor(actors->GetNextActor());
-	//}
-	//actors->Delete();
-
-
-
-	//this->freeFoots_radioButton->setChecked(true);
-	//this->fixedFoots_radioButton->setChecked(false);
-	//this->fixedRF_radioButton->setChecked(false);
-	//this->fixedLF_radioButton->setChecked(false);
-	//this->freeFoots_radioButton->setEnabled(false);
-	//this->fixedFoots_radioButton->setEnabled(false);
-	//this->fixedRF_radioButton->setEnabled(false);
-	//this->fixedLF_radioButton->setEnabled(false);
-
 	robotModel(1);
 
 	mRenderWindow->Render();
 
-
-	//customMouseInteractorStyle* style = new customMouseInteractorStyle();
-
-
-	//mInteractor->SetInteractorStyle(style);
-	//style->SetDefaultRenderer(mRenderer);
-	//style->pelvisActor = PlconeActor;
-	//style->headActor = Head_objActor;
-	//style->chestActor = CUconeActor;
-	//style->Upper_chestActor = CUconeActor_upper;
-	//style->RUA = RarmActor;
-	//style->RLA = RforearmActor;
-	//style->LUA = LarmActor;
-	//style->LLA = LforearmActor;
-	//style->RUL = RlulegActor;
-	//style->RLL = RllegActor;
-	//style->LUL = LlulegActor;
-	//style->LLL = LllegActor;
-	//style->LH_Actor = LeftHand_objActor;
-	//style->RH_Actor = RightHand_objActor;
-	//style->LL_Actor = LF_objActor;
-	//style->RL_Actor = RF_objActor;
-
-
-	//style->SM_pelvisActor = stickModel_pelvisActor;
-	//style->SM_CH0 = stickModel_chest_0_Actor;
-	//style->SM_CH1 = stickModel_chest_1_Actor;
-	//style->SM_CH2 = stickModel_chest_2_Actor;
-	//style->SM_CH3 = stickModel_chest_3_Actor;
-	//style->SM_headActor = stickModel_head_Actor;
-	//style->SM_RUA = stickModel_rightUpperArm_Actor;
-	//style->SM_RLA = stickModel_rightLowerArm_Actor;
-	//style->SM_RH_Actor = stickModel_rightHand_Actor;
-	//style->SM_LUA = stickModel_leftUpperArm_Actor;
-	//style->SM_LLA = stickModel_leftLowerArm_Actor;
-	//style->SM_LH_Actor = stickModel_leftHand_Actor;
-	//style->SM_RUL = stickModel_rightUpperLeg_Actor;
-	//style->SM_RLL = stickModel_rightLowerLeg_Actor;
-	//style->SM_RF_Actor = stickModel_rightFoot_Actor;
-	//style->SM_LUL = stickModel_leftUpperLeg_Actor;
-	//style->SM_LLL = stickModel_leftLowerLeg_Actor;
-	//style->SM_LF_Actor = stickModel_leftFoot_Actor;
-
-
-	//style->ffIK_pelvisActor = IK_pelvisActor;
-	//style->ffIK_CH0 = IK_chest_0_Actor;
-	//style->ffIK_CH1 = IK_chest_1_Actor;
-	//style->ffIK_CH2 = IK_chest_2_Actor;
-	//style->ffIK_CH3 = IK_chest_3_Actor;
-	//style->ffIK_headActor = IK_head_Actor;;
-	//style->ffIK_RUA = IK_rightUpperArm_Actor;
-	//style->ffIK_RLA = IK_rightLowerArm_Actor;
-	//style->ffIK_RH = IK_rightHand_Actor;
-	//style->ffIK_LUA = IK_leftUpperArm_Actor;
-	//style->ffIK_LLA = IK_leftLowerArm_Actor;
-	//style->ffIK_LH = IK_leftHand_Actor;
-	//style->ffIK_RUL = IK_rightUpperLeg_Actor;
-	//style->ffIK_RLL = IK_rightLowerLeg_Actor;
-	//style->ffIK_RF_Actor = IK_rightFoot_Actor;
-	//style->ffIK_LUL = IK_leftUpperLeg_Actor;
-	//style->ffIK_LLL = IK_leftLowerLeg_Actor;
-	//style->ffIK_LF_Actor = IK_leftFoot_Actor;
-
-	//style->freeRightUL_Actor = IK_freeRightUpperLeg_Actor;
-	//style->freeRightLL_Actor = IK_freeRightLowerLeg_Actor;
-	//style->freeRightFoot_Actor = IK_freeRightFoot_Actor;
-
-	//style->freeLeftUL_Actor = IK_freeLeftUpperLeg_Actor;
-	//style->freeLeftLL_Actor = IK_freeLeftLowerLeg_Actor;
-	//style->freeLeftFoot_Actor = IK_freeLeftFoot_Actor;
-
-
-	//style->ConsProp_sphere_actor = ConstraintProp_sphere_actor;
-	//style->TConsProp_sphere_actor = TConstraintProp_sphere_actor;
-	//style->TConsProp_sphere_actor2 = TConstraintProp_sphere_actor2;
-	//style->TConsProp_sphere_actor3 = TConstraintProp_sphere_actor3;
-
-	////style->ConsProp_line_actor = ConstraintProp_line_actor;
-	//style->ConsProp_line_actor = ConstraintProp_line_actor1;
-	//style->TConsProp_line_actor = TConstraintProp_line_actor1;
-	//style->TConsProp_line_actor2 = TConstraintProp_line_actor2;
-	//style->TConsProp_line_actor3 = TConstraintProp_line_actor3;
-
-	//style->ConsProp_plane_actor = ConstraintProp_plane_actor;
-	//style->ConsProp_cube_actor = ConstraintProp_cube_actor;
-	//style->tartget = targetActor;
-
-
-	//mInteractor->SetInteractorStyle(style);
-	//mInteractor->SetRenderWindow(mRenderWindow);
-
-	/**************************************************************/
 	rhIK_solvePosAngle2 = true;
 
 	double angle_z = 0;
