@@ -81,7 +81,7 @@ string COLOR_TConstraintProp_line_actor3 = "SandyBrown";
 
 
 
-
+//Inverse Kinematices Calculations
 void calculate3Angle(int p1, int p2, int p3);
 
 
@@ -150,104 +150,95 @@ void colorSetting(int flag, string color)
 
 }
 
-class vtkTimerCallback_target : public vtkCommand
-{
-public:
-	vtkTimerCallback_target() = default;
-	~vtkTimerCallback_target() = default;
 
-	int timerId = 0;
-	static vtkTimerCallback_target* New()
-	{
-		vtkTimerCallback_target* cb = new vtkTimerCallback_target;
-		cb->TimerCount = 0;
-		return cb;
-	}
-
-	virtual void Execute(vtkObject* caller, unsigned long eventId,
-		void* vtkNotUsed(callData))
-	{
-		vtkRenderWindowInteractor* iren =
-			dynamic_cast<vtkRenderWindowInteractor*>(caller);
-		if (vtkCommand::TimerEvent == eventId)
-		{
-			++this->TimerCount;
-		}
-		if (TimerCount < frameCnt)
-		{
-			if (first)
-			{
-				add_angle_rua_x = (float)rua_x / (float)frameCnt;
-				add_angle_rua_z = (float)rua_z / (float)frameCnt;
-				add_angle_rla = (float)rla_x / (float)frameCnt;
-
-				first = false;
-			}
-			
-			mRenderWindow->Render();
-			//RarmTransform->Identity();
-			RarmTransform->Translate(-arm_X, arm_Y, 0);
-			RarmTransform->RotateWXYZ(add_angle_rua_x, -1, 0, 0);
-			RarmTransform->Translate(arm_X, -arm_Y, 0);
-			//RarmTransform->Identity();
-			mRenderWindow->Render();
-
-
-			mRenderWindow->Render();
-			//RforearmTransform->Identity();
-			RforearmTransform->Translate(-arm_X, arm_Y2, 0);
-			RforearmTransform->RotateWXYZ(add_angle_rla, -1, 0, 0);
-			RforearmTransform->Translate(arm_X, -arm_Y2, 0);
-			//RforearmTransform->Identity();
-			mRenderWindow->Render();
-
-
-			mRenderWindow->Render();
-			//RarmTransform->Identity();
-			RarmTransform->Translate(-arm_X, arm_Y, 0);
-			RarmTransform->RotateWXYZ(add_angle_rua_z, 0, 0, 1);
-			RarmTransform->Translate(arm_X, -arm_Y, 0);
-			//RarmTransform->Identity();
-			mRenderWindow->Render();
-
-		}
-	}
-
-private:
-	int TimerCount = 0;
-	int TotalCnt = 100;
-
-
-	bool first = true;
-
-public:
-	int frameCnt = 10;
-	int x = 0;
-	int y = 0;
-	int z = 0;
-
-	float rua_x = 0;
-	float rua_z = 0;
-	float rla_x = 0;
-
-	float add_angle_rua_x = 0;
-	float add_angle_rua_z = 0;
-	float add_angle_rla = 0;
-
-	int currntIdx = 0;
-
-};
-
-
-
-
-
-
-
-
-
-
-
+////Animation 추가
+//class vtkTimerCallback_target : public vtkCommand
+//{
+//public:
+//	vtkTimerCallback_target() = default;
+//	~vtkTimerCallback_target() = default;
+//
+//	int timerId = 0;
+//	static vtkTimerCallback_target* New()
+//	{
+//		vtkTimerCallback_target* cb = new vtkTimerCallback_target;
+//		cb->TimerCount = 0;
+//		return cb;
+//	}
+//
+//	virtual void Execute(vtkObject* caller, unsigned long eventId,
+//		void* vtkNotUsed(callData))
+//	{
+//		vtkRenderWindowInteractor* iren =
+//			dynamic_cast<vtkRenderWindowInteractor*>(caller);
+//		if (vtkCommand::TimerEvent == eventId)
+//		{
+//			++this->TimerCount;
+//		}
+//		if (TimerCount < frameCnt)
+//		{
+//			if (first)
+//			{
+//				add_angle_rua_x = (float)rua_x / (float)frameCnt;
+//				add_angle_rua_z = (float)rua_z / (float)frameCnt;
+//				add_angle_rla = (float)rla_x / (float)frameCnt;
+//
+//				first = false;
+//			}
+//			
+//			mRenderWindow->Render();
+//			//RarmTransform->Identity();
+//			RarmTransform->Translate(-arm_X, arm_Y, 0);
+//			RarmTransform->RotateWXYZ(add_angle_rua_x, -1, 0, 0);
+//			RarmTransform->Translate(arm_X, -arm_Y, 0);
+//			//RarmTransform->Identity();
+//			mRenderWindow->Render();
+//
+//
+//			mRenderWindow->Render();
+//			//RforearmTransform->Identity();
+//			RforearmTransform->Translate(-arm_X, arm_Y2, 0);
+//			RforearmTransform->RotateWXYZ(add_angle_rla, -1, 0, 0);
+//			RforearmTransform->Translate(arm_X, -arm_Y2, 0);
+//			//RforearmTransform->Identity();
+//			mRenderWindow->Render();
+//
+//
+//			mRenderWindow->Render();
+//			//RarmTransform->Identity();
+//			RarmTransform->Translate(-arm_X, arm_Y, 0);
+//			RarmTransform->RotateWXYZ(add_angle_rua_z, 0, 0, 1);
+//			RarmTransform->Translate(arm_X, -arm_Y, 0);
+//			//RarmTransform->Identity();
+//			mRenderWindow->Render();
+//
+//		}
+//	}
+//
+//private:
+//	int TimerCount = 0;
+//	int TotalCnt = 100;
+//
+//
+//	bool first = true;
+//
+//public:
+//	int frameCnt = 10;
+//	int x = 0;
+//	int y = 0;
+//	int z = 0;
+//
+//	float rua_x = 0;
+//	float rua_z = 0;
+//	float rla_x = 0;
+//
+//	float add_angle_rua_x = 0;
+//	float add_angle_rua_z = 0;
+//	float add_angle_rla = 0;
+//
+//	int currntIdx = 0;
+//
+//};
 
 
 class vtkTimerCallback2 : public vtkCommand
