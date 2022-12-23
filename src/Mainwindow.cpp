@@ -151,106 +151,16 @@ void colorSetting(int flag, string color)
 }
 
 
-////Animation 추가
-//class vtkTimerCallback_target : public vtkCommand
-//{
-//public:
-//	vtkTimerCallback_target() = default;
-//	~vtkTimerCallback_target() = default;
-//
-//	int timerId = 0;
-//	static vtkTimerCallback_target* New()
-//	{
-//		vtkTimerCallback_target* cb = new vtkTimerCallback_target;
-//		cb->TimerCount = 0;
-//		return cb;
-//	}
-//
-//	virtual void Execute(vtkObject* caller, unsigned long eventId,
-//		void* vtkNotUsed(callData))
-//	{
-//		vtkRenderWindowInteractor* iren =
-//			dynamic_cast<vtkRenderWindowInteractor*>(caller);
-//		if (vtkCommand::TimerEvent == eventId)
-//		{
-//			++this->TimerCount;
-//		}
-//		if (TimerCount < frameCnt)
-//		{
-//			if (first)
-//			{
-//				add_angle_rua_x = (float)rua_x / (float)frameCnt;
-//				add_angle_rua_z = (float)rua_z / (float)frameCnt;
-//				add_angle_rla = (float)rla_x / (float)frameCnt;
-//
-//				first = false;
-//			}
-//			
-//			mRenderWindow->Render();
-//			//RarmTransform->Identity();
-//			RarmTransform->Translate(-arm_X, arm_Y, 0);
-//			RarmTransform->RotateWXYZ(add_angle_rua_x, -1, 0, 0);
-//			RarmTransform->Translate(arm_X, -arm_Y, 0);
-//			//RarmTransform->Identity();
-//			mRenderWindow->Render();
-//
-//
-//			mRenderWindow->Render();
-//			//RforearmTransform->Identity();
-//			RforearmTransform->Translate(-arm_X, arm_Y2, 0);
-//			RforearmTransform->RotateWXYZ(add_angle_rla, -1, 0, 0);
-//			RforearmTransform->Translate(arm_X, -arm_Y2, 0);
-//			//RforearmTransform->Identity();
-//			mRenderWindow->Render();
-//
-//
-//			mRenderWindow->Render();
-//			//RarmTransform->Identity();
-//			RarmTransform->Translate(-arm_X, arm_Y, 0);
-//			RarmTransform->RotateWXYZ(add_angle_rua_z, 0, 0, 1);
-//			RarmTransform->Translate(arm_X, -arm_Y, 0);
-//			//RarmTransform->Identity();
-//			mRenderWindow->Render();
-//
-//		}
-//	}
-//
-//private:
-//	int TimerCount = 0;
-//	int TotalCnt = 100;
-//
-//
-//	bool first = true;
-//
-//public:
-//	int frameCnt = 10;
-//	int x = 0;
-//	int y = 0;
-//	int z = 0;
-//
-//	float rua_x = 0;
-//	float rua_z = 0;
-//	float rla_x = 0;
-//
-//	float add_angle_rua_x = 0;
-//	float add_angle_rua_z = 0;
-//	float add_angle_rla = 0;
-//
-//	int currntIdx = 0;
-//
-//};
-
-
-class vtkTimerCallback2 : public vtkCommand
+class vtkTimerCallback_Animation : public vtkCommand
 {
 public:
-	vtkTimerCallback2() = default;
-	~vtkTimerCallback2() = default;
+	vtkTimerCallback_Animation() = default;
+	~vtkTimerCallback_Animation() = default;
 
 	int timerId = 0;
-	static vtkTimerCallback2* New()
+	static vtkTimerCallback_Animation* New()
 	{
-		vtkTimerCallback2* cb = new vtkTimerCallback2;
+		vtkTimerCallback_Animation* cb = new vtkTimerCallback_Animation;
 		cb->TimerCount = 0;
 		return cb;
 	}
@@ -485,14 +395,13 @@ public:
 					currentMove.rll[1] = poses[currntIdx].rll[1] - poses[currntIdx - 1].rll[1];
 					currentMove.rll[2] = poses[currntIdx].rll[2] - poses[currntIdx - 1].rll[2];
 
-
 				}
 				
 				//CHST
 				if (currentMove.chest[0] != 0)
 				{
 					COLOR_CUconeActor = "Yellow";
-					jointIncrease.chest[0] = currentMove.chest[0] / frameCnt;
+					jointIncrease.chest[0] = currentMove.chest[0] / frameCnt;	 //증가값 지정 
 				}
 
 				if (currentMove.chest[1] != 0)
@@ -13854,7 +13763,7 @@ void MainWindow::selectList()
 	mInteractor->SetInteractorStyle(style);
 	mInteractor->SetRenderWindow(mRenderWindow);
 
-	vtkNew<vtkTimerCallback2> cb;
+	vtkNew<vtkTimerCallback_Animation> cb;
 	cb->currentMove = savedPoses[selectidx];
 	cb->poses.clear();
 	cb->poses.assign(savedPoses.begin(), savedPoses.end());
