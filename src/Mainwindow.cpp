@@ -13344,26 +13344,6 @@ void MainWindow::selectList()
 	mRenderer->RemoveActor(RUL_JS_actor);
 	mRenderer->RemoveActor(RLL_JS_actor);
 
-	//vtkActorCollection* actors = vtkActorCollection::New();
-	//int NumberOfActors = renderer->VisibleActorCount();
-	//actors = mRenderer->GetActors();
-	//actors->InitTraversal();
-	//for (int i = 0; i < NumberOfActors; i++) {
-	//	mRenderer->RemoveActor(actors->GetNextActor());
-	//}
-	//actors->Delete();
-
-
-
-	//this->freeFoots_radioButton->setChecked(true);
-	//this->fixedFoots_radioButton->setChecked(false);
-	//this->fixedRF_radioButton->setChecked(false);
-	//this->fixedLF_radioButton->setChecked(false);
-	//this->freeFoots_radioButton->setEnabled(false);
-	//this->fixedFoots_radioButton->setEnabled(false);
-	//this->fixedRF_radioButton->setEnabled(false);
-	//this->fixedLF_radioButton->setEnabled(false);
-
 
 	if(selectidx == 3)
 		displayRobot_Model(10);
@@ -13456,47 +13436,6 @@ void MainWindow::selectList()
 	style->ConsProp_plane_actor = ConstraintProp_plane_actor;
 	style->ConsProp_cube_actor = ConstraintProp_cube_actor;
 
-
-
-	/*
-	style->CHEST(savedPoses[selectidx].chest[0], -1, 0, 0);
-	style->CHEST(savedPoses[selectidx].chest[1], 0, -1, 0);
-	style->CHEST(savedPoses[selectidx].chest[2], 0, 0, 1);
-	
-	style->lla(savedPoses[selectidx].lla[0], -1, 0, 0);
-	style->lla(savedPoses[selectidx].lla[1], 0, 1, 0);
-	style->lla(savedPoses[selectidx].lla[2], 0, 0, 1);
-
-	style->rla(savedPoses[selectidx].rla[0], -1, 0, 0);
-	style->rla(savedPoses[selectidx].rla[1], 0, 1, 0);
-	style->rla(savedPoses[selectidx].rla[2], 0, 0, -1);
-
-	style->rua(savedPoses[selectidx].rua[0], -1, 0, 0);
-	style->rua(savedPoses[selectidx].rua[1], 0, 1, 0);
-	style->rua(savedPoses[selectidx].rua[2], 0, 0, -1);
-
-	style->lua(savedPoses[selectidx].lua[0], -1, 0, 0);
-	style->lua(savedPoses[selectidx].lua[1], 0, 1, 0);
-	style->lua(savedPoses[selectidx].lua[2], 0, 0, 1);
-
-	style->lll(savedPoses[selectidx].lll[0], -1, 0, 0);
-	style->lll(savedPoses[selectidx].lll[1], 0, 1, 0);
-	style->lll(savedPoses[selectidx].lll[2], 0, 0, 1);
-
-	style->lul(savedPoses[selectidx].lul[0], -1, 0, 0);
-	style->lul(savedPoses[selectidx].lul[1], 0, 1, 0);
-	style->lul(savedPoses[selectidx].lul[2], 0, 0, 1);
-
-
-	style->rll(savedPoses[selectidx].rll[0], -1, 0, 0);
-	style->rll(savedPoses[selectidx].rll[1], 0, 1, 0);
-	style->rll(savedPoses[selectidx].rll[2], 0, 0, -1);
-
-	style->rul(savedPoses[selectidx].rul[0], -1, 0, 0);
-	style->rul(savedPoses[selectidx].rul[1], 0, 1, 0);
-	style->rul(savedPoses[selectidx].rul[2], 0, 0, -1);
-
-	*/
 	mInteractor->SetInteractorStyle(style);
 	mInteractor->SetRenderWindow(mRenderWindow);
 
