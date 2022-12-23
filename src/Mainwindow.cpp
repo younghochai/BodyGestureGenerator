@@ -48,6 +48,7 @@ bool b_rightFoot = true;
 bool b_draw_endPose = true;
 
 
+//Humanoid Model Color Setting
 string COLOR_PlconeActor = "Moccasin";
 string COLOR_CUconeActor = "DarkTurquoise";
 string COLOR_CUconeActor_upper = "DarkTurquoise";
