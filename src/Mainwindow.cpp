@@ -13842,9 +13842,6 @@ void calculate3Angle(int p1, int p2, int p3)
 	double position[3] = { 0,0,0 };
 	RightHand_ObjReader_Transform->GetPosition(position);
 	targetLinePoints->InsertNextPoint(position);
-	//std::cout << position[0] << "   " << position[1] << "   " << position[2] << std::endl;
-
-	//std::cout << "XYZ : " << getTheta << "  " << getPhi << "  " << getZ << std::endl;
 
 	targetTransform->SetInput(RightHand_ObjReader_Transform);
 	mRenderer->Render();
