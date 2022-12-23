@@ -84,7 +84,7 @@ string COLOR_TConstraintProp_line_actor2 = "SandyBrown";
 string COLOR_TConstraintProp_line_actor3 = "SandyBrown";
 
 
-
+//InversKinematices Variables
 vtkSmartPointer<vtkPoints> targetLinePoints;
 double inverseKinematices_Theta_0 = 0;
 double inverseKinematices_Theta_1 = 0;
