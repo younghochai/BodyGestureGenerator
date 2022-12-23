@@ -13842,9 +13842,6 @@ void calculate3Angle(int p1, int p2, int p3)
 	double position[3] = { 0,0,0 };
 	RightHand_ObjReader_Transform->GetPosition(position);
 	targetLinePoints->InsertNextPoint(position);
-	//std::cout << position[0] << "   " << position[1] << "   " << position[2] << std::endl;
-
-	//std::cout << "XYZ : " << getTheta << "  " << getPhi << "  " << getZ << std::endl;
 
 	targetTransform->SetInput(RightHand_ObjReader_Transform);
 	mRenderer->Render();
@@ -13853,7 +13850,7 @@ void calculate3Angle(int p1, int p2, int p3)
 
 void MainWindow::drawThetaPhi()
 {
-
+	//Tartget Point 지정 및 표출
 	QString q_theta = ui->edit_theta->text();
 	QString q_phi = ui->edit_phi->text();
 	QString q_z = ui->edit_z->text();
@@ -13865,7 +13862,6 @@ void MainWindow::drawThetaPhi()
 
 	if (q_theta.toStdString().size() > 0)
 		getTheta = stoi(q_theta.toStdString());
-
 
 	if (q_phi.toStdString().size() > 0)
 		getPhi = stoi(q_phi.toStdString());
@@ -13897,6 +13893,7 @@ void MainWindow::selectTarget()
 }
 void MainWindow::targetAdd()
 {
+	//IK Target Point 추가
 	QString q_theta = ui->edit_theta->text();
 	QString q_phi = ui->edit_phi->text();
 	QString q_z = ui->edit_z->text();
@@ -13935,6 +13932,8 @@ void MainWindow::targetAdd()
 
 void MainWindow::playTargets()
 {
+	//표준에서 사용하는 형식으로 표출하기 위한 함수
+	//한쪽 어깨를 사용한 움직이만 표출할 수 있음
 	//GestureInterface
 	std::cout << "Play Targets" << std::endl;
 	string savedName = "GestureInterface/";
@@ -14027,8 +14026,6 @@ void MainWindow::playTargets()
 
 						strGestureTemp += strTemp;
 					}
-
-
 				}
 			}
 			else
@@ -14303,6 +14300,8 @@ void MainWindow::playTargets()
 
 void MainWindow::nextPosition()
 {
+	//Pose와 Pose 사이의 움직임을 Gesture로 지정
+	//Gesture의 움직을 새롭게 생성하기 위한 함수
 
 	ui->lbl_posture0->setPixmap(QPixmap());
 	ui->lbl_posture0->setText("");
@@ -14380,9 +14379,6 @@ void MainWindow::nextPosition()
 
 	ui->lbl_gesture7->setText("");
 	ui->lbl_gesture7->setFrameShape(QFrame::NoFrame);
-
-	
-	
 
 
 	nextBtncnt++;
