@@ -13083,7 +13083,6 @@ void MainWindow::authoring_mode()
 	style->TConsProp_sphere_actor2 = TConstraintProp_sphere_actor2;
 	style->TConsProp_sphere_actor3 = TConstraintProp_sphere_actor3;
 
-	//style->ConsProp_line_actor = ConstraintProp_line_actor;
 	style->ConsProp_line_actor = ConstraintProp_line_actor1;
 	style->TConsProp_line_actor = TConstraintProp_line_actor1;
 	style->TConsProp_line_actor2 = TConstraintProp_line_actor2;
@@ -13324,12 +13323,6 @@ void MainWindow::selectList()
 	mRenderer->RemoveActor(none_xaxis_actor);
 	mRenderer->RemoveActor(none_yaxis_actor);
 	mRenderer->RemoveActor(none_zaxis_actor);
-
-	//this->fullbodyIK_checkBox->setChecked(0);
-	//this->rhIK_checkBox->setChecked(0);
-	//this->lhIK_checkBox->setChecked(0);
-	//this->rfIK_checkBox->setChecked(0);
-	//this->lfIK_checkBox->setChecked(0);
 
 	mRenderer->RemoveActor(rh_outlineActor);
 	rhIK_flag = 0;
