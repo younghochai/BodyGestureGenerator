@@ -20,68 +20,21 @@
 
 
 
-struct Quaternion_VAR {
-	double w, x, y, z;
-};
 
-struct EulerAngles_VAR {
+struct EulerAngles {
 	double x_roll, y_pitch, z_yaw;
 };
-
-EulerAngles_VAR ToEulerAngles(Quaternion_VAR q) {
-	EulerAngles_VAR angles;
-
-	// roll (x-axis rotation)
-	double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
-	double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-	angles.x_roll = std::atan2(sinr_cosp, cosr_cosp);
-
-	// pitch (y-axis rotation)
-	double sinp = 2 * (q.w * q.y - q.z * q.x);
-	if (std::abs(sinp) >= 1)
-		angles.y_pitch = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
-	else
-		angles.y_pitch = std::asin(sinp);
-
-	// yaw (z-axis rotation)
-	double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
-	double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-	angles.z_yaw = std::atan2(siny_cosp, cosy_cosp);
-
-	return angles;
-}
-
-Quaternion_VAR ToQuaternion(double yaw, double pitch, double roll) // yaw (Z), pitch (Y), roll (X)
-{
-	// Abbreviations for the various angular functions
-	double cy = cos(yaw * 0.5);
-	double sy = sin(yaw * 0.5);
-	double cp = cos(pitch * 0.5);
-	double sp = sin(pitch * 0.5);
-	double cr = cos(roll * 0.5);
-	double sr = sin(roll * 0.5);
-
-	Quaternion_VAR q;
-	q.w = cr * cp * cy + sr * sp * sy;
-	q.x = sr * cp * cy - cr * sp * sy;
-	q.y = cr * sp * cy + sr * cp * sy;
-	q.z = cr * cp * sy - sr * sp * cy;
-
-	return q;
-}
-
-
 
 using namespace std;
 
 
 std::vector<string> senserDataFileName;
 std::vector<Quaternion> readSensingQuaternion;
-std::vector< EulerAngles_VAR> readSensingAngles;
-std::vector< EulerAngles_VAR> readSensingAngles_RL;
+std::vector< EulerAngles> readSensingAngles;
+std::vector< EulerAngles> readSensingAngles_RL;
 
-std::vector< EulerAngles_VAR> readSensingAngles_LU;
-std::vector< EulerAngles_VAR> readSensingAngles_LL;
+std::vector< EulerAngles> readSensingAngles_LU;
+std::vector< EulerAngles> readSensingAngles_LL;
 
 
 bool b_saveImage = false;
@@ -13955,7 +13908,7 @@ void MainWindow::displayStick_Model()
 }
 
 
-void multiSensingDataRead(string filePath, std::vector<EulerAngles_VAR>& out)
+void multiSensingDataRead(string filePath, std::vector<EulerAngles>& out)
 {
 	vector<Quaternion> tempQuat;
 	vector<vector<string>> content;
@@ -14027,7 +13980,7 @@ void multiSensingDataRead(string filePath, std::vector<EulerAngles_VAR>& out)
 
 		//std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
 
-		EulerAngles_VAR temp;
+		EulerAngles temp;
 		temp.x_roll = totalx;
 		temp.y_pitch = totaly;
 		temp.z_yaw = totalz;
