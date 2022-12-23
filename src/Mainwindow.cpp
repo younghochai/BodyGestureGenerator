@@ -14626,12 +14626,6 @@ void MainWindow::sensingPlay()
 			mRenderer->RemoveActor(none_yaxis_actor);
 			mRenderer->RemoveActor(none_zaxis_actor);
 
-			//this->fullbodyIK_checkBox->setChecked(0);
-			//this->rhIK_checkBox->setChecked(0);
-			//this->lhIK_checkBox->setChecked(0);
-			//this->rfIK_checkBox->setChecked(0);
-			//this->lfIK_checkBox->setChecked(0);
-
 			mRenderer->RemoveActor(rh_outlineActor);
 			rhIK_flag = 0;
 			mRenderer->RemoveActor(lh_outlineActor);
@@ -14653,26 +14647,6 @@ void MainWindow::sensingPlay()
 			mRenderer->RemoveActor(RLL_JS_actor);
 			mRenderer->RemoveActor(targetActor);
 			mRenderer->RemoveActor(sphere2Actor);
-
-			//vtkActorCollection* actors = vtkActorCollection::New();
-			//int NumberOfActors = renderer->VisibleActorCount();
-			//actors = mRenderer->GetActors();
-			//actors->InitTraversal();
-			//for (int i = 0; i < NumberOfActors; i++) {
-			//	mRenderer->RemoveActor(actors->GetNextActor());
-			//}
-			//actors->Delete();
-
-
-
-			//this->freeFoots_radioButton->setChecked(true);
-			//this->fixedFoots_radioButton->setChecked(false);
-			//this->fixedRF_radioButton->setChecked(false);
-			//this->fixedLF_radioButton->setChecked(false);
-			//this->freeFoots_radioButton->setEnabled(false);
-			//this->fixedFoots_radioButton->setEnabled(false);
-			//this->fixedRF_radioButton->setEnabled(false);
-			//this->fixedLF_radioButton->setEnabled(false);
 
 			robotModel(1);
 			int scaleFactor = 3;
