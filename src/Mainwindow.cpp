@@ -12492,8 +12492,6 @@ MainWindow::MainWindow(QWidget* parent) :
 		string str;
 		ob >> str;
 
-		//cout << "str : "<<str << "\n";
-		//cout << "str : " <<std::stoi(str) << "\n";
 		cnt++;
 		if (cnt % 3 == 1)
 		{
@@ -12531,6 +12529,7 @@ void MainWindow::moveToward(std::vector<double> target)
 {
 }
 
+//Model 선택 지정
 void MainWindow::selectModel(int ID)
 {
 	std::cout << ID << std::endl;
