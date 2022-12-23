@@ -15887,7 +15887,7 @@ void MainWindow::playTargets()
 			{
 				if (prev_theta1 < inverseKinematices_Theta_1)
 				{
-					//±ÁÈû
+					//êµ½íž˜
 					temp = L"Rs,Flexion,";
 					temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
 					temp += L"\n";
@@ -15901,7 +15901,7 @@ void MainWindow::playTargets()
 				{
 					if (inverseKinematices_Theta_1 - prev_theta1 != 0)
 					{
-						//Æï
+						//í„
 						temp = L"Rs,Extension,";
 						temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
 						temp += L"\n";
@@ -15919,7 +15919,7 @@ void MainWindow::playTargets()
 			{
 				if (prev_theta1 < inverseKinematices_Theta_1)
 				{
-					//¹ú¸²
+					//ë²Œë¦¼
 					temp = L"Rs,Abduction,";
 					temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
 					temp += L"\n";
@@ -15933,7 +15933,7 @@ void MainWindow::playTargets()
 				{
 					if (inverseKinematices_Theta_1 - prev_theta1 != 0)
 					{
-						//¸ðÀ½
+						//ëª¨ìŒ
 						temp = L"Rs,Adduction,";
 						temp += to_wstring(abs(inverseKinematices_Theta_1 - prev_theta1));
 						temp += L"\n";
@@ -15949,7 +15949,7 @@ void MainWindow::playTargets()
 
 			if (prev_theta0 < inverseKinematices_Theta_0)
 			{
-				//¼öÆò¸ðÀ½
+				//ìˆ˜í‰ëª¨ìŒ
 				temp = L"Rs,Horizontal Adduction,";
 				temp += to_wstring(abs(inverseKinematices_Theta_0 - prev_theta0));
 				temp += L"\n";
@@ -15963,7 +15963,7 @@ void MainWindow::playTargets()
 			{
 				if (inverseKinematices_Theta_0 - prev_theta0 != 0)
 				{
-					//¼öÆò¹ú¸²
+					//ìˆ˜í‰ë²Œë¦¼
 					temp = L"Rs,Horizontal Abduction,";
 					temp += to_wstring(abs(inverseKinematices_Theta_0 - prev_theta0));
 					temp += L"\n";
@@ -15977,7 +15977,7 @@ void MainWindow::playTargets()
 
 			if (prev_theta2 < inverseKinematices_Theta_2)
 			{
-				//±ÁÈû
+				//êµ½íž˜
 				temp = L"Re,Flexion,";
 				temp += to_wstring(abs(inverseKinematices_Theta_2 - prev_theta2));
 				temp += L"\n";
@@ -15991,7 +15991,7 @@ void MainWindow::playTargets()
 			{
 				if (inverseKinematices_Theta_2 - prev_theta2 != 0)
 				{
-					//Æï
+					//í„
 					temp = L"Re,Extension,";
 					temp += to_wstring(abs(inverseKinematices_Theta_2 - prev_theta2));
 					temp += L"\n";
