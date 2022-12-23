@@ -12357,8 +12357,6 @@ void multiSensingDataRead(string filePath, std::vector<EulerAngles>& out)
 		tempQuat[i] = tempQuat[i].multiply(tempQuat[1].inverse());
 		tempQuat[i].toEulerAngle(totalx, totaly, totalz);
 
-		//std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
-
 		EulerAngles temp;
 		temp.x_roll = totalx;
 		temp.y_pitch = totaly;
@@ -12378,8 +12376,6 @@ MainWindow::MainWindow(QWidget* parent) :
 	mRenderer = vtkSmartPointer<vtkRenderer>::New();
 	mInteractor = vtkSmartPointer<QVTKInteractor>::New();
 	mInteractorStyle = vtkSmartPointer<vtkInteractorStyle>::New();
-
-
 
 
 	savedPoses.clear();
@@ -12478,6 +12474,7 @@ MainWindow::MainWindow(QWidget* parent) :
 	QObject::connect(ui->nextBtn, &QPushButton::clicked, this, &MainWindow::nextPosition);
 	QObject::connect(ui->sensingBtn, &QPushButton::clicked, this, &MainWindow::sensingPlay);
 
+	//Gesture Target 지정
 	nextBtncnt = 0;
 	savedTarget.clear();
 	fstream ob;
@@ -12495,8 +12492,6 @@ MainWindow::MainWindow(QWidget* parent) :
 		string str;
 		ob >> str;
 
-		//cout << "str : "<<str << "\n";
-		//cout << "str : " <<std::stoi(str) << "\n";
 		cnt++;
 		if (cnt % 3 == 1)
 		{
@@ -12534,6 +12529,7 @@ void MainWindow::moveToward(std::vector<double> target)
 {
 }
 
+//Model 선택 지정
 void MainWindow::selectModel(int ID)
 {
 	std::cout << ID << std::endl;
@@ -12601,13 +12597,6 @@ void MainWindow::selectModel(int ID)
 		mRenderer->AddActor(none_yaxis_actor);
 		mRenderer->AddActor(none_zaxis_actor);
 
-
-		//this->fullbodyIK_checkBox->setChecked(0);
-		//this->rhIK_checkBox->setChecked(0);
-		//this->lhIK_checkBox->setChecked(0);
-		//this->rfIK_checkBox->setChecked(0);
-		//this->lfIK_checkBox->setChecked(0);
-
 		mRenderer->RemoveActor(rh_outlineActor);
 		rhIK_flag = 0;
 		mRenderer->RemoveActor(lh_outlineActor);
@@ -12616,16 +12605,6 @@ void MainWindow::selectModel(int ID)
 		rfIK_flag = 0;
 		mRenderer->RemoveActor(lf_outlineActor);
 		lfIK_flag = 0;
-
-
-		//this->freeFoots_radioButton->setChecked(true);
-		//this->fixedFoots_radioButton->setChecked(false);
-		//this->fixedRF_radioButton->setChecked(false);
-		//this->fixedLF_radioButton->setChecked(false);
-		//this->freeFoots_radioButton->setEnabled(false);
-		//this->fixedFoots_radioButton->setEnabled(false);
-		//this->fixedRF_radioButton->setEnabled(false);
-		//this->fixedLF_radioButton->setEnabled(false);
 
 		mRenderer->RemoveActor(pelvisJS_actor);
 		mRenderer->RemoveActor(chestJS_actor);
@@ -12767,49 +12746,36 @@ void MainWindow::selectModel(int ID)
 		LFObj_scale = 50;
 
 
-
 		mRenderer->RemoveActor(stickModel_pelvisActor);
-
 		mRenderer->RemoveActor(stickModel_chest_0_Actor);
 		mRenderer->RemoveActor(stickModel_chest_1_Actor);
 		mRenderer->RemoveActor(stickModel_chest_2_Actor);
 		mRenderer->RemoveActor(stickModel_chest_3_Actor);
-
 		mRenderer->RemoveActor(stickModel_head_Actor);
-
 		mRenderer->RemoveActor(stickModel_rightShoulderJoint_Actor);
 		mRenderer->RemoveActor(stickModel_rightUpperArm_Actor);
 		mRenderer->RemoveActor(stickModel_rightElbow_Actor);
 		mRenderer->RemoveActor(stickModel_rightLowerArm_Actor);
 		mRenderer->RemoveActor(stickModel_rightHand_Actor);
-
 		mRenderer->RemoveActor(stickModel_leftShoulderJoint_Actor);
 		mRenderer->RemoveActor(stickModel_leftUpperArm_Actor);
 		mRenderer->RemoveActor(stickModel_leftElbow_Actor);
 		mRenderer->RemoveActor(stickModel_leftLowerArm_Actor);
 		mRenderer->RemoveActor(stickModel_leftHand_Actor);
-
 		mRenderer->RemoveActor(stickModel_rightLegJoint_Actor);
 		mRenderer->RemoveActor(stickModel_rightUpperLeg_Actor);
 		mRenderer->RemoveActor(stickModel_rightKnee_Actor);
 		mRenderer->RemoveActor(stickModel_rightLowerLeg_Actor);
 		mRenderer->RemoveActor(stickModel_rightFoot_Actor);
-
 		mRenderer->RemoveActor(stickModel_leftLegJoint_Actor);
 		mRenderer->RemoveActor(stickModel_leftUpperLeg_Actor);
 		mRenderer->RemoveActor(stickModel_leftKnee_Actor);
 		mRenderer->RemoveActor(stickModel_leftLowerLeg_Actor);
 		mRenderer->RemoveActor(stickModel_leftFoot_Actor);
-
 		mRenderer->RemoveActor(none_xaxis_actor);
 		mRenderer->RemoveActor(none_yaxis_actor);
 		mRenderer->RemoveActor(none_zaxis_actor);
 
-		//this->fullbodyIK_checkBox->setChecked(0);
-		//this->rhIK_checkBox->setChecked(0);
-		//this->lhIK_checkBox->setChecked(0);
-		//this->rfIK_checkBox->setChecked(0);
-		//this->lfIK_checkBox->setChecked(0);
 
 		mRenderer->RemoveActor(rh_outlineActor);
 		rhIK_flag = 0;
@@ -12832,18 +12798,7 @@ void MainWindow::selectModel(int ID)
 		mRenderer->RemoveActor(RLL_JS_actor);
 
 
-		//this->freeFoots_radioButton->setChecked(true);
-		//this->fixedFoots_radioButton->setChecked(false);
-		//this->fixedRF_radioButton->setChecked(false);
-		//this->fixedLF_radioButton->setChecked(false);
-		//this->freeFoots_radioButton->setEnabled(false);
-		//this->fixedFoots_radioButton->setEnabled(false);
-		//this->fixedRF_radioButton->setEnabled(false);
-		//this->fixedLF_radioButton->setEnabled(false);
-
-
 		displayRobot_Model(1);
-		//jointSpheres();
 		mRenderWindow->Render();
 	}
 	if (ID == 2)
@@ -12934,18 +12889,7 @@ void MainWindow::selectModel(int ID)
 		mRenderer->RemoveActor(RUL_JS_actor);
 		mRenderer->RemoveActor(RLL_JS_actor);
 
-		//this->freeFoots_radioButton->setChecked(true);
-		//this->fixedFoots_radioButton->setChecked(false);
-		//this->fixedRF_radioButton->setChecked(false);
-		//this->fixedLF_radioButton->setChecked(false);
-		//this->freeFoots_radioButton->setEnabled(true);
-		//this->fixedFoots_radioButton->setEnabled(true);
-		//this->fixedRF_radioButton->setEnabled(true);
-		//this->fixedLF_radioButton->setEnabled(true);
-
-
 		displayStick_Model();
-		//jointSpheres();
 		mRenderWindow->Render();
 	}
 
@@ -12992,11 +12936,6 @@ void MainWindow::enableFixedFoots()
 		mRenderer->RemoveActor(stickModel_leftLowerLeg_Actor);
 		mRenderer->RemoveActor(stickModel_leftFoot_Actor);
 
-		//this->fullbodyIK_checkBox->setChecked(0);
-		//this->rhIK_checkBox->setChecked(0);
-		//this->lhIK_checkBox->setChecked(0);
-		//this->rfIK_checkBox->setChecked(0);
-		//this->lfIK_checkBox->setChecked(0);
 		IKflag_Status = 0;
 		mRenderer->RemoveActor(rh_outlineActor);
 		rhIK_flag = 0;
