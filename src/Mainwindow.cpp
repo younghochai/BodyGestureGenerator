@@ -12378,8 +12378,6 @@ MainWindow::MainWindow(QWidget* parent) :
 	mInteractorStyle = vtkSmartPointer<vtkInteractorStyle>::New();
 
 
-
-
 	savedPoses.clear();
 	savedTarget.clear();
 
@@ -12476,6 +12474,7 @@ MainWindow::MainWindow(QWidget* parent) :
 	QObject::connect(ui->nextBtn, &QPushButton::clicked, this, &MainWindow::nextPosition);
 	QObject::connect(ui->sensingBtn, &QPushButton::clicked, this, &MainWindow::sensingPlay);
 
+	//Gesture Target 지정
 	nextBtncnt = 0;
 	savedTarget.clear();
 	fstream ob;
