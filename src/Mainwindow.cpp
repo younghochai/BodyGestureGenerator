@@ -13893,6 +13893,7 @@ void MainWindow::selectTarget()
 }
 void MainWindow::targetAdd()
 {
+	//IK Target Point 추가
 	QString q_theta = ui->edit_theta->text();
 	QString q_phi = ui->edit_phi->text();
 	QString q_z = ui->edit_z->text();
