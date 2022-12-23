@@ -13932,6 +13932,8 @@ void MainWindow::targetAdd()
 
 void MainWindow::playTargets()
 {
+	//표준에서 사용하는 형식으로 표출하기 위한 함수
+	//한쪽 어깨를 사용한 움직이만 표출할 수 있음
 	//GestureInterface
 	std::cout << "Play Targets" << std::endl;
 	string savedName = "GestureInterface/";
