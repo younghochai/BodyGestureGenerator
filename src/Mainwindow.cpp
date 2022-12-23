@@ -12357,8 +12357,6 @@ void multiSensingDataRead(string filePath, std::vector<EulerAngles>& out)
 		tempQuat[i] = tempQuat[i].multiply(tempQuat[1].inverse());
 		tempQuat[i].toEulerAngle(totalx, totaly, totalz);
 
-		//std::cout << totalx << " , " << totaly << " , " << totalz << std::endl;
-
 		EulerAngles temp;
 		temp.x_roll = totalx;
 		temp.y_pitch = totaly;

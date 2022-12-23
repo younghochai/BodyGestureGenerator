@@ -66,7 +66,7 @@ public:
 
 
 	
-
+	//QT Event Add
 public slots:
 	void addPose();
 	void selectList();
