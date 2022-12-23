@@ -119,6 +119,11 @@ int trajCount = 0;
 bool VitruvianAvatar::isLoaded = false;
 VitruvianAvatar vAvatar;
 
+int totalAngleOfRUA = 0;
+int totalAngleOfRLA = 0;
+
+int totalAngleOfRUA_z = 0;
+//int totalAngleOfRLA_z = 0;
 
 vtkNew<vtkNamedColors> colors;
 vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
@@ -131,6 +136,14 @@ vtkSmartPointer<QVTKInteractor> mInteractor;
 vtkSmartPointer<vtkInteractorStyle> mInteractorStyle;
 
 
+
+//***************************************************************************************************  Robot Model *******************************//
+
+
+vtkSmartPointer<vtkSphereSource> targetSphere = vtkSmartPointer<vtkSphereSource>::New();
+vtkSmartPointer<vtkPolyDataMapper> targetMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+vtkSmartPointer<vtkTransform> targetTransform = vtkSmartPointer<vtkTransform>::New();
+vtkSmartPointer<vtkActor> targetActor = vtkSmartPointer<vtkActor>::New();
 
 
 // Grid Surface
@@ -158,7 +171,7 @@ vtkSmartPointer<vtkTransform> CUconeTransform = vtkSmartPointer<vtkTransform>::N
 vtkSmartPointer<vtkActor> CUconeActor = vtkSmartPointer<vtkActor>::New();
 
 
-// chest upperCone
+// chest 
 vtkSmartPointer<vtkConeSource> CUcone_upper = vtkSmartPointer<vtkConeSource>::New();
 vtkSmartPointer<vtkPolyDataMapper> CUconeMapper_upper = vtkSmartPointer<vtkPolyDataMapper>::New();
 vtkSmartPointer<vtkTransform> CUconeTransform_upper = vtkSmartPointer<vtkTransform>::New();
@@ -1881,6 +1894,7 @@ int captureCount = 0;
 // for RightHand Inverse Kinematics
 int rhIK_Targetx = 31;
 int rhIK_Targety = 0;
+int rhIK_Targetz = 0;
 
 int lhIK_Targetx = 31;
 int lhIK_Targety = 0;
@@ -2370,6 +2384,8 @@ void CHEST(int A, int x, int y, int z)
 	mRenderWindow->Render();
 }
 
+
+
 void rua(int A, int x, int y, int z)
 {
 	mRenderWindow->Render();
@@ -2389,6 +2405,70 @@ void rla(int A, int x, int y, int z)
 	RforearmTransform->Translate(arm_X, -arm_Y2, 0);
 	//RarmTransform->Identity();
 	mRenderWindow->Render();
+}
+
+void inverseKinematicesRH(double ruaA, double rlaA, int x, int y, int z)
+{
+	//int angle1 = 0;
+	//int angle2 = 0;
+
+	//if (x != 0)
+	//{
+	//	std::cout << "input X " << std::endl;
+	//	if (ruaA > totalAngleOfRUA)
+	//	{
+	//		angle1 = ruaA - totalAngleOfRUA;
+
+	//		totalAngleOfRUA += angle1;
+	//	}
+
+	//	if (ruaA < totalAngleOfRUA)
+	//	{
+	//		angle1 = totalAngleOfRUA - ruaA;
+
+	//		totalAngleOfRUA -= angle1;
+
+	//		angle1 *= -1;
+	//	}
+
+	//	if (rlaA > totalAngleOfRLA)
+	//	{
+	//		angle2 = rlaA - totalAngleOfRLA;
+	//		totalAngleOfRLA += angle2;
+
+	//	}
+
+	//	if (rlaA < totalAngleOfRLA)
+	//	{
+	//		angle2 = totalAngleOfRLA - rlaA;
+	//		totalAngleOfRLA -= angle2;
+
+	//		angle1 *= -1;
+	//	}
+	//}
+
+
+
+	//std::cout << totalAngleOfRUA << std::endl;
+	//std::cout << totalAngleOfRLA << std::endl;
+
+	mRenderWindow->Render();
+	//RarmTransform->Identity();
+	RarmTransform->Translate(-arm_X, arm_Y, 0);
+	RarmTransform->RotateWXYZ(ruaA, x, y, z);
+	RarmTransform->Translate(arm_X, -arm_Y, 0);
+	//RarmTransform->Identity();
+	mRenderWindow->Render();
+	
+
+	mRenderWindow->Render();
+	//RforearmTransform->Identity();
+	RforearmTransform->Translate(-arm_X, arm_Y2, 0);
+	RforearmTransform->RotateWXYZ(rlaA, x, y, z);
+	RforearmTransform->Translate(arm_X, -arm_Y2, 0);
+	//RforearmTransform->Identity();
+	mRenderWindow->Render();
+
 }
 
 void lua(int A, int x, int y, int z)
