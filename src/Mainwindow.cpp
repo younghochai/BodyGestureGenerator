@@ -11259,114 +11259,6 @@ void robotModel(int rotate)
 	targetActor->GetProperty()->SetColor(colors->GetColor3d("DarkGreen").GetData());
 
 
-
-	//	vtkNew<vtkNamedColors> colors;
-	//
-	//	// colors->SetColor("Bkg", 0.2, 0.3, 0.4);
-	//
-	//	vtkNew<vtkSphereSource> sphereSource;
-	//	sphereSource->SetCenter(.5, 0, 0);
-	//
-	//	unsigned int res = 18;
-	//	sphereSource->SetThetaResolution(res * 2);
-	//	sphereSource->SetPhiResolution(res);
-	//	sphereSource->Update();
-	//
-	//	vtkNew<vtkIdFilter> cellIdFilter;
-	//	cellIdFilter->SetInputConnection(sphereSource->GetOutputPort());
-	//	cellIdFilter->SetCellIds(true);
-	//	cellIdFilter->SetPointIds(false);
-	//#if VTK890
-	//	cellIdFilter->SetCellIdsArrayName("CellIds");
-	//#else
-	//	cellIdFilter->SetIdsArrayName("CellIds");
-	//#endif
-	//	cellIdFilter->Update();
-	//
-	//	//WriteDataSet(cellIdFilter->GetOutput(), "CellIdFilter.vtp");
-	//
-	//	vtkNew<vtkIdFilter> pointIdFilter;
-	//	pointIdFilter->SetInputConnection(cellIdFilter->GetOutputPort());
-	//	pointIdFilter->SetCellIds(false);
-	//	pointIdFilter->SetPointIds(true);
-	//#if VTK890
-	//	pointIdFilter->SetPointIdsArrayName("PointIds");
-	//#else
-	//	pointIdFilter->SetIdsArrayName("PointIds");
-	//#endif
-	//	pointIdFilter->Update();
-	//
-	//	vtkDataSet* sphereWithIds = pointIdFilter->GetOutput();
-	//
-	//	//WriteDataSet(sphereWithIds, "BothIdFilter.vtp");
-	//
-	//	vtkNew<vtkCubeSource> cubeSource;
-	//	cubeSource->Update();
-	//
-	//	vtkNew<vtkBox> implicitCube;
-	//	implicitCube->SetBounds(cubeSource->GetOutput()->GetBounds());
-	//
-	//	vtkNew<vtkClipPolyData> clipper;
-	//	clipper->SetClipFunction(implicitCube);
-	//	clipper->SetInputData(sphereWithIds);
-	//	clipper->InsideOutOn();
-	//	clipper->Update();
-	//
-	//	//WriteDataSet(clipper->GetOutput(), "clipper.vtp");
-	//
-	//	// Get the clipped cell ids
-	//	vtkPolyData* clipped = clipper->GetOutput();
-	//
-	//	std::cout << "There are " << clipped->GetNumberOfPoints()
-	//		<< " clipped points." << std::endl;
-	//	std::cout << "There are " << clipped->GetNumberOfCells() << " clipped cells."
-	//		<< std::endl;
-	//
-	//	//vtkIdTypeArray* clippedCellIds = dynamic_cast<vtkIdTypeArray*>(clipped->GetNumberOfCells()->GetArray("CellIds"));
-	//
-	//	//for (vtkIdType i = 0; i < clippedCellIds->GetNumberOfTuples(); i++)
-	//	//{
-	//	//	std::cout << "Clipped cell id " << i << " : " << clippedCellIds->GetValue(i)
-	//	//		<< std::endl;
-	//	//}
-	//
-	//	// Create a mapper and actor for clipped sphere
-	//
-	//	vtkSmartPointer<vtkTransform> translation = vtkSmartPointer<vtkTransform>::New();
-	//	translation->Translate(-12.0, 70.0, +30.0);
-	//
-	//	vtkNew<vtkPolyDataMapper> clippedMapper;
-	//	clippedMapper->SetInputConnection(clipper->GetOutputPort());
-	//	clippedMapper->ScalarVisibilityOff();
-	//
-	//
-	//	vtkNew<vtkActor> clippedActor;
-	//	clippedActor->SetMapper(clippedMapper);
-	//	clippedActor->RotateZ(90);
-	//	clippedActor->RotateY(90);
-	//	clippedActor->SetScale(60);
-	//	clippedActor->SetUserTransform(translation);
-	//	clippedActor->GetProperty()->SetOpacity(0.5);
-	//	clippedActor->GetProperty()->SetRepresentationToWireframe();
-	//	clippedActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
-	//
-	//	// Create a mapper and actor for cube
-	//	vtkNew<vtkPolyDataMapper> cubeMapper;
-	//	cubeMapper->SetInputConnection(cubeSource->GetOutputPort());
-	//
-	//	vtkNew<vtkActor> cubeActor;
-	//	cubeActor->SetMapper(cubeMapper);
-	//
-	//	cubeActor->GetProperty()->SetRepresentationToWireframe();
-	//	cubeActor->GetProperty()->SetOpacity(0.5);
-	//	cubeActor->GetProperty()->SetColor(colors->GetColor3d("Blue").GetData());
-	//
-	//	mRenderer->UseHiddenLineRemovalOn();
-	//	mRenderer->AddActor(clippedActor);
-
-
-
-
 	//renderer->AddActor(planeActor);
 	mRenderer->AddActor(PlconeActor);
 	mRenderer->AddActor(CUconeActor);
@@ -11395,7 +11287,6 @@ void MainWindow::displayRobot_Model(int rotate)
 {
 	robotModel(rotate);
 }
-
 void MainWindow::displayFixedFoots_Model()
 {
 	IK_rightFoot_Transform->Identity();
@@ -12438,7 +12329,6 @@ void multiSensingDataRead(string filePath, std::vector<EulerAngles>& out)
 		if (content[i].size() > 0)
 		{
 
-			//cout << content[i][1] << " " << content[i][2] << " " << content[i][3] << " " << content[i][4];
 			if (i == 0 || i == 1) continue;
 			Quaternion temp;
 			temp.setW(std::stod(content[i][1]));
