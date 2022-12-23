@@ -13850,7 +13850,7 @@ void calculate3Angle(int p1, int p2, int p3)
 
 void MainWindow::drawThetaPhi()
 {
-
+	//Tartget Point 지정 및 표출
 	QString q_theta = ui->edit_theta->text();
 	QString q_phi = ui->edit_phi->text();
 	QString q_z = ui->edit_z->text();
@@ -13862,7 +13862,6 @@ void MainWindow::drawThetaPhi()
 
 	if (q_theta.toStdString().size() > 0)
 		getTheta = stoi(q_theta.toStdString());
-
 
 	if (q_phi.toStdString().size() > 0)
 		getPhi = stoi(q_phi.toStdString());
