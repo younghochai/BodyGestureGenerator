@@ -14026,8 +14026,6 @@ void MainWindow::playTargets()
 
 						strGestureTemp += strTemp;
 					}
-
-
 				}
 			}
 			else
@@ -14302,6 +14300,8 @@ void MainWindow::playTargets()
 
 void MainWindow::nextPosition()
 {
+	//Pose와 Pose 사이의 움직임을 Gesture로 지정
+	//Gesture의 움직을 새롭게 생성하기 위한 함수
 
 	ui->lbl_posture0->setPixmap(QPixmap());
 	ui->lbl_posture0->setText("");
@@ -14379,9 +14379,6 @@ void MainWindow::nextPosition()
 
 	ui->lbl_gesture7->setText("");
 	ui->lbl_gesture7->setFrameShape(QFrame::NoFrame);
-
-	
-	
 
 
 	nextBtncnt++;
