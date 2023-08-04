@@ -189,8 +189,9 @@ public class Player : MonoBehaviour
 
             for (int i = 0; i < _bodyCustomJointNames.Length; i++)
             {
-                smpl_module.SetWorldJointRotation(_bodyCustomJointNames[i], load_quat_list[0][i][frame_cnt]);
+                //smpl_module.SetWorldJointRotation(_bodyCustomJointNames[i], load_quat_list[0][i][frame_cnt]);
                 //smpl_module.SetLocalJointRotation(_bodyCustomJointNames[i], load_quat_list[0][i][frame_cnt]);
+                smpl_module.SetWorld2LocalJointRotation(_bodyCustomJointNames[i], load_quat_list[0][i][frame_cnt]);
             }
             smpl_module.UpdateJointPositions(false);
             yield return new WaitForSeconds(.025f);
