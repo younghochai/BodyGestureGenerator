@@ -148,9 +148,7 @@ namespace JKress.AITrainer
         }
 
 
-        /// <summary>
-        /// Add relevant information on each body part to observations.
-        /// </summary>
+       
         public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor)
         {
             //Interaction Objects Contact Check
