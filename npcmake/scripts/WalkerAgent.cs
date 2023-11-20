@@ -162,9 +162,7 @@ namespace JKress.AITrainer
             if (bp.rb.transform != hips) sensor.AddObservation(bp.currentStrength / m_JdController.maxJointForceLimit);
         }
 
-        /// <summary>
-        /// Loop over body parts to add them to observation.
-        /// </summary>
+        
         public override void CollectObservations(VectorSensor sensor)
         {
             var cubeForward = m_OrientationCube.transform.forward;
