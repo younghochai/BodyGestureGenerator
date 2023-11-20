@@ -12,11 +12,7 @@ namespace JKress.AITrainer
     public class runagent : Agent
     {
         
-        /// Changed body parts and joints for Robot Kyle rig.
-        /// Added Heuristic function to test joints by user input.
-        /// Added ray perception sensor 3d to help navigate around walls.
-        /// </summary>
-        /// 
+       
         [Header("Training Type")] //If true, agent is penalized for moving away from target
         public bool earlyTraining = true;
 
