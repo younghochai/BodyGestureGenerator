@@ -11,8 +11,7 @@ namespace JKress.AITrainer
 {
     public class runagent : Agent
     {
-        /// <summary>
-        /// Based on walker example.
+        
         /// Changed body parts and joints for Robot Kyle rig.
         /// Added Heuristic function to test joints by user input.
         /// Added ray perception sensor 3d to help navigate around walls.
