@@ -97,9 +97,7 @@ namespace JKress.AITrainer
             spineStabilizer.uprightTorque = m_stabilizerTorque;
         }
 
-        /// <summary>
-        /// Loop over body parts and reset them to initial conditions.
-        /// </summary>
+        
         public override void OnEpisodeBegin()
         {
             targetController.MoveTargetToRandomPosition(); //method also fixes overlaps
