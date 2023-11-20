@@ -11,13 +11,8 @@ namespace JKress.AITrainer
 {
     public class runagent : Agent
     {
-        /// <summary>
-        /// Based on walker example.
-        /// Changed body parts and joints for Robot Kyle rig.
-        /// Added Heuristic function to test joints by user input.
-        /// Added ray perception sensor 3d to help navigate around walls.
-        /// </summary>
-        /// 
+        
+       
         [Header("Training Type")] //If true, agent is penalized for moving away from target
         public bool earlyTraining = true;
 
@@ -102,9 +97,7 @@ namespace JKress.AITrainer
             spineStabilizer.uprightTorque = m_stabilizerTorque;
         }
 
-        /// <summary>
-        /// Loop over body parts and reset them to initial conditions.
-        /// </summary>
+        
         public override void OnEpisodeBegin()
         {
             targetController.MoveTargetToRandomPosition(); //method also fixes overlaps
@@ -155,9 +148,7 @@ namespace JKress.AITrainer
         }
 
 
-        /// <summary>
-        /// Add relevant information on each body part to observations.
-        /// </summary>
+       
         public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor)
         {
             //Interaction Objects Contact Check
@@ -179,9 +170,7 @@ namespace JKress.AITrainer
             if (bp.rb.transform != hips) sensor.AddObservation(bp.currentStrength / m_JdController.maxJointForceLimit);
         }
 
-        /// <summary>
-        /// Loop over body parts to add them to observation.
-        /// </summary>
+      
         public override void CollectObservations(VectorSensor sensor)
         {
             var cubeForward = m_OrientationCube.transform.forward;
