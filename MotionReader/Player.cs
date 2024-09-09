@@ -1,26 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// AMASS data animation player for SMPL-X
+/// </summary>
 public class Player : MonoBehaviour
 {
-    public float speed;
+    [Header("Reader Mode")]
+    public bool CSVMode;
+    public bool TXTMode;
 
-    float hAxis;
-    float vAxis;
+    [Header("File Path")]
+    public string RootFilePath;
+    public string FileName;
 
-    bool xDown;
-    bool cDown;
-    bool vDown;
+    [HideInInspector]
+    public bool xDown;
+    [HideInInspector]
+    public bool cDown;
 
     public List<List<List<Quaternion>>> load_quat_list = new List<List<List<Quaternion>>>();
     public List<List<List<Vector3>>> load_axis_list = new List<List<List<Vector3>>>();
 
-    public SMPLX smpl_module;
-    Vector3 moveVec;
+    SMPLX smpl_module;
+    private bool isInitialRotationApplied = false; // 초기 회전 적용 여부를 추적하는 플래그
 
-    string[] _bodyJointNames = new string[] {"pelvis", "left_hip", "right_hip", "spine1", "left_knee",
+    string[] _bodyJointNames = new string[] {"global_pos","pelvis", "left_hip", "right_hip", "spine1", "left_knee",
                                              "right_knee", "spine2", "left_ankle", "right_ankle", "spine3",
                                              "left_foot", "right_foot", "neck", "left_collar", "right_collar",
                                              "head", "left_shoulder", "right_shoulder", "left_elbow", "right_elbow",
@@ -29,159 +37,119 @@ public class Player : MonoBehaviour
     string[] _bodyCustomJointNames = new string[] { "pelvis","spine2","right_shoulder","right_elbow", "left_shoulder",
                                                     "left_elbow","right_hip","right_knee","left_hip","left_knee"};
 
-    //string[] _bodyCustomJointNames = new string[] { "pelvis" };
+    Transform pelvis;
 
     void Start()
     {
-        
+        //현재 스크립트가 붙어있는 SMPL 모델 정보를 가져옴
+        smpl_module = this.GetComponent<SMPLX>();
+        // smpl 모델에서 pelvis를 정보를 가져옴. smplx-male - root - pelvis
+        pelvis = transform.GetChild(0).GetChild(0).GetChild(0);
     }
 
     // Update is called once per frame
     void Update()
     {
         GetInput();
-        Move();
         fileRead();
         _Animation();
-        fileSave();
     }
 
+    /// <summary>
+    /// X키로 CSV를 읽어온 뒤 C키로 코루틴 실행
+    /// </summary>
     void GetInput()
     {
-        hAxis = Input.GetAxisRaw("Horizontal");
-        vAxis = Input.GetAxisRaw("Vertical");
         xDown = Input.GetKeyDown(KeyCode.X);
         cDown = Input.GetKeyDown(KeyCode.C);
-        vDown = Input.GetKeyDown(KeyCode.V);
     }
 
-    void Move()
-    {
-        moveVec = new Vector3(hAxis, 0, vAxis).normalized;
-
-        transform.position += moveVec * speed * Time.deltaTime;
-    }
-
+    /// <summary>
+    /// 읽고자하는 CSV or txt 파일의 전체 경로를 CSVReader(" ")의 문자열 매개변수로 입력
+    /// 
+    /// EX)   CSVReader("C:/Users/{username}/filepath..." + "fileName")
+    /// 
+    /// </summary>
     void fileRead()
     {
         if(xDown)
         {
-            //string prefix1 = "C:/Users/pssil/PycharmProjects/pythonProject1/TotalCapture_csv_concat_convert/s1/";
-            //string prefix2 = "C:/Users/pssil/PycharmProjects/pythonProject1/TotalCapture_csv_concat_convert/s2/";
-            //string prefix3 = "C:/Users/pssil/PycharmProjects/pythonProject1/TotalCapture_csv_concat_convert/s3/";
-            //string prefix4 = "C:/Users/pssil/PycharmProjects/pythonProject1/TotalCapture_csv_concat_convert/s4/";
-            //string prefix5 = "C:/Users/pssil/PycharmProjects/pythonProject1/TotalCapture_csv_concat_convert/s5/";
-            string prefix = "C:/Users/pssil/Downloads/";
-
-            /***************subject 1***************/
-            //CSVReader(prefix1 + "acting1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "acting2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "acting3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix1 + "freestyle1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "freestyle2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "freestyle3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix1 + "rom1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "rom2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "rom3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix1 + "walking1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "walking2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix1 + "walking3_stageii_concat_root_body_pose.csv");
-
-            /***************subject 2***************/
-            //CSVReader(prefix2 + "acting1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix2 + "acting2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix2 + "acting3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix2 + "freestyle2_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix2 + "rom1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix2 + "rom2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix2 + "rom3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix2 + "walking1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix2 + "walking2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix2 + "walking3_stageii_concat_root_body_pose.csv");
-
-            /***************subject 3***************/
-            //CSVReader(prefix3 + "acting2_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix3 + "rom1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix3 + "rom2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix3 + "rom3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix3 + "walking1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix3 + "walking2_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix3 + "walking3_stageii_concat_root_body_pose.csv");
-
-            /***************subject 4***************/
-            //CSVReader(prefix4 + "freestyle1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix4 + "freestyle3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix4 + "rom3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix4 + "walking2_stageii_concat_root_body_pose.csv");
-
-            /***************subject 5***************/
-            //CSVReader(prefix5 + "freestyle1_stageii_concat_root_body_pose.csv");
-            //CSVReader(prefix5 + "freestyle3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix5 + "rom3_stageii_concat_root_body_pose.csv");
-
-            //CSVReader(prefix5 + "walking2_stageii_concat_root_body_pose.csv");
-
-            //TXTReader(prefix + "alignpos.txt");
-            TXTReader(prefix + "0718_T_Pose2.txt");
-            //TXTReader(prefix + "walking1_stageii_concat_root_body_pose.txt");
-
-            Debug.Log("TXT file load done");
-            //Debug.Log("CSV file load done");
+            if(CSVMode)
+            {
+                CSVReader(RootFilePath + FileName);
+                Debug.Log("CSV file load done");
+                //Debug.Log($"total frame : {load_axis_list[0][0].Count}");
+            }
+            if(TXTMode)
+            {
+                TXTReader(RootFilePath + FileName);
+                Debug.Log("TXT file load done");
+            }
         }
     }
 
+    /// <summary>
+    /// 읽어들인 CSV 파일(or TXT 파일)을 Update() 콜백 메소드에서 코루틴으로 순차적으로 재생하기 위한 함수
+    /// avatar_play()가 켜져 있을 땐 txt를 읽을 수 없고 반대의 경우 csv를 읽을 수 없음.
+    /// </summary>
     void _Animation()
     {
-        //avatar_play()�� ���� ���� �� txt�� ���� �� ���� �ݴ��� ��� csv�� ���� �� ����.
         if(cDown)
         {
-            //StartCoroutine(avatar_play());
-            StartCoroutine(avator_play_custom());
+            if (CSVMode)
+            {
+                StartCoroutine(avatar_play());
+            }
+            if (TXTMode)
+            {
+                StartCoroutine(avator_play_custom());
+            }
         }
     }
 
-    void fileSave()
-    { 
-        if(vDown)
-        {
-            string prefix = "C:/Users/pssil/PycharmProjects/pythonProject1/TotalCapture_csv_concat_convert_txt/";
-            string txtFilePath = prefix + "walking1_stageii_concat_root_body_pose.txt";
-
-
-            TXTWriter(txtFilePath);
-
-
-            Debug.Log("CSV quaternion save done");
-        }
-    }
-
+    /// <summary>
+    /// AMASS 데이터를 애니메이션하기 위한 코루틴
+    /// </summary>
+    /// <returns></returns>
     IEnumerator avatar_play()
     {
+        // 이 코드가 주석처리 되면 아래로 누운 상태로 재생됨
+        // 처음 코루틴이 실행될 때만 회전을 적용
+        if (!isInitialRotationApplied)
+        {
+            transform.rotation *= Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+            isInitialRotationApplied = true; // 회전이 적용되었음을 표시
+        }
 
         for (int frame_cnt = 0; frame_cnt < load_axis_list[0][0].Count; frame_cnt++)
         {
 
             for (int i = 0; i < _bodyJointNames.Length; i++)
             {
-                smpl_module.SetLocalJointRotation(_bodyJointNames[i], QuatFromRodrigues(load_axis_list[0][i][frame_cnt].x, load_axis_list[0][i][frame_cnt].y, load_axis_list[0][i][frame_cnt].z));
+                if (i == 0)
+                {
+                    //Translation
+                    Vector3 pos_ = new Vector3(load_axis_list[0][i][frame_cnt].x, load_axis_list[0][i][frame_cnt].z, load_axis_list[0][i][frame_cnt].y);
+
+                    pelvis.position = pos_ + new Vector3(0f, 0.55f, 0f);
+                }
+                else if (i != 0)
+                {
+                    smpl_module.SetLocalJointRotation(_bodyJointNames[i], QuatFromRodrigues(load_axis_list[0][i][frame_cnt].x, load_axis_list[0][i][frame_cnt].y, load_axis_list[0][i][frame_cnt].z));
+                }
+
+                
             }
             smpl_module.UpdateJointPositions(false);
-            yield return new WaitForSeconds(.025f);
+            yield return new WaitForSeconds(.000f); // origin 0.008f / 레그돌 환경일 때 지연 시간이 없는게 더 좋음
         }
         yield break;
     }
 
+    /// <summary>
+    /// 센서를 통해 취득한 데이터를 플레이하기 위한 코루틴
+    /// </summary>
+    /// <returns></returns>
     IEnumerator avator_play_custom()
     {
         for (int frame_cnt = 0; frame_cnt < load_quat_list[0][0].Count; frame_cnt++)
@@ -199,6 +167,11 @@ public class Player : MonoBehaviour
         yield break;
     }
 
+    /// <summary>
+    /// 콤마(,)로 각 값을, 개행(\n)으로 하나의 프레임을 구분함
+    /// 최초 작성자 - 류재영 , 인용 - 김현범
+    /// </summary>
+    /// <param name="file_path">파일 경로</param>
     void CSVReader(string file_path)
     {
         FileStream quatStream = new FileStream(file_path, FileMode.Open);
@@ -288,20 +261,6 @@ public class Player : MonoBehaviour
         return;
     }
 
-    void TXTWriter(string file_path) //ConvertToTXT
-    {
-        FileStream quatStream = new FileStream(file_path, FileMode.Create);
-        StreamWriter sw = new StreamWriter(quatStream);
-        List<List<Quaternion>> load_axis_buf = new List<List<Quaternion>>();
-
-        sw.Write(load_axis_buf);
-
-        sw.Close();
-        quatStream.Close();
-
-        return;
-    }
-
     public static Quaternion QuatFromRodrigues(float rodX, float rodY, float rodZ)
     {
         // Local joint coordinate systems
@@ -309,20 +268,6 @@ public class Player : MonoBehaviour
         //   Unity:  X-Left,  Y-Up, Z-Back, Left-handed
         Vector3 axis = new Vector3(-rodX, rodY, rodZ);
         float angle_deg = -axis.magnitude * Mathf.Rad2Deg;
-        Vector3.Normalize(axis);
-
-        Quaternion quat = Quaternion.AngleAxis(angle_deg, axis);
-
-        return quat;
-    }
-
-    public static Quaternion InverseQuatFromRodrigues(float rodX, float rodY, float rodZ)
-    {
-        // Local joint coordinate systems
-        //   SMPL-X: X-Right, Y-Up, Z-Back, Right-handed
-        //   OpenGL: X-Right, Y-Up, Z-Back, Right-handed
-        Vector3 axis = new Vector3(rodX, rodY, rodZ);
-        float angle_deg = axis.magnitude * Mathf.Rad2Deg;
         Vector3.Normalize(axis);
 
         Quaternion quat = Quaternion.AngleAxis(angle_deg, axis);
