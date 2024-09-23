@@ -9,6 +9,13 @@ using UnityEngine;
 /// </summary>
 public class Player : MonoBehaviour
 {
+    // 이벤트 핸들러 선언
+    public delegate void OnDataLoaded();
+    public event OnDataLoaded DataLoadedEvent;
+
+    [Header("Recording Mode")]
+    public bool RecordMode;
+
     [Header("Reader Mode")]
     public bool CSVMode;
     public bool TXTMode;
@@ -45,14 +52,26 @@ public class Player : MonoBehaviour
         smpl_module = this.GetComponent<SMPLX>();
         // smpl 모델에서 pelvis를 정보를 가져옴. smplx-male - root - pelvis
         pelvis = transform.GetChild(0).GetChild(0).GetChild(0);
+
+        // RecordMode가 활성화된 경우 곧바로 파일을 읽고 애니메이션 실행
+        if (RecordMode)
+        {
+            LoadAnimationData();
+            StartAnimation();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         GetInput();
-        fileRead();
-        _Animation();
+
+        // RecordMode가 아닌 경우에만 X, C 키로 파일 읽기 및 애니메이션
+        if (!RecordMode)
+        {
+            fileRead();
+            _Animation();
+        }
     }
 
     /// <summary>
@@ -70,40 +89,57 @@ public class Player : MonoBehaviour
     /// EX)   CSVReader("C:/Users/{username}/filepath..." + "fileName")
     /// 
     /// </summary>
+    void LoadAnimationData()
+    {
+        if (CSVMode)
+        {
+            CSVReader(RootFilePath + FileName);
+            Debug.Log("CSV file load done");
+            //Debug.Log($"total frame : {load_axis_list[0][0].Count}");
+        }
+        if (TXTMode)
+        {
+            TXTReader(RootFilePath + FileName);
+            Debug.Log("TXT file load done");
+        }
+
+        // 데이터 로드 완료 이벤트 호출(Recording Mode를 위한 옵션)
+        if (DataLoadedEvent != null)
+        {
+            DataLoadedEvent();
+        }
+    }
+
     void fileRead()
     {
         if(xDown)
         {
-            if(CSVMode)
-            {
-                CSVReader(RootFilePath + FileName);
-                Debug.Log("CSV file load done");
-                //Debug.Log($"total frame : {load_axis_list[0][0].Count}");
-            }
-            if(TXTMode)
-            {
-                TXTReader(RootFilePath + FileName);
-                Debug.Log("TXT file load done");
-            }
+            LoadAnimationData();
         }
     }
 
     /// <summary>
     /// 읽어들인 CSV 파일(or TXT 파일)을 Update() 콜백 메소드에서 코루틴으로 순차적으로 재생하기 위한 함수
-    /// avatar_play()가 켜져 있을 땐 txt를 읽을 수 없고 반대의 경우 csv를 읽을 수 없음.
+    /// CSVMode가 켜져 있을 땐 txt를 읽을 수 없고 반대의 경우 csv를 읽을 수 없음.
     /// </summary>
+    void StartAnimation()
+    {
+        if (CSVMode)
+        {
+            StartCoroutine(avatar_play());
+        }
+        if (TXTMode)
+        {
+            StartCoroutine(avator_play_custom());
+        }
+    }
+
+    
     void _Animation()
     {
         if(cDown)
         {
-            if (CSVMode)
-            {
-                StartCoroutine(avatar_play());
-            }
-            if (TXTMode)
-            {
-                StartCoroutine(avator_play_custom());
-            }
+            StartAnimation();
         }
     }
 
