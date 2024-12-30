@@ -205,7 +205,7 @@ vtkSmartPointer<vtkTransform> RforechestTransform = vtkSmartPointer<vtkTransform
 vtkSmartPointer<vtkActor> RforechestActor = vtkSmartPointer<vtkActor>::New();
 
 
-const char* headTexture_filename = "../BodyGestureGenerator/data/headmap.jpg";
+const char* headTexture_filename = "./data/headmap.jpg";
 std::string headNeck_objFilename /*= "humanHead1.obj"*/;
 vtkSmartPointer<vtkOBJReader> Head_ObjReader = vtkSmartPointer<vtkOBJReader>::New();
 vtkSmartPointer<vtkPolyDataMapper> Head_ObjReader_mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
