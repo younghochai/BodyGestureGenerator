@@ -1,16 +1,23 @@
 import os
 import numpy as np
-import json
-from json import JSONEncoder
-# np.set_printoptions(threshold=sys.maxsize)
 
-root_file_path = 'TotalCapture/s3/'
+root_file_path = 'C:/Users/pssil/PycharmProjects/pythonProject1/TotalCapture/s1/'
+
+# dummy list
 npz_file_name = ['acting1_stageii.npz','acting2_stageii.npz','acting3_stageii.npz',
                  'freestyle1_stageii.npz', 'freestyle2_stageii.npz', 'freestyle3_stageii.npz',
                  'rom1_stageii.npz', 'rom2_stageii.npz', 'rom3_stageii.npz',
                  'walking1_stageii.npz', 'walking2_stageii.npz', 'walking3_stageii.npz']
+excluded_files = ['male_stagei.npz', 'female_stagei.npz']
 
-temp_name = 'walking1_stageii'
+# 수동 경로 지정 방법
+temp_name = 'acting1_stageii'
+
+# 추출한 CSV 파일을 저장할 경로
+csv_save_path = "C:/Users/pssil/Downloads/TotalCapture/s1/"
+
+# 자동 경로 지정 방법(new!)
+file_name_list = os.listdir(root_file_path)
 
 # npz 파일 경로
 npz_file_path = root_file_path + temp_name + '.npz'
@@ -41,102 +48,84 @@ markers_sim
 marker_meta
 num_markers
 '''
-text = "mocap_time_length"
+text = "root_orient"
 
 # npz 파일 열기
 npz_data = np.load(npz_file_path, allow_pickle=True)
 
-a2 = npz_data['root_orient']
-b2 = npz_data['pose_body']
+for file_name in file_name_list:
+    # 제외할 파일명이 리스트에 있는지 확인
+    # 딕셔너리 구조가 다를 경우 사용. 목록에 작성한 파일은 제외하고 추출
+    if file_name in excluded_files:
+        print(f"{file_name} 제외됨.")
+        continue
 
-result = np.concatenate((a2,b2),axis=1)
+    text1 = '_concat_trans_poses'
+    npz_data = np.load(root_file_path+file_name, allow_pickle=True)
+    keys = list(npz_data.keys())
+    print(keys)
+    # for SMPL-X
+    a2 = npz_data['trans']
+    b2 = npz_data['root_orient']
+    c2 = npz_data['pose_body']
+    result = np.concatenate((a2,b2,c2),axis=1)
 
-lst = npz_data.files
+    # for SMPL-H
+    # a2 = npz_data['trans']
+    # b2 = npz_data['poses'][:,:66]
+    # result = np.concatenate((a2,b2),axis=1)
+    np.savetxt(csv_save_path + file_name[:-4] + text1 + '.csv', result, delimiter=",")
+    print(file_name, " 저장완료.")
+
+
+
+# lst = npz_data.files
 # for key in lst: # 파일 목록 불러오기(딕셔너리)
 #    print(key)
 #    print(npz_data[key])
-print(text)
-print(npz_data[text])
+# print(text)
+# print(npz_data[text])
 # npz_data_len = npz_data[text]
 # print(len(npz_data_len[0]))
 
-gender_data = npz_data['gender']
-gender_data = np.array([gender_data])
-surface_data = npz_data['surface_model_type']
-surface_data = np.array([surface_data])
-frame_data = npz_data['mocap_frame_rate']
-frame_data = np.array([frame_data])
-time_data = npz_data['mocap_time_length']
-time_data = np.array([time_data])
+# gender_data = npz_data['gender']
+# gender_data = np.array([gender_data])
+# surface_data = npz_data['surface_model_type']
+# surface_data = np.array([surface_data])
+# frame_data = npz_data['mocap_frame_rate']
+# frame_data = npz_data['mocap_framerate'] # for SMPL-H
+# frame_data = np.array([frame_data])
+# time_data = npz_data['mocap_time_length']
+# time_data = np.array([time_data])
+# print(gender_data)
 
-text2 = 'concat_root_body_pose'
+# text2 = 'concat_root_body_pose'
 # .csv 파일 변환
 # np.savetxt(temp_name +'_'+text2+'.csv', result, delimiter=",") #, fmt='%s'
 # np.savetxt('acting1_stageii'+'_'+text+'.csv', npz_data[text], delimiter=",") #, fmt='%s'
 # np.savetxt('acting1_stageii'+'_'+text+'.csv', npz_data[text], fmt='%s') #, fmt='%s'
 # np.savetxt('acting1_stageii_time.csv', time_data, fmt='%s')  # 문자열 포멧으로 변환
 
-# 데이터 추출
-# data_dict = {}
-# for key in npz_data.keys():
-#     data_dict[key] = npz_data[key].tolist()
-#
-# # JSON 변환
-# json_data = json.dumps(data_dict, default=lambda x: x.tolist())
-#
-# # JSON 파일 저장
-# json_file_path = "output.json"
-# with open(json_file_path, "w") as json_file:
-#     json_file.write(json_data)
-#
-# print("Saved JSON data to", json_file_path)
 
 
+'''
+### 길이 추출 ###
+keys_to_check = ['trans', 'root_orient', 'pose_body']
 
-# class NumpyArrayEncoder(JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, np.ndarray):
-#             return obj.tolist()
-#         return JSONEncoder.default(self, obj)
+# npz 파일 열기
+npz_data = np.load(npz_file_path, allow_pickle=True)
 
+# 값의 크기를 가져오기
+values = [len(npz_data[key][0]) if key in npz_data else 0 for key in keys_to_check]
 
-# npz 파일에 저장된 데이터 확인
-# for array_name in npz_data.files:
-#     array_data = npz_data[array_name]
-#     encodedNumpyData = json.dumps(array_data, cls=NumpyArrayEncoder)
-#     print("Printing JSON serialized Numpy array")
-#     print(encodedNumpyData)
+# 테이블 출력
+header = " | ".join(f"{key:^15}" for key in keys_to_check)  # 헤더 가운데 정렬
+separator = "-" * len(header)
+row = " | ".join(f"{value:^15}" for value in values)  # 값 가운데 정렬
 
-    # print("Array Name:", array_name)
-    # print("Array Data:")
-    # print(array_data)
+print(header)
+print(separator)
+print(row)
 
-# npz_file_path = 'your_npz_file.npz'
-#
-# # .npz 파일 로드
-# npz_data = np.load(npz_file_path)
-#
-# # .json 파일 이름 생성
-# json_file_path = os.path.splitext(npz_file_path)[0] + '.json' # [0]:파일 이름,[1]:확장자
-#
-# # 배열을 JSON 형식으로 변환
-# json_data = json.dumps(npz_data)
-#
-# # .json 파일 저장
-# with open(json_file_path, "w") as json_file:
-#     json_file.write(json_data)
-
-# folder_path = 'your_folder_path'  # 읽어올 폴더 경로
-# npz_files = [file for file in os.listdir(folder_path) if file.endswith('.npz')]  # .npz 파일 목록 가져오기
-#
-# for npz_file in npz_files:
-#     npz_file_path = os.path.join(folder_path, npz_file)  # 폴더 경로와 파일명 합치기
-#
-#     # .npz 파일 로드
-#     npz_data = np.load(npz_file_path)
-#
-#     # TODO: 원하는 작업 수행
-#     # 예시: 배열 출력
-#     print(npz_data['array1'])
-
-
+# NOTE: 결과값 smplx 변환 가이드(20250117) 슬라이드33 참고
+'''
