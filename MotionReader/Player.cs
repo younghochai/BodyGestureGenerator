@@ -24,6 +24,13 @@ public class Player : MonoBehaviour
     public string RootFilePath;
     public string FileName;
 
+    [Header("Position")]
+    [Tooltip("기본값은 0")]
+    public float pelvisHeight;
+
+    [Header("Animation Delay")]
+    public float seconds;
+
     [HideInInspector]
     public bool xDown;
     [HideInInspector]
@@ -86,7 +93,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 읽고자하는 CSV or txt 파일의 전체 경로를 CSVReader(" ")의 문자열 매개변수로 입력
     /// 
-    /// EX)   CSVReader("C:/Users/{username}/filepath..." + "fileName")
+    /// EX)   CSVReader("C:/Users/{username}/filepath.../" + "fileName")
     /// 
     /// </summary>
     void LoadAnimationData()
@@ -167,7 +174,7 @@ public class Player : MonoBehaviour
                     //Translation
                     Vector3 pos_ = new Vector3(load_axis_list[0][i][frame_cnt].x, load_axis_list[0][i][frame_cnt].z, load_axis_list[0][i][frame_cnt].y);
 
-                    pelvis.position = pos_ + new Vector3(0f, 0.55f, 0f);
+                    pelvis.position = pos_ + new Vector3(0f, pelvisHeight, 0f);
                 }
                 else if (i != 0)
                 {
@@ -177,7 +184,7 @@ public class Player : MonoBehaviour
                 
             }
             smpl_module.UpdateJointPositions(false);
-            yield return new WaitForSeconds(.000f); // origin 0.008f / 레그돌 환경일 때 지연 시간이 없는게 더 좋음
+            yield return new WaitForSeconds(seconds); // origin 0.008f / Ragdoll 0.000f 레그돌 환경일 때 지연 시간이 없는게 더 좋음
         }
         yield break;
     }
