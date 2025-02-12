@@ -57,7 +57,6 @@ public class JointAngleController : MonoBehaviour
 
         // 4) 기본 선택 조인트 설정 (인덱스 0: "pelvis")
         selectedJoint = _bodyJointNames[0];
-        //Debug.Log("Dropdown initialized and first joint selected.");
 
         // 5) 버튼 클릭 이벤트 연결
         updateButton.onClick.AddListener(OnUpdateButtonClicked);
@@ -184,6 +183,9 @@ public class JointAngleController : MonoBehaviour
                 Vector3 frameValue = jointPositions[frame][jointIndex];
                 Debug.Log($"Frame {frame}: {frameValue}");
             }
+
+            // Update the graph
+            PlotJoint(selectedJoint);
         }
         else
         {
