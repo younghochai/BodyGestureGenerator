@@ -129,7 +129,7 @@ public class SMPLX : MonoBehaviour
         string[] genders = new string[] {"female", "neutral", "male"};
         foreach (string gender in genders)
         {
-            Debug.Log("[SMPL-X] Setup betas-to-joints regressor: " + gender);
+            //Debug.Log("[SMPL-X] Setup betas-to-joints regressor: " + gender);
             string name_betas = "betasToJoints_" + gender;
             string name_template = "templateJ_" + gender;
 
@@ -271,10 +271,10 @@ public class SMPLX : MonoBehaviour
         //   SMPL-X: X-Right, Y-Up, Z-Back, Right-handed
         //   Unity:  X-Left,  Y-Up, Z-Back, Left-handed
         Vector3 axis = new Vector3(-rodX, rodY, rodZ);
-        float angle_deg = - axis.magnitude * Mathf.Rad2Deg;
+        float angle_deg = - axis.magnitude * Mathf.Rad2Deg; // radian to degree
         Vector3.Normalize(axis);
 
-        Quaternion quat = Quaternion.AngleAxis(angle_deg, axis);
+        Quaternion quat = Quaternion.AngleAxis(angle_deg, axis); // axis, angle to quaternion
         
         return quat;
     }
