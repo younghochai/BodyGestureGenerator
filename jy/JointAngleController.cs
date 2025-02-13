@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using TMPro;
 using ChartAndGraph;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class JointAngleController : MonoBehaviour
 {
@@ -13,7 +10,15 @@ public class JointAngleController : MonoBehaviour
 
     [Header("UI Settings")]
     public TMP_Dropdown jointDropdown; // Inspector에서 드롭다운(오브젝트)을 연결
-    public UnityEngine.UI.Button updateButton; // 업데이트 버튼
+    public TMP_Dropdown axisDropdown; // Inspector에서 드롭다운(오브젝트)을 연결
+    public UnityEngine.UI.Button increaseButton; // +0.1 버튼
+    public UnityEngine.UI.Button decreaseButton; // -0.1 버튼
+    //public UnityEngine.UI.Button saveCSVButton; // Save CSV 버튼
+
+    [Header("Graph Settings")]
+    //public float yAxisMin = -3f;  // Default Y-axis minimum value
+    //public float yAxisMax = 3f;   // Default Y-axis maximum value
+
     public int startFrame;
     public int endFrame;
     public string selectedJoint;       // 선택된 조인트 이름
@@ -21,9 +26,6 @@ public class JointAngleController : MonoBehaviour
     [Header("File Path")]
     public string RootFilePath;
     public string FileName;
-
-    [Header("Joint Selection")]
-    SMPLX smpl_module;
 
     private List<List<Vector3>> jointPositions;  // 각 관절의 위치 데이터를 저장
     private Dictionary<string, int> jointNameToIndex; // 조인트 이름 -> 인덱스 매핑
@@ -40,6 +42,7 @@ public class JointAngleController : MonoBehaviour
 
     void Start()
     {
+
         // 1) SMPL 조인트 데이터 구조 초기화
         jointPositions = new List<List<Vector3>>();
         jointNameToIndex = new Dictionary<string, int>();
@@ -52,14 +55,17 @@ public class JointAngleController : MonoBehaviour
         string fullPath = Path.Combine(RootFilePath, FileName);
         LoadCSV(fullPath);
 
-        // 3) Dropdown 초기화 (SMPL 조인트 목록 연결)
-        InitializeDropdown();
+        // 3) Dropdown 초기화
+        InitializeDropdown(); // SMPL 조인트 목록
+        InitializeAxisDropdown(); // 편집할 축 목록
 
         // 4) 기본 선택 조인트 설정 (인덱스 0: "pelvis")
         selectedJoint = _bodyJointNames[0];
 
         // 5) 버튼 클릭 이벤트 연결
-        updateButton.onClick.AddListener(OnUpdateButtonClicked);
+        increaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(0.1f));
+        decreaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(-0.1f));
+        //saveCSVButton.onClick.AddListener(OnSaveCSVButtonClicked);
     }
 
     void Update()
@@ -136,6 +142,24 @@ public class JointAngleController : MonoBehaviour
         OnJointSelected(0);
     }
 
+    void InitializeAxisDropdown()
+    {
+        if (axisDropdown == null)
+        {
+            Debug.LogWarning("Axis TMP_Dropdown is not assigned in the Inspector!");
+            return;
+        }
+
+        // 기존 옵션 초기화
+        axisDropdown.ClearOptions();
+        // 축 옵션 추가
+        List<string> options = new List<string> { "X", "Y", "Z" };
+        axisDropdown.AddOptions(options);
+
+        // 초기값 설정(인덱스 1: "Y")
+        axisDropdown.value = 1;
+    }
+
     /// <summary>
     /// 드롭다운에서 선택한 조인트를 처리
     /// </summary>
@@ -168,29 +192,34 @@ public class JointAngleController : MonoBehaviour
         PlotJoint(selectedJoint);
     }
 
-    /// <summary>
-    /// 업데이트 버튼 클릭 시 호출되는 메서드
-    /// </summary>
-    void OnUpdateButtonClicked()
+    private void OnValueChangeButtonClicked(float increment)
     {
-        if (jointPositions.Count > 0)
-        {
-            int jointIndex = jointNameToIndex[selectedJoint];
+        if (string.IsNullOrEmpty(selectedJoint)) return;
+        
+        int jointIndex = jointNameToIndex[selectedJoint];
+        int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
 
-            // Print joint data values within the specified frame range
-            for (int frame = startFrame; frame <= endFrame && frame < jointPositions.Count; frame++)
+        // 선택된 범위 내의 모든 프레임 Y값을 increment만큼 변경
+        for (int frame = startFrame; frame <= endFrame && frame < jointPositions.Count; frame++)
+        {
+            Vector3 currentPos = jointPositions[frame][jointIndex];
+            switch (selectedAxis)
             {
-                Vector3 frameValue = jointPositions[frame][jointIndex];
-                Debug.Log($"Frame {frame}: {frameValue}");
+                case 0: // X
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x + increment, currentPos.y, currentPos.z);
+                    break;
+                case 1: // Y
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y + increment, currentPos.z);
+                    break;
+                case 2: // Z
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, currentPos.z + increment);
+                    break;
             }
+        }
 
-            // Update the graph
-            PlotJoint(selectedJoint);
-        }
-        else
-        {
-            Debug.LogWarning("jointPositions is empty. CSV not loaded?");
-        }
+        // 그래프 업데이트
+        PlotJoint(selectedJoint);
+        Debug.Log($"Applied {increment:F1} increment to {selectedJoint} from frame {startFrame} to {endFrame}");
     }
 
     /// <summary>
@@ -204,19 +233,27 @@ public class JointAngleController : MonoBehaviour
             return;
         }
 
+        // 0) Set Y-axis range
+        //chart.DataSource.VerticalViewSize = yAxisMax - yAxisMin;  // Y축 범위 설정
+        //chart.DataSource.VerticalViewOrigin = yAxisMin;  // Y축 시작점 설정
+
+
         // 1) jointName -> jointIndex
         int jIndex = jointNameToIndex[jointName];
 
         // 2) 카테고리 준비
         chart.DataSource.StartBatch();
-
-        chart.DataSource.ClearCategory("JointPlot");
+        chart.DataSource.ClearCategory("X Angle");
+        chart.DataSource.ClearCategory("Y Angle");
+        chart.DataSource.ClearCategory("Z Angle");
 
         // 3) 프레임 반복하며 (x축=프레임, y축=pos.y) 형태로 Plot
         for (int frame = 0; frame < jointPositions.Count; frame++)
         {
             Vector3 pos = jointPositions[frame][jIndex];
-            chart.DataSource.AddPointToCategory("JointPlot", frame, pos.y);
+            chart.DataSource.AddPointToCategory("X Angle", frame, pos.x);
+            chart.DataSource.AddPointToCategory("Y Angle", frame, pos.y);
+            chart.DataSource.AddPointToCategory("Z Angle", frame, pos.z);
         }
 
         chart.DataSource.EndBatch();
