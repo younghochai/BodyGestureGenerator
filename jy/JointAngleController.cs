@@ -9,28 +9,32 @@ public class JointAngleController : MonoBehaviour
     public GraphChart chart;
 
     [Header("UI Settings")]
-    public TMP_Dropdown jointDropdown; // Inspector에서 드롭다운(오브젝트)을 연결
-    public TMP_Dropdown axisDropdown; // Inspector에서 드롭다운(오브젝트)을 연결
+    // Dropdown
+    public TMP_Dropdown jointDropdown;
+    public TMP_Dropdown axisDropdown;
+
+    // Button
     public UnityEngine.UI.Button increaseButton; // +0.1 버튼
     public UnityEngine.UI.Button decreaseButton; // -0.1 버튼
-    //public UnityEngine.UI.Button saveCSVButton; // Save CSV 버튼
+    public UnityEngine.UI.Button shiftLeftButton; // Shift Left 버튼
+    public UnityEngine.UI.Button shiftRightButton; // Shift Right 버튼
+    public UnityEngine.UI.Button saveCSVButton; // Save CSV 버튼
 
     [Header("Graph Settings")]
     //public float yAxisMin = -3f;  // Default Y-axis minimum value
     //public float yAxisMax = 3f;   // Default Y-axis maximum value
-
-    public int startFrame;
-    public int endFrame;
-    public string selectedJoint;       // 선택된 조인트 이름
 
     [Header("File Path")]
     public string RootFilePath;
     public string FileName;
 
     private List<List<Vector3>> jointPositions;  // 각 관절의 위치 데이터를 저장
+    private List<float> times; // 각 프레임의 시간을 저장
     private Dictionary<string, int> jointNameToIndex; // 조인트 이름 -> 인덱스 매핑
+    public int startFrame;
+    public int endFrame;
+    public string selectedJoint;       // 선택된 조인트 이름
 
-    // SMPL 또는 SMPLX에서 사용하는 조인트 목록
     string[] _bodyJointNames = new string[]
     {
         "pelvis", "left_hip", "right_hip", "spine1", "left_knee",
@@ -42,6 +46,8 @@ public class JointAngleController : MonoBehaviour
 
     void Start()
     {
+        // 0) 시간 리스트 초기화
+        times = new List<float>();
 
         // 1) SMPL 조인트 데이터 구조 초기화
         jointPositions = new List<List<Vector3>>();
@@ -62,10 +68,12 @@ public class JointAngleController : MonoBehaviour
         // 4) 기본 선택 조인트 설정 (인덱스 0: "pelvis")
         selectedJoint = _bodyJointNames[0];
 
-        // 5) 버튼 클릭 이벤트 연결
+        // 5) 버튼 이벤트 연결
         increaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(0.1f));
         decreaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(-0.1f));
-        //saveCSVButton.onClick.AddListener(OnSaveCSVButtonClicked);
+        shiftLeftButton.onClick.AddListener(() => OnFrameShiftButtonClicked(-1));
+        shiftRightButton.onClick.AddListener(() => OnFrameShiftButtonClicked(1));
+        saveCSVButton.onClick.AddListener(OnSaveCSVButtonClicked);
     }
 
     void Update()
@@ -102,6 +110,7 @@ public class JointAngleController : MonoBehaviour
         for (int i = 1; i < lines.Length; i++)
         {
             string[] values = lines[i].Split(',');
+            times.Add(float.Parse(values[1]));
             List<Vector3> framePositions = new List<Vector3>();
 
             for (int j = 2; j < values.Length; j += 3)
@@ -117,7 +126,7 @@ public class JointAngleController : MonoBehaviour
     }
 
     /// <summary>
-    /// Dropdown 초기화(조인트 목록 추가)
+    /// Dropdown (조인트 목록 추가)
     /// </summary>
     void InitializeDropdown()
     {
@@ -142,24 +151,6 @@ public class JointAngleController : MonoBehaviour
         OnJointSelected(0);
     }
 
-    void InitializeAxisDropdown()
-    {
-        if (axisDropdown == null)
-        {
-            Debug.LogWarning("Axis TMP_Dropdown is not assigned in the Inspector!");
-            return;
-        }
-
-        // 기존 옵션 초기화
-        axisDropdown.ClearOptions();
-        // 축 옵션 추가
-        List<string> options = new List<string> { "X", "Y", "Z" };
-        axisDropdown.AddOptions(options);
-
-        // 초기값 설정(인덱스 1: "Y")
-        axisDropdown.value = 1;
-    }
-
     /// <summary>
     /// 드롭다운에서 선택한 조인트를 처리
     /// </summary>
@@ -180,7 +171,7 @@ public class JointAngleController : MonoBehaviour
             for (int frame = startFrame; frame <= endFrame && frame < jointPositions.Count; frame++)
             {
                 Vector3 frameValue = jointPositions[frame][jointIndex];
-                Debug.Log($"Frame {frame}: {frameValue}");
+                //Debug.Log($"Frame {frame}: {frameValue}");
             }
         }
         else
@@ -192,6 +183,30 @@ public class JointAngleController : MonoBehaviour
         PlotJoint(selectedJoint);
     }
 
+    /// <summary>
+    /// Dropdown (Axis Angle 목록 추가)
+    /// </summary>
+    void InitializeAxisDropdown()
+    {
+        if (axisDropdown == null)
+        {
+            Debug.LogWarning("Axis TMP_Dropdown is not assigned in the Inspector!");
+            return;
+        }
+
+        // 기존 옵션 초기화
+        axisDropdown.ClearOptions();
+        // 축 옵션 추가
+        List<string> options = new List<string> { "X", "Y", "Z" };
+        axisDropdown.AddOptions(options);
+
+        // 초기값 설정(인덱스 1: "Y")
+        axisDropdown.value = 1;
+    }
+
+    /// <summary>
+    /// Button (y value increase/decrease)
+    /// </summary>
     private void OnValueChangeButtonClicked(float increment)
     {
         if (string.IsNullOrEmpty(selectedJoint)) return;
@@ -223,7 +238,108 @@ public class JointAngleController : MonoBehaviour
     }
 
     /// <summary>
-    /// 예: 선택된 조인트를 JointPlot 카테고리에 표시
+    /// Button (X value shift)
+    /// </summary>
+    private void OnFrameShiftButtonClicked(int shiftAmount)
+    {
+        int range = endFrame - startFrame + 1; // 현재 프레임 범위 (startFrame ~ endFrame)
+        int totalFrames = jointPositions.Count; // 전체 프레임 수
+        int newRange; // 새로운 프레임 범위
+
+        // Decrease (Scaling down)
+        if (shiftAmount == -1)
+        {
+            newRange = Mathf.Max(1, range / 2); // 새로운 프레임 범위 = 현재 프레임 범위의 절반 (최소값은 1)
+
+            // 1) startFrame ~ endFrame scaling down
+            for (int i = 0; i < newRange; i++)
+            {
+                jointPositions[startFrame + i] = jointPositions[startFrame + (i * 2)];
+            }
+
+            // 2) endFrame ~ totalFrame translate left
+            jointPositions.RemoveRange(startFrame + newRange, range - newRange);
+
+            // 3) Update the frame range (startFrame ~ endFrame)
+            endFrame = startFrame + newRange;
+
+            // 4) Update the graph
+            PlotJoint(selectedJoint);
+            Debug.Log($"Scaled down frames from {startFrame} to {endFrame}. New range: {startFrame} to {endFrame}");
+        }
+
+        // Increase (Scaling up)
+        else if (shiftAmount == 1)
+        {
+            newRange = Mathf.Min(totalFrames - startFrame, range * 2); // 새로운 프레임 범위는 현재 프레임 범위의 2배
+            List<List<Vector3>> interpolatedFrames = new List<List<Vector3>>();
+            List<List<Vector3>> preservedFrames = new List<List<Vector3>>();
+
+            // 1) endFrame ~ totalFrame 보존
+            for (int i = endFrame + 1; i < totalFrames; i++)
+            {
+                preservedFrames.Add(jointPositions[i]);
+                Debug.Log($"Preserved frame {i}");
+            }
+            Debug.Log("Preserved frames: " + preservedFrames.Count);
+
+            // 2) startFrame ~ endFrame scaling up -> Linear interpolation
+            for (int i = 0; i < range; i++)
+            {
+                interpolatedFrames.Add(jointPositions[startFrame + i]);
+                if (i < range - 1)
+                {
+                    List<Vector3> interpolatedFrame = new List<Vector3>();
+                    for (int j = 0; j < jointPositions[startFrame + i].Count; j++)
+                    {
+                        Vector3 start = jointPositions[startFrame + i][j];
+                        Vector3 end = jointPositions[startFrame + i + 1][j];
+                        Vector3 mid = Vector3.Lerp(start, end, 0.5f); // Linear interpolation Coeff = 0.5
+                        interpolatedFrame.Add(mid);
+                    }
+                    interpolatedFrames.Add(interpolatedFrame);
+                }
+            }
+
+            // 3) Update the frame range (startFrame ~ endFrame)
+            for (int i = 0; i < interpolatedFrames.Count; i++)
+            {
+                if (startFrame + i < jointPositions.Count)
+                {
+                    jointPositions[startFrame + i] = interpolatedFrames[i];
+                }
+                else
+                {
+                    jointPositions.Add(interpolatedFrames[i]);
+                }
+            }
+            endFrame = startFrame + newRange;
+
+            // 4) 보존해놓은 endFrame ~ totalFrame을 덮어쓰기
+            for (int i = 0; i < preservedFrames.Count; i++)
+            {
+                if (startFrame + interpolatedFrames.Count + i < jointPositions.Count)
+                {
+                    jointPositions[startFrame + interpolatedFrames.Count + i] = preservedFrames[i];
+                }
+                else
+                {
+                    jointPositions.Add(preservedFrames[i]);
+                }
+            }
+
+            // 5) Update the graph
+            PlotJoint(selectedJoint);
+            Debug.Log($"Scaled up frames from {startFrame} to {endFrame}. New range: {startFrame} to {endFrame}");
+        }
+
+        // Regularize the frame range
+        startFrame = Mathf.Max(0, startFrame);
+        endFrame = Mathf.Min(totalFrames - 1, endFrame);
+    }
+
+    /// <summary>
+    /// Plot the selected joint on the graph
     /// </summary>
     void PlotJoint(string jointName)
     {
@@ -232,11 +348,6 @@ public class JointAngleController : MonoBehaviour
             Debug.LogWarning("Chart reference not set!");
             return;
         }
-
-        // 0) Set Y-axis range
-        //chart.DataSource.VerticalViewSize = yAxisMax - yAxisMin;  // Y축 범위 설정
-        //chart.DataSource.VerticalViewOrigin = yAxisMin;  // Y축 시작점 설정
-
 
         // 1) jointName -> jointIndex
         int jIndex = jointNameToIndex[jointName];
@@ -257,5 +368,48 @@ public class JointAngleController : MonoBehaviour
         }
 
         chart.DataSource.EndBatch();
+    }
+
+    /// <summary>
+    /// Save Button
+    /// </summary>
+    private void OnSaveCSVButtonClicked()
+    {
+        string savePath = Path.Combine(RootFilePath, "Edited_" + FileName);
+        SaveCSV(savePath);
+    }
+
+    private void SaveCSV(string filePath)
+    {
+        List<string> lines = new List<string>();
+
+        // Add header
+        string header = "Frame,Time";
+        foreach (var jointName in _bodyJointNames)
+        {
+            header += $",{jointName}_wx,{jointName}_wy,{jointName}_wz";
+        }
+        lines.Add(header);
+
+        // Ensure times list matches jointPositions list size
+    while (times.Count < jointPositions.Count)
+    {
+        times.Add(times.Count > 0 ? times[times.Count - 1] + (times[1] - times[0]) : 0f);
+    }
+
+        // Add data
+        for (int i = 0; i < jointPositions.Count; i++)
+        {
+            //string line = $"{i},{i * 0.00581}"; // Assuming 172 FPS, adjust as necessary
+            string line = $"{i},{times[i]}"; // 저장된 시간 값을 사용
+            foreach (var pos in jointPositions[i])
+            {
+                line += $",{pos.x},{pos.y},{pos.z}";
+            }
+            lines.Add(line);
+        }
+
+        File.WriteAllLines(filePath, lines);
+        Debug.Log($"CSV saved to {filePath}");
     }
 }
