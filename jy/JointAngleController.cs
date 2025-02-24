@@ -34,6 +34,10 @@ public class JointAngleController : MonoBehaviour
     public int startFrame;
     public int endFrame;
     public string selectedJoint;       // 선택된 조인트 이름
+    public List<List<Vector3>> GetJointPositions()
+    {
+        return jointPositions;
+    }
 
     string[] _bodyJointNames = new string[]
     {
