@@ -8,37 +8,33 @@ public class JointAngleController : MonoBehaviour
 {
     public GraphChart chart;
 
-    [Header("UI Settings")]
-    // Dropdown
-    public TMP_Dropdown jointDropdown;
-    public TMP_Dropdown axisDropdown;
+    [Header("Dropdown")]
+    public TMP_Dropdown jointDropdown; // 조인트 목록
+    public TMP_Dropdown axisDropdown; // 축 목록
 
-    // Button
+    [Header("Buttons")]
     public UnityEngine.UI.Button increaseButton; // +0.1 버튼
     public UnityEngine.UI.Button decreaseButton; // -0.1 버튼
-    public UnityEngine.UI.Button shiftLeftButton; // Shift Left 버튼
-    public UnityEngine.UI.Button shiftRightButton; // Shift Right 버튼
-    public UnityEngine.UI.Button saveCSVButton; // Save CSV 버튼
-
-    [Header("Graph Settings")]
-    //public float yAxisMin = -3f;  // Default Y-axis minimum value
-    //public float yAxisMax = 3f;   // Default Y-axis maximum value
+    public UnityEngine.UI.Button shiftLeftButton; // Shift Left
+    public UnityEngine.UI.Button shiftRightButton; // Shift Right
+    public UnityEngine.UI.Button saveCSVButton; // Save CSV
+    public UnityEngine.UI.Button undoButton; // Undo Button
 
     [Header("File Path")]
     public string RootFilePath;
     public string FileName;
 
+    [Header("Edit Value Settings")]
+    public int startFrame;
+    public int endFrame;
+    public int midFrame;
+    public float midFrameIncrement = 1.0f;
+
+    [Header("Body Joint Names")]
     private List<List<Vector3>> jointPositions;  // 각 관절의 위치 데이터를 저장
     private List<float> times; // 각 프레임의 시간을 저장
     private Dictionary<string, int> jointNameToIndex; // 조인트 이름 -> 인덱스 매핑
-    public int startFrame;
-    public int endFrame;
-    public string selectedJoint;       // 선택된 조인트 이름
-    public List<List<Vector3>> GetJointPositions()
-    {
-        return jointPositions;
-    }
-
+    public string selectedJoint; // 선택된 조인트 이름
     string[] _bodyJointNames = new string[]
     {
         "pelvis", "left_hip", "right_hip", "spine1", "left_knee",
@@ -47,6 +43,11 @@ public class JointAngleController : MonoBehaviour
         "head", "left_shoulder", "right_shoulder", "left_elbow", "right_elbow",
         "left_wrist", "right_wrist"
     };
+
+    public List<List<Vector3>> GetJointPositions()
+    {
+        return jointPositions;
+    }
 
     void Start()
     {
@@ -73,8 +74,8 @@ public class JointAngleController : MonoBehaviour
         selectedJoint = _bodyJointNames[0];
 
         // 5) 버튼 이벤트 연결
-        increaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(0.1f));
-        decreaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(-0.1f));
+        increaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(midFrameIncrement));
+        decreaseButton.onClick.AddListener(() => OnValueChangeButtonClicked(-midFrameIncrement));
         shiftLeftButton.onClick.AddListener(() => OnFrameShiftButtonClicked(-1));
         shiftRightButton.onClick.AddListener(() => OnFrameShiftButtonClicked(1));
         saveCSVButton.onClick.AddListener(OnSaveCSVButtonClicked);
@@ -85,6 +86,9 @@ public class JointAngleController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// CSV Load
+    /// </summary>
     void LoadCSV(string filePath)
     {
         if (string.IsNullOrEmpty(filePath))
@@ -154,11 +158,6 @@ public class JointAngleController : MonoBehaviour
         jointDropdown.value = 0;
         OnJointSelected(0);
     }
-
-    /// <summary>
-    /// 드롭다운에서 선택한 조인트를 처리
-    /// </summary>
-    /// <param name="index">드롭다운에서 선택된 옵션의 인덱스</param>
     void OnJointSelected(int index)
     {
         selectedJoint = _bodyJointNames[index];
@@ -214,31 +213,37 @@ public class JointAngleController : MonoBehaviour
     private void OnValueChangeButtonClicked(float increment)
     {
         if (string.IsNullOrEmpty(selectedJoint)) return;
-        
+
         int jointIndex = jointNameToIndex[selectedJoint];
         int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
+
+        int range = endFrame - startFrame;
+        //midFrame = startFrame + range / 2;
 
         // 선택된 범위 내의 모든 프레임 Y값을 increment만큼 변경
         for (int frame = startFrame; frame <= endFrame && frame < jointPositions.Count; frame++)
         {
             Vector3 currentPos = jointPositions[frame][jointIndex];
+            float weight = Mathf.Max(1.0f - Mathf.Abs((float)(frame - midFrame) / (float)(range / 2)), 0.0f);
+            float weightedIncrement = increment * weight;
+
             switch (selectedAxis)
             {
                 case 0: // X
-                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x + increment, currentPos.y, currentPos.z);
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x + weightedIncrement, currentPos.y, currentPos.z);
                     break;
                 case 1: // Y
-                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y + increment, currentPos.z);
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y + weightedIncrement, currentPos.z);
                     break;
                 case 2: // Z
-                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, currentPos.z + increment);
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, currentPos.z + weightedIncrement);
                     break;
             }
         }
 
         // 그래프 업데이트
         PlotJoint(selectedJoint);
-        Debug.Log($"Applied {increment:F1} increment to {selectedJoint} from frame {startFrame} to {endFrame}");
+        Debug.Log($"Applied {increment:F1} increment to {selectedJoint} from frame {startFrame} to {endFrame} with weighted adjustment.");
     }
 
     /// <summary>
@@ -370,7 +375,6 @@ public class JointAngleController : MonoBehaviour
             chart.DataSource.AddPointToCategory("Y Angle", frame, pos.y);
             chart.DataSource.AddPointToCategory("Z Angle", frame, pos.z);
         }
-
         chart.DataSource.EndBatch();
     }
 
@@ -382,7 +386,6 @@ public class JointAngleController : MonoBehaviour
         string savePath = Path.Combine(RootFilePath, "Edited_" + FileName);
         SaveCSV(savePath);
     }
-
     private void SaveCSV(string filePath)
     {
         List<string> lines = new List<string>();
@@ -396,10 +399,10 @@ public class JointAngleController : MonoBehaviour
         lines.Add(header);
 
         // Ensure times list matches jointPositions list size
-    while (times.Count < jointPositions.Count)
-    {
-        times.Add(times.Count > 0 ? times[times.Count - 1] + (times[1] - times[0]) : 0f);
-    }
+        while (times.Count < jointPositions.Count)
+        {
+            times.Add(times.Count > 0 ? times[times.Count - 1] + (times[1] - times[0]) : 0f);
+        }
 
         // Add data
         for (int i = 0; i < jointPositions.Count; i++)
