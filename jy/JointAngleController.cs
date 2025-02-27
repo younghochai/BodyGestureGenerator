@@ -18,7 +18,6 @@ public class JointAngleController : MonoBehaviour
     public UnityEngine.UI.Button shiftLeftButton; // Shift Left
     public UnityEngine.UI.Button shiftRightButton; // Shift Right
     public UnityEngine.UI.Button saveCSVButton; // Save CSV
-    public UnityEngine.UI.Button undoButton; // Undo Button
 
     [Header("File Path")]
     public string RootFilePath;
@@ -83,7 +82,9 @@ public class JointAngleController : MonoBehaviour
 
     void Update()
     {
-
+        // 현재 편집중인 범위 표시
+        PlotVerticalMarker(startFrame, "StartMarker");
+        PlotVerticalMarker(endFrame, "EndMarker");  
     }
 
     /// <summary>
@@ -158,7 +159,7 @@ public class JointAngleController : MonoBehaviour
         jointDropdown.value = 0;
         OnJointSelected(0);
     }
-    void OnJointSelected(int index)
+    public void OnJointSelected(int index)
     {
         selectedJoint = _bodyJointNames[index];
         Debug.Log($"[JointAngleController] 조인트 선택: {selectedJoint}");
@@ -189,7 +190,7 @@ public class JointAngleController : MonoBehaviour
     /// <summary>
     /// Dropdown (Axis Angle 목록 추가)
     /// </summary>
-    void InitializeAxisDropdown()
+    public void InitializeAxisDropdown()
     {
         if (axisDropdown == null)
         {
@@ -303,7 +304,7 @@ public class JointAngleController : MonoBehaviour
                     {
                         Vector3 start = jointPositions[startFrame + i][j];
                         Vector3 end = jointPositions[startFrame + i + 1][j];
-                        Vector3 mid = Vector3.Lerp(start, end, 0.5f); // Linear interpolation Coeff = 0.5
+                        Vector3 mid = Vector3.Slerp(start, end, 0.5f); // Linear interpolation Coeff = 0.5
                         interpolatedFrame.Add(mid);
                     }
                     interpolatedFrames.Add(interpolatedFrame);
@@ -350,7 +351,7 @@ public class JointAngleController : MonoBehaviour
     /// <summary>
     /// Plot the selected joint on the graph
     /// </summary>
-    void PlotJoint(string jointName)
+    public void PlotJoint(string jointName)
     {
         if (chart == null)
         {
@@ -375,6 +376,20 @@ public class JointAngleController : MonoBehaviour
             chart.DataSource.AddPointToCategory("Y Angle", frame, pos.y);
             chart.DataSource.AddPointToCategory("Z Angle", frame, pos.z);
         }
+        chart.DataSource.EndBatch();
+    }   
+
+    /// <summary>
+    /// 현재 편집중인 프레임 범위에 마커 표시
+    /// </summary>
+    private void PlotVerticalMarker(int markerFrame, string markerCategory)
+    {
+        if (chart == null) return;
+
+        chart.DataSource.StartBatch();
+            chart.DataSource.ClearCategory(markerCategory);
+            chart.DataSource.AddPointToCategory(markerCategory, markerFrame, -10);
+            chart.DataSource.AddPointToCategory(markerCategory, markerFrame, 10);
         chart.DataSource.EndBatch();
     }
 
