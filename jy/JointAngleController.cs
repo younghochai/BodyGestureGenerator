@@ -84,7 +84,7 @@ public class JointAngleController : MonoBehaviour
     {
         // 현재 편집중인 범위 표시
         PlotVerticalMarker(startFrame, "StartMarker");
-        PlotVerticalMarker(endFrame, "EndMarker");  
+        PlotVerticalMarker(endFrame, "EndMarker");
     }
 
     /// <summary>
