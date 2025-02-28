@@ -76,6 +76,10 @@ public class AxisanglePlayer : MonoBehaviour
                 }
             }
         }
+
+        if (fixedFrame >= 0)
+            PlotFixedFrameMarker(fixedFrame); // mark fixedFrame on the chart
+
     }
 
     void LoadCSV()
@@ -206,5 +210,24 @@ public class AxisanglePlayer : MonoBehaviour
                 targetObjects[i].rotation = q;
             }
         }
+    }
+
+    /// <summary>
+    /// Plot the fixed frame marker on the chart
+    /// </summary>
+    private void PlotFixedFrameMarker(int markerFrame)
+    {
+        if (jointAngleController == null || jointAngleController.chart == null)
+        {
+            Debug.LogWarning("Chart reference not set in JointAngleController!");
+            return;
+        }
+
+        // Using the same pattern as PlotVerticalMarker in JointAngleController
+        jointAngleController.chart.DataSource.StartBatch();
+            jointAngleController.chart.DataSource.ClearCategory("FixedFrameMarker");
+            jointAngleController.chart.DataSource.AddPointToCategory("FixedFrameMarker", markerFrame, -10);
+            jointAngleController.chart.DataSource.AddPointToCategory("FixedFrameMarker", markerFrame, 10);
+        jointAngleController.chart.DataSource.EndBatch();
     }
 }
