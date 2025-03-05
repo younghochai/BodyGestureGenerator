@@ -24,6 +24,7 @@ public class JointAngleController : MonoBehaviour
     public string FileName;
 
     [Header("Edit Value Settings")]
+    public bool useWeightedAdjustment = true;
     public int startFrame;
     public int endFrame;
     public int midFrame;
@@ -42,14 +43,9 @@ public class JointAngleController : MonoBehaviour
         "head", "left_shoulder", "right_shoulder", "left_elbow", "right_elbow",
         "left_wrist", "right_wrist"
     };
+    public static event System.Action OnJointDataChanged; // 데이터 변경시 모든 그래프에 업데이트를 알리는 이벤트 변수
 
-    // static 이벤트로 데이터 변경 시 모든 인스턴스가 업데이트되도록 함
-    public static event System.Action OnJointDataChanged;
-
-    public List<List<Vector3>> GetJointPositions()
-    {
-        return jointPositions;
-    }
+    public List<List<Vector3>> GetJointPositions(){return jointPositions;} // 전체 관절 위치 데이터
 
     void Start()
     {
@@ -83,12 +79,7 @@ public class JointAngleController : MonoBehaviour
         shiftRightButton.onClick.AddListener(() => OnFrameShiftButtonClicked(1));
         saveCSVButton.onClick.AddListener(OnSaveCSVButtonClicked);
         
-        OnJointDataChanged += HandleJointDataChanged; // 각 인스턴스가 데이터 변경 이벤트에 구독하여 자신의 차트를 업데이트
-    }
-
-    void OnDestroy()
-    {
-        OnJointDataChanged -= HandleJointDataChanged;
+        OnJointDataChanged += HandleJointDataChanged; // 다중 그래프가 데이터 변경 이벤트를 참조
     }
 
     void Update()
@@ -96,12 +87,6 @@ public class JointAngleController : MonoBehaviour
         // startFrame ~ endFrame 범위에 대한 마커 표시
         PlotVerticalMarker(startFrame, "StartMarker");
         PlotVerticalMarker(endFrame, "EndMarker");
-    }
-
-    // 데이터 변경시 호출. 자신의 차트를 갱신
-    void HandleJointDataChanged()
-    {
-        PlotJoint(selectedJoint);
     }
 
     /// <summary>
@@ -203,41 +188,56 @@ public class JointAngleController : MonoBehaviour
         axisDropdown.value = 1; // 초기값 설정(인덱스 1: "Y")
     }
 
+    // 데이터 변경 이벤트 핸들러. 현재 선택한 관절 데이터를 기반으로 그래프를 재렌더링
+    void HandleJointDataChanged()
+    {
+        PlotJoint(selectedJoint);
+    }
+
     /// <summary>
     /// Button (y value increase/decrease)
     /// </summary>
+    /// 
+
     private void OnValueChangeButtonClicked(float increment)
+{
+    int jointIndex = jointNameToIndex[selectedJoint];
+    int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
+    int range = endFrame - startFrame;
+
+    // 선택된 범위 내의 모든 프레임 값 변경
+    for (int frame = startFrame; frame <= endFrame && frame < jointPositions.Count; frame++)
     {
-        if (string.IsNullOrEmpty(selectedJoint)) return;
+        Vector3 currentPos = jointPositions[frame][jointIndex];
+        float trueIncrement;
 
-        int jointIndex = jointNameToIndex[selectedJoint];
-        int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
-        int range = endFrame - startFrame;
-
-        // 선택된 범위 내의 모든 프레임 Y값을 increment만큼 변경
-        for (int frame = startFrame; frame <= endFrame && frame < jointPositions.Count; frame++)
+        if (useWeightedAdjustment)
         {
-            Vector3 currentPos = jointPositions[frame][jointIndex];
-            float weight = Mathf.Max(1.0f - Mathf.Abs((float)(frame - midFrame) / (range / 2f)), 0.0f);
-            float weightedIncrement = increment * weight;
-
-            switch (selectedAxis)
-            {
-                case 0: // X
-                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x + weightedIncrement, currentPos.y, currentPos.z);
-                    break;
-                case 1: // Y
-                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y + weightedIncrement, currentPos.z);
-                    break;
-                case 2: // Z
-                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, currentPos.z + weightedIncrement);
-                    break;
-            }
+            float normalizedDistance = Mathf.Clamp01(Mathf.Abs((float)(frame - midFrame)) / (range / 2f));
+            float weight = 1.0f - normalizedDistance * normalizedDistance;
+            trueIncrement = increment * weight;
         }
-        // 단일 그래프만 갱신하는 대신, 전체 그래프 업데이트 이벤트를 발생시키도록 함
-        BroadcastJointDataChanged();
-        Debug.Log($"Applied {increment:F1} increment to {selectedJoint} from frame {startFrame} to {endFrame} with weighted adjustment.");
+        else
+        {
+            trueIncrement = increment;
+        }
+
+        switch (selectedAxis)
+        {
+            case 0: // X
+                jointPositions[frame][jointIndex] = new Vector3(currentPos.x + trueIncrement, currentPos.y, currentPos.z);
+                break;
+            case 1: // Y
+                jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y + trueIncrement, currentPos.z);
+                break;
+            case 2: // Z
+                jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, currentPos.z + trueIncrement);
+                break;
+        }
     }
+    BroadcastJointDataChanged();
+    //Debug.Log($"Applied {increment:F1} increment to {selectedJoint} from frame {startFrame} to {endFrame} with {(useWeightedAdjustment ? "weighted" : "uniform")} adjustment.");
+}
 
     /// <summary>
     /// Button (X value shift)
@@ -266,8 +266,8 @@ public class JointAngleController : MonoBehaviour
             endFrame = startFrame + newRange;
 
             // 4) Update the graph
-            BroadcastJointDataChanged();
-            Debug.Log($"Scaled down frames from {startFrame} to {endFrame}. New range: {startFrame} to {endFrame}");
+            BroadcastJointDataChanged(); // 단일 그래프만 갱신하는 대신, 전체 그래프 업데이트 이벤트를 발생시키도록 함
+            //Debug.Log($"Scaled down frames from {startFrame} to {endFrame}. New range: {startFrame} to {endFrame}");
         }
 
         // Increase (Scaling up)
@@ -329,8 +329,8 @@ public class JointAngleController : MonoBehaviour
             }
 
             // 5) Update the graph
-            BroadcastJointDataChanged();
-            Debug.Log($"Scaled up frames from {startFrame} to {endFrame}. New range: {startFrame} to {endFrame}");
+            BroadcastJointDataChanged(); // 단일 그래프만 갱신하는 대신, 전체 그래프 업데이트 이벤트를 발생시키도록 함
+            //Debug.Log($"Scaled up frames from {startFrame} to {endFrame}. New range: {startFrame} to {endFrame}");
         }
 
         // Regularize the frame range
@@ -338,7 +338,7 @@ public class JointAngleController : MonoBehaviour
         endFrame = Mathf.Min(totalFrames - 1, endFrame);
     }
 
-    // 모든 인스턴스에 데이터 변경됨을 알림
+    // 모든 그래프 인스턴스에 데이터 변경을 알림.
     private void BroadcastJointDataChanged()
     {
         OnJointDataChanged?.Invoke();
@@ -382,9 +382,9 @@ public class JointAngleController : MonoBehaviour
     {
         if (chart == null) return;
         chart.DataSource.StartBatch();
-        chart.DataSource.ClearCategory(markerCategory);
-        chart.DataSource.AddPointToCategory(markerCategory, markerFrame, -10);
-        chart.DataSource.AddPointToCategory(markerCategory, markerFrame, 10);
+            chart.DataSource.ClearCategory(markerCategory);
+            chart.DataSource.AddPointToCategory(markerCategory, markerFrame, -10);
+            chart.DataSource.AddPointToCategory(markerCategory, markerFrame, 10);
         chart.DataSource.EndBatch();
     }
 
