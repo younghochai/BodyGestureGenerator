@@ -175,39 +175,51 @@ public class AxisanglePlayer : MonoBehaviour
 
     IEnumerator PlayExponentialMapDataT()
     {
-        while (true)
+        List<List<Vector3>> jointPositions = jointAngleController.GetJointPositions(); // 최신 데이터 가져오기
+    
+        if (jointPositions == null || jointPositions.Count == 0)
         {
-            List<List<Vector3>> jointPositions = jointAngleController.GetJointPositions(); // 최신 데이터 가져오기
-
-            if (jointPositions == null || jointPositions.Count == 0)
+            Debug.LogError("❌ 저장된 데이터가 없습니다.");
+            yield break;
+        }
+    
+        isPlaying = true;
+        startTime = Time.time;
+        currentFrameIndex = Pstartframe;
+    
+        float frameDuration = 0.066f; // 기본적으로 15 FPS (1초 / 15프레임)
+        float accumulatedTime = 0f;   // 경과한 시간을 누적하여 관리
+    
+        while (currentFrameIndex < Pendframe)
+        {
+            if (fixedFrame == -1)
             {
-                Debug.LogError("❌ 저장된 데이터가 없습니다.");
-                yield break;
-            }
-
-            isPlaying = true;
-            startTime = Time.time;
-            currentFrameIndex = Pstartframe;
-
-            while (currentFrameIndex < Pendframe)
-            {
-                if (fixedFrame == -1)
+                // ✅ 실제 경과 시간에 배속을 적용하여 누적
+                accumulatedTime += Time.deltaTime * playbackSpeed;
+    
+                // ✅ 경과 시간이 프레임 지속 시간보다 길면 여러 프레임을 한 번에 실행
+                while (accumulatedTime >= frameDuration)
                 {
                     ApplyExponentialMapDataT(jointPositions[currentFrameIndex]);
                     currentFrameIndex++;
-                    yield return new WaitForSeconds(0.033f / playbackSpeed);
-                }
-                else
-                {
-                    ApplyExponentialMapDataT(jointAngleController.GetJointPositions()[fixedFrame]); // 최신 값 반영
-                    yield return null;
+                    accumulatedTime -= frameDuration; // ✅ 실행한 프레임의 시간만큼 차감
+    
+                    if (currentFrameIndex >= Pendframe) // 프레임 끝나면 종료
+                    {
+                        break;
+                    }
                 }
             }
-
-            Debug.Log("⏹ 재생 완료!");
-            isPlaying = false;
-            yield break;
+            else
+            {
+                ApplyExponentialMapDataT(jointAngleController.GetJointPositions()[fixedFrame]); // 최신 값 반영
+            }
+    
+            yield return null; // ✅ 매 프레임마다 실행 (FPS 제한 없음)
         }
+    
+        Debug.Log("⏹ 재생 완료!");
+        isPlaying = false;
     }
     void ApplyExponentialMapDataT(List<Vector3> frameData)
     {
