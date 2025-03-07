@@ -1,16 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.IO;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class AxisanglePlayer : MonoBehaviour
 {
     public Transform[] targetObjects;
-    public string fileName = "ExponentialMapData.csv"; // 파일 이름
+    public string rootpath;
+    public string fileName;
     public JointAngleController jointAngleController;
     public float playbackSpeed = 1.0f;
     public bool isCsvMode = false;
     public int fixedFrame = -1;
+    public TextMeshProUGUI frameText;
+    public int Pstartframe;
+    public int Pendframe;
 
     private List<List<Vector3>> jointPositions;
 
@@ -38,6 +45,8 @@ public class AxisanglePlayer : MonoBehaviour
                 Debug.LogError("❌ JointAngleController를 찾을 수 없습니다.");
             }
         }
+
+        FixedUpdate();
     }
 
     void Update()
@@ -82,9 +91,15 @@ public class AxisanglePlayer : MonoBehaviour
 
     }
 
+    private void FixedUpdate()
+    {
+        frameText.text = "NOW PLAYING: " + currentFrameIndex.ToString();
+    }
+
+
     void LoadCSV()
     {
-        string filePath = Path.Combine(Application.persistentDataPath, fileName);
+        string filePath = Path.Combine(rootpath, fileName);
 
         if (!File.Exists(filePath))
         {
@@ -118,6 +133,7 @@ public class AxisanglePlayer : MonoBehaviour
 
         while (currentFrameIndex < recordedFrames.Count)
         {
+            Debug.Log(currentFrameIndex);
             float elapsedTime = (Time.time - startTime) * playbackSpeed;
 
             while (currentFrameIndex < recordedFrames.Count && float.Parse(recordedFrames[currentFrameIndex][1]) <= elapsedTime)
@@ -171,9 +187,9 @@ public class AxisanglePlayer : MonoBehaviour
 
             isPlaying = true;
             startTime = Time.time;
-            currentFrameIndex = 0;
+            currentFrameIndex = Pstartframe;
 
-            while (currentFrameIndex < jointPositions.Count)
+            while (currentFrameIndex < Pendframe)
             {
                 if (fixedFrame == -1)
                 {
@@ -231,3 +247,4 @@ public class AxisanglePlayer : MonoBehaviour
         jointAngleController.chart.DataSource.EndBatch();
     }
 }
+
