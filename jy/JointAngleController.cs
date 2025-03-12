@@ -30,7 +30,7 @@ public class JointAngleController : MonoBehaviour
     public int endFrame;
     public int midFrame;
     public float midFrameIncrement = 1.0f;
-    [Range(0.01f, 10.0f)] public float weightExponent = 1.0f;
+    [Range(0.01f, 3.0f)] public float weightExponent = 1.0f;
 
     [Header("Body Joint Names")]
     private static List<List<Vector3>> jointPositions; // 각 관절의 위치 데이터를 저장. 여러 그래프가 공유하는 데이터

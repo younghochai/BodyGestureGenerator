@@ -5,12 +5,13 @@ using System.IO;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.Playables;
 
 public class AxisanglePlayer : MonoBehaviour
 {
     public Transform[] targetObjects;
-    public string rootpath;
-    public string fileName;
+    public string rootpath = "C:/Users/USER/Desktop/SMPLX/SMPLX/Assets/SMPLX/Scripts/ExponentialMapData.csv";
+    public string fileName = "ExponentialMapData.csv"; // 파일 이름
     public JointAngleController jointAngleController;
     public float playbackSpeed = 1.0f;
     public bool isCsvMode = false;
@@ -29,10 +30,8 @@ public class AxisanglePlayer : MonoBehaviour
 
     void Start()
     {
-        if (isCsvMode == true)
-        {
-            LoadCSV();
-        }
+        LoadCSV();
+        
 
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -89,6 +88,19 @@ public class AxisanglePlayer : MonoBehaviour
         if (fixedFrame >= 0)
             PlotFixedFrameMarker(fixedFrame); // mark fixedFrame on the chart
 
+        if (Input.GetKeyDown(KeyCode.Y) && !isPlaying)
+        {
+            if (jointAngleController != null)
+            {
+                fixedFrame = -1; // 고정된 프레임 해제
+                StartCoroutine(PlayExponentialMapDataY());
+            }
+            else
+            {
+                Debug.LogError("❌ JointAngleController를 찾을 수 없습니다.");
+            }
+        }
+
     }
 
     private void FixedUpdate()
@@ -105,7 +117,7 @@ public class AxisanglePlayer : MonoBehaviour
         {
             Debug.LogError($"❌ CSV 파일을 찾을 수 없음: {filePath}");
             return;
-        } 
+        }
 
         string[] lines = File.ReadAllLines(filePath);
         if (lines.Length < 2) return;
@@ -118,6 +130,54 @@ public class AxisanglePlayer : MonoBehaviour
 
         //Debug.Log($"✅ CSV 데이터 로드 완료: {recordedFrames.Count} 프레임");
     }
+
+    IEnumerator PlayExponentialMapDataY()
+    {
+        if (recordedFrames.Count == 0)
+        {
+            Debug.LogError("❌ 저장된 데이터가 없습니다.");
+            yield break;
+        }
+
+        // ✅ jointPositions을 최신 데이터로 가져오기
+        jointPositions = jointAngleController.GetJointPositions();
+        if (jointPositions == null || jointPositions.Count == 0)
+        {
+            Debug.LogError("❌ jointPositions 데이터가 없습니다.");
+            yield break;
+        }
+
+        isPlaying = true;
+        startTime = Time.time;
+        currentFrameIndex = 0;
+
+        while (currentFrameIndex < recordedFrames.Count)
+        {
+            float elapsedTime = (Time.time - startTime) * playbackSpeed;
+
+            while (currentFrameIndex < recordedFrames.Count &&
+                   float.Parse(recordedFrames[currentFrameIndex][1]) <= elapsedTime)
+            {
+                // ✅ 회전 데이터는 jointPositions에서 가져옴
+                if (currentFrameIndex < jointPositions.Count)
+                {
+                    ApplyExponentialMapDataY(recordedFrames[currentFrameIndex], jointPositions[currentFrameIndex]);
+                }
+                else
+                {
+                    Debug.LogWarning($"⚠️ jointPositions 데이터 부족: {currentFrameIndex}/{jointPositions.Count}");
+                }
+
+                currentFrameIndex++;
+            }
+
+            yield return null;
+        }
+
+        Debug.Log("⏹ 재생 완료!");
+        isPlaying = false;
+    }
+
 
     IEnumerator PlayExponentialMapData()
     {
@@ -142,7 +202,7 @@ public class AxisanglePlayer : MonoBehaviour
                 Debug.Log(currentFrameIndex);
                 currentFrameIndex++;
             }
-            
+
             yield return null;
         }
 
@@ -154,14 +214,23 @@ public class AxisanglePlayer : MonoBehaviour
     {
         for (int i = 0; i < targetObjects.Length; i++)
         {
-            if (i * 3 + 2 < frameData.Length && targetObjects[i] != null)
+            if (targetObjects[i] == null) continue;
+
+            string jointName = targetObjects[i].name.ToLower(); // 오브젝트 이름을 소문자로 변환
+
+            // 🔹 rotation (wx, wy, wz) 컬럼 찾기
+            int wxIndex = System.Array.IndexOf(headers, $"{jointName}_wx");
+            int wyIndex = System.Array.IndexOf(headers, $"{jointName}_wy");
+            int wzIndex = System.Array.IndexOf(headers, $"{jointName}_wz");
+
+            if (wxIndex >= 0 && wyIndex >= 0 && wzIndex >= 0 && wxIndex < frameData.Length)
             {
-                float wx = float.Parse(frameData[i * 3 + 2]);
-                float wy = float.Parse(frameData[i * 3 + 3]);
-                float wz = float.Parse(frameData[i * 3 + 4]);
+                float wx = float.Parse(frameData[wxIndex]);
+                float wy = float.Parse(frameData[wyIndex]);
+                float wz = float.Parse(frameData[wzIndex]);
 
                 Vector3 expMap = new Vector3(wx, wy, wz);
-                float angle = expMap.magnitude; // 회전 크기
+                float angle = expMap.magnitude;
                 Vector3 axis = angle > 0 ? expMap / angle : Vector3.zero;
 
                 float sinHalfAngle = Mathf.Sin(angle / 2.0f);
@@ -170,40 +239,99 @@ public class AxisanglePlayer : MonoBehaviour
                 Quaternion q = new Quaternion(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
                 targetObjects[i].rotation = q;
             }
+            else
+            {
+                Debug.LogWarning($"⚠️ {jointName}의 rotation 데이터를 찾을 수 없음.");
+            }
+
+            // 🔹 position (px, py, pz) 컬럼 찾기
+            int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
+            int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
+            int pzIndex = System.Array.IndexOf(headers, $"{jointName}_pz");
+
+            if (pxIndex >= 0 && pyIndex >= 0 && pzIndex >= 0 && pxIndex < frameData.Length)
+            {
+                targetObjects[i].position = new Vector3(float.Parse(frameData[pxIndex]),
+                                                        float.Parse(frameData[pyIndex]),
+                                                        float.Parse(frameData[pzIndex]));
+            }
+            else
+            {
+                Debug.LogWarning($"⚠️ {jointName}의 position 데이터를 찾을 수 없음.");
+            }
         }
     }
+
+    void ApplyExponentialMapDataY(string[] frameData2, List<Vector3> frameData)
+    {
+        for (int i = 0; i < targetObjects.Length; i++)
+        {
+            if (targetObjects[i] == null) continue;
+            if (i >= frameData.Count) continue; // ✅ frameData가 부족하면 넘어가기
+
+            string jointName = targetObjects[i].name.ToLower();
+
+            // ✅ rotation (wx, wy, wz) 적용
+            Vector3 expMap = frameData[i];
+            float angle = expMap.magnitude;
+            Vector3 axis = angle > 0 ? expMap / angle : Vector3.zero;
+
+            float sinHalfAngle = Mathf.Sin(angle / 2.0f);
+            float cosHalfAngle = Mathf.Cos(angle / 2.0f);
+
+            Quaternion q = new Quaternion(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
+            targetObjects[i].rotation = q;
+
+            // ✅ position (px, py, pz) CSV에서 가져오기
+            int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
+            int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
+            int pzIndex = System.Array.IndexOf(headers, $"{jointName}_pz");
+
+            if (pxIndex >= 0 && pyIndex >= 0 && pzIndex >= 0 && pxIndex < frameData2.Length)
+            {
+                targetObjects[i].position = new Vector3(float.Parse(frameData2[pxIndex]),
+                                                        float.Parse(frameData2[pyIndex]),
+                                                        float.Parse(frameData2[pzIndex]));
+            }
+            else
+            {
+                Debug.LogWarning($"⚠️ {jointName}의 position 데이터를 찾을 수 없음.");
+            }
+        }
+    }
+
 
     IEnumerator PlayExponentialMapDataT()
     {
         List<List<Vector3>> jointPositions = jointAngleController.GetJointPositions(); // 최신 데이터 가져오기
-    
+
         if (jointPositions == null || jointPositions.Count == 0)
         {
             Debug.LogError("❌ 저장된 데이터가 없습니다.");
             yield break;
         }
-    
+
         isPlaying = true;
         startTime = Time.time;
         currentFrameIndex = Pstartframe;
-    
+
         float frameDuration = 0.066f; // 기본적으로 15 FPS (1초 / 15프레임)
         float accumulatedTime = 0f;   // 경과한 시간을 누적하여 관리
-    
+
         while (currentFrameIndex < Pendframe)
         {
             if (fixedFrame == -1)
             {
                 // ✅ 실제 경과 시간에 배속을 적용하여 누적
                 accumulatedTime += Time.deltaTime * playbackSpeed;
-    
+
                 // ✅ 경과 시간이 프레임 지속 시간보다 길면 여러 프레임을 한 번에 실행
                 while (accumulatedTime >= frameDuration)
                 {
                     ApplyExponentialMapDataT(jointPositions[currentFrameIndex]);
                     currentFrameIndex++;
                     accumulatedTime -= frameDuration; // ✅ 실행한 프레임의 시간만큼 차감
-    
+
                     if (currentFrameIndex >= Pendframe) // 프레임 끝나면 종료
                     {
                         break;
@@ -214,10 +342,10 @@ public class AxisanglePlayer : MonoBehaviour
             {
                 ApplyExponentialMapDataT(jointAngleController.GetJointPositions()[fixedFrame]); // 최신 값 반영
             }
-    
+
             yield return null; // ✅ 매 프레임마다 실행 (FPS 제한 없음)
         }
-    
+
         Debug.Log("⏹ 재생 완료!");
         isPlaying = false;
     }
@@ -225,18 +353,20 @@ public class AxisanglePlayer : MonoBehaviour
     {
         for (int i = 0; i < targetObjects.Length; i++)
         {
-            if (i < frameData.Count && targetObjects[i] != null)
-            {
-                Vector3 expMap = frameData[i];
-                float angle = expMap.magnitude;
-                Vector3 axis = angle > 0 ? expMap / angle : Vector3.zero;
+            if (targetObjects[i] == null || i >= frameData.Count) continue;
 
-                float sinHalfAngle = Mathf.Sin(angle / 2.0f);
-                float cosHalfAngle = Mathf.Cos(angle / 2.0f);
+            string jointName = targetObjects[i].name.ToLower();
 
-                Quaternion q = new Quaternion(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
-                targetObjects[i].rotation = q;
-            }
+            // 🔹 rotation (wx, wy, wz) 적용
+            Vector3 expMap = frameData[i];
+            float angle = expMap.magnitude;
+            Vector3 axis = angle > 0 ? expMap / angle : Vector3.zero;
+
+            float sinHalfAngle = Mathf.Sin(angle / 2.0f);
+            float cosHalfAngle = Mathf.Cos(angle / 2.0f);
+
+            Quaternion q = new Quaternion(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
+            targetObjects[i].rotation = q;
         }
     }
 
@@ -253,10 +383,9 @@ public class AxisanglePlayer : MonoBehaviour
 
         // Using the same pattern as PlotVerticalMarker in JointAngleController
         jointAngleController.chart.DataSource.StartBatch();
-            jointAngleController.chart.DataSource.ClearCategory("FixedFrameMarker");
-            jointAngleController.chart.DataSource.AddPointToCategory("FixedFrameMarker", markerFrame, -10);
-            jointAngleController.chart.DataSource.AddPointToCategory("FixedFrameMarker", markerFrame, 10);
+        jointAngleController.chart.DataSource.ClearCategory("FixedFrameMarker");
+        jointAngleController.chart.DataSource.AddPointToCategory("FixedFrameMarker", markerFrame, -10);
+        jointAngleController.chart.DataSource.AddPointToCategory("FixedFrameMarker", markerFrame, 10);
         jointAngleController.chart.DataSource.EndBatch();
     }
 }
-
