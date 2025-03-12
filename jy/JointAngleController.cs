@@ -18,6 +18,7 @@ public class JointAngleController : MonoBehaviour
     public UnityEngine.UI.Button shiftLeftButton; // Shift Left
     public UnityEngine.UI.Button shiftRightButton; // Shift Right
     public UnityEngine.UI.Button saveCSVButton; // Save CSV
+    public UnityEngine.UI.Button linearInterpolateButton; // 선형 보간 버튼
 
     [Header("File Path")]
     public string RootFilePath;
@@ -43,6 +44,11 @@ public class JointAngleController : MonoBehaviour
         "head", "left_shoulder", "right_shoulder", "left_elbow", "right_elbow",
         "left_wrist", "right_wrist"
     };
+
+    [Header("Utility")]
+    private static Stack<List<List<Vector3>>> undoHistory = new Stack<List<List<Vector3>>>(); // Undo
+    private static int maxUndoSteps = 5; // 최대 실행 취소 단계 수
+
     public static event System.Action OnJointDataChanged; // 데이터 변경시 모든 그래프에 업데이트를 알리는 이벤트 변수
 
     public List<List<Vector3>> GetJointPositions(){return jointPositions;} // 전체 관절 위치 데이터
@@ -79,6 +85,7 @@ public class JointAngleController : MonoBehaviour
         shiftRightButton.onClick.AddListener(() => OnFrameShiftButtonClicked(1));
         saveCSVButton.onClick.AddListener(OnSaveCSVButtonClicked);
         
+        linearInterpolateButton.onClick.AddListener(OnLinearInterpolateButtonClicked); // 선형 보간 버튼
         OnJointDataChanged += HandleJointDataChanged; // 다중 그래프가 데이터 변경 이벤트를 참조
     }
 
@@ -87,6 +94,12 @@ public class JointAngleController : MonoBehaviour
         // startFrame ~ endFrame 범위에 대한 마커 표시
         PlotVerticalMarker(startFrame, "StartMarker");
         PlotVerticalMarker(endFrame, "EndMarker");
+
+        // Ctrl+Z 입력 감지
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+        {
+            UndoLastEdit();
+        }
     }
 
     /// <summary>
@@ -154,7 +167,7 @@ public class JointAngleController : MonoBehaviour
     public void OnJointSelected(int index)
     {
         selectedJoint = _bodyJointNames[index];
-        Debug.Log($"[JointAngleController] 조인트 선택: {selectedJoint}");
+        Debug.Log($"조인트 선택: {selectedJoint}");
 
         if (jointPositions.Count > 0)
         {
@@ -197,9 +210,10 @@ public class JointAngleController : MonoBehaviour
     /// <summary>
     /// Button (y value increase/decrease)
     /// </summary>
-    /// 
     private void OnValueChangeButtonClicked(float increment)
     {
+        SaveStateForUndo(); // 현재 상태를 저장
+
         int jointIndex = jointNameToIndex[selectedJoint];
         int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
         int range = endFrame - startFrame;
@@ -259,6 +273,9 @@ public class JointAngleController : MonoBehaviour
     /// </summary>
     private void OnFrameShiftButtonClicked(int shiftAmount)
     {
+        SaveStateForUndo(); // 현재 상태를 저장
+
+
         int range = endFrame - startFrame + 1; // 현재 프레임 범위 (startFrame ~ endFrame)
         int totalFrames = jointPositions.Count; // 전체 프레임 수
         int newRange; // 새로운 프레임 범위
@@ -353,6 +370,79 @@ public class JointAngleController : MonoBehaviour
         endFrame = Mathf.Min(totalFrames - 1, endFrame);
     }
 
+    /// <summary>
+    /// 시작 프레임과 끝 프레임 사이의 값들을 직선으로 보간합니다.
+    /// </summary>
+    private void OnLinearInterpolateButtonClicked()
+    {
+        // 범위 유효성 확인
+        if (jointPositions == null || jointPositions.Count == 0) return;
+        if (startFrame >= endFrame) return;
+        if (startFrame < 0 || endFrame >= jointPositions.Count) return;
+        
+        // Undo를 위한 현재 상태 저장
+        SaveStateForUndo();
+        
+        int jointIndex = jointNameToIndex[selectedJoint];
+        int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
+        
+        // 시작 프레임과 끝 프레임의 값 가져오기
+        Vector3 startValue = jointPositions[startFrame][jointIndex];
+        Vector3 endValue = jointPositions[endFrame][jointIndex];
+        
+        // 축별로 시작 값과 끝 값
+        float startAxisValue = 0f;
+        float endAxisValue = 0f;
+        
+        switch (selectedAxis)
+        {
+            case 0: // X
+                startAxisValue = startValue.x;
+                endAxisValue = endValue.x;
+                break;
+            case 1: // Y
+                startAxisValue = startValue.y;
+                endAxisValue = endValue.y;
+                break;
+            case 2: // Z
+                startAxisValue = startValue.z;
+                endAxisValue = endValue.z;
+                break;
+        }
+        
+        // 시작 프레임과 끝 프레임 사이의 모든 프레임에 선형 보간 적용
+        int totalFrames = endFrame - startFrame;
+        for (int frame = startFrame + 1; frame < endFrame; frame++)
+        {
+            // 현재 프레임의 진행 비율 계산 (0.0 ~ 1.0)
+            float t = (float)(frame - startFrame) / totalFrames;
+            
+            // 선형 보간
+            float interpolatedValue = Mathf.Lerp(startAxisValue, endAxisValue, t);
+            
+            // 현재 프레임의 현재 값 가져오기
+            Vector3 currentPos = jointPositions[frame][jointIndex];
+            
+            // 선택된 축에 대해서만 값 변경
+            switch (selectedAxis)
+            {
+                case 0: // X
+                    jointPositions[frame][jointIndex] = new Vector3(interpolatedValue, currentPos.y, currentPos.z);
+                    break;
+                case 1: // Y
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, interpolatedValue, currentPos.z);
+                    break;
+                case 2: // Z
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, interpolatedValue);
+                    break;
+            }
+        }
+        
+        // 변경 사항 그래프에 반영
+        BroadcastJointDataChanged();
+        Debug.Log($"선형 보간 적용됨: {selectedJoint}, 축: {axisDropdown.options[selectedAxis].text}, 프레임: {startFrame}~{endFrame}");
+    }
+
     // 모든 그래프 인스턴스에 데이터 변경을 알림.
     private void BroadcastJointDataChanged()
     {
@@ -401,6 +491,64 @@ public class JointAngleController : MonoBehaviour
             chart.DataSource.AddPointToCategory(markerCategory, markerFrame, -10);
             chart.DataSource.AddPointToCategory(markerCategory, markerFrame, 10);
         chart.DataSource.EndBatch();
+    }
+
+    /// <summary>
+    /// 마지막 편집을 실행 취소합니다.
+    /// </summary>
+    private void UndoLastEdit()
+    {
+        if (undoHistory.Count > 0)
+        {
+            jointPositions = undoHistory.Pop();
+            Debug.Log("Undo");
+            BroadcastJointDataChanged();
+        }
+        else
+        {
+            Debug.Log("No more undo steps available");
+        }
+    }
+    private void SaveStateForUndo()
+    {
+        // 현재 jointPositions의 깊은 복사본 생성
+        List<List<Vector3>> currentState = new List<List<Vector3>>();
+        foreach (var frame in jointPositions)
+        {
+            List<Vector3> framePositions = new List<Vector3>();
+            foreach (var position in frame)
+            {
+                framePositions.Add(new Vector3(position.x, position.y, position.z));
+            }
+            currentState.Add(framePositions);
+        }
+        
+        // 이력에 저장
+        undoHistory.Push(currentState);
+        
+        // 최대 이력 수 제한
+        if (undoHistory.Count > maxUndoSteps)
+        {
+            // 가장 오래된 이력을 제거하기 위해 임시 스택을 사용
+            Stack<List<List<Vector3>>> tempStack = new Stack<List<List<Vector3>>>();
+            
+            // 최신 항목(maxUndoSteps-1개)을 임시 스택으로 이동
+            int itemsToKeep = maxUndoSteps - 1;
+            while (undoHistory.Count > 0 && itemsToKeep > 0)
+            {
+                tempStack.Push(undoHistory.Pop());
+                itemsToKeep--;
+            }
+            
+            // 나머지 오래된 항목은 버림
+            undoHistory.Clear();
+            
+            // 임시 스택에서 다시 원래 스택으로 복원
+            while (tempStack.Count > 0)
+            {
+                undoHistory.Push(tempStack.Pop());
+            }
+        }
     }
 
     /// <summary>
