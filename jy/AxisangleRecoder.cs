@@ -14,10 +14,19 @@ public class AxisangleRecoder : MonoBehaviour
     {
         // CSV 헤더 만들기 (Frame, Time, 오브젝트별 Exponential Map 값)
         string header = "Frame,Time";
+
+        // 먼저 rotation 데이터를 저장
         foreach (Transform obj in targetObjects)
         {
             header += $",{obj.name}_wx,{obj.name}_wy,{obj.name}_wz"; // Exponential Map (Axis * Angle)
         }
+
+        // 그 다음에 position 데이터를 저장
+        foreach (Transform obj in targetObjects)
+        {
+            header += $",{obj.name}_px,{obj.name}_py,{obj.name}_pz"; // Position
+        }
+
         logData.Add(header);
     }
 
@@ -29,9 +38,17 @@ public class AxisangleRecoder : MonoBehaviour
             startTime = Time.time;
             logData.Clear();
             string header = "Frame,Time";
+
+            // 먼저 rotation 데이터를 저장
             foreach (Transform obj in targetObjects)
             {
                 header += $",{obj.name}_wx,{obj.name}_wy,{obj.name}_wz";
+            }
+
+            // 그 다음에 position 데이터를 저장
+            foreach (Transform obj in targetObjects)
+            {
+                header += $",{obj.name}_px,{obj.name}_py,{obj.name}_pz";
             }
             logData.Add(header);
             Debug.Log("🎥 Exponential Map 저장 시작!");
@@ -57,6 +74,7 @@ public class AxisangleRecoder : MonoBehaviour
 
         string logEntry = $"{currentFrame},{currentTime:F6}";
 
+        // 먼저 rotation 데이터를 저장
         foreach (Transform obj in targetObjects)
         {
             if (obj != null)
@@ -69,6 +87,20 @@ public class AxisangleRecoder : MonoBehaviour
                 Vector3 expMap = axis * angle; // Exponential Map 변환
 
                 logEntry += $",{expMap.x:F6},{expMap.y:F6},{expMap.z:F6}";
+            }
+            else
+            {
+                logEntry += ",0,0,0"; // 기본값
+            }
+        }
+
+        // 그 다음에 position 데이터를 저장
+        foreach (Transform obj in targetObjects)
+        {
+            if (obj != null)
+            {   
+                Vector3 pos = obj.position;
+                logEntry += $",{pos.x:F6},{pos.y:F6},{pos.z:F6}";
             }
             else
             {
