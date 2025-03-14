@@ -48,8 +48,7 @@ public class JointAngleController : MonoBehaviour
 
     [Header("Utility")]
     private static Stack<List<List<Vector3>>> undoHistory = new Stack<List<List<Vector3>>>(); // Undo
-    private static int maxUndoSteps = 5; // 최대 실행 취소 단계 수
-
+    private static int maxUndoSteps = 10; // 최대 실행 취소 단계 수
     public static event System.Action OnJointDataChanged; // 데이터 변경시 모든 그래프에 업데이트를 알리는 이벤트 변수
 
     public List<List<Vector3>> GetJointPositions(){return jointPositions;} // 전체 관절 위치 데이터
@@ -567,6 +566,11 @@ public class JointAngleController : MonoBehaviour
         foreach (var jointName in _bodyJointNames)
         {
             header += $",{jointName}_wx,{jointName}_wy,{jointName}_wz";
+        }
+
+        foreach (var jointName in _bodyJointNames)
+        {
+            header += $",{jointName}_px,{jointName}_py,{jointName}_pz";
         }
         lines.Add(header);
         while (times.Count < jointPositions.Count)

@@ -244,6 +244,8 @@ public class AxisanglePlayer : MonoBehaviour
                 Debug.LogWarning($"⚠️ {jointName}의 rotation 데이터를 찾을 수 없음.");
             }
 
+            if (jointName != "pelvis") continue; // ✅ pelvis가 아니면 position 업데이트 건너뛰기
+
             // 🔹 position (px, py, pz) 컬럼 찾기
             int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
             int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
@@ -282,6 +284,8 @@ public class AxisanglePlayer : MonoBehaviour
             Quaternion q = new Quaternion(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
             targetObjects[i].rotation = q;
 
+            if (jointName != "pelvis") continue; // ✅ pelvis가 아니면 position 업데이트 건너뛰기
+            
             // ✅ position (px, py, pz) CSV에서 가져오기
             int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
             int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
