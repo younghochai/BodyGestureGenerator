@@ -19,6 +19,9 @@ public class JointAngleController : MonoBehaviour
     public UnityEngine.UI.Button shiftRightButton; // Shift Right
     public UnityEngine.UI.Button saveCSVButton; // Save CSV
     public UnityEngine.UI.Button linearInterpolateButton; // 선형 보간 버튼
+    public UnityEngine.UI.Button easeInButton; // 비선형 보간 버튼
+    public UnityEngine.UI.Button easeOutButton; // 비선형 보간 버튼
+
 
     [Header("File Path")]
     public string RootFilePath;
@@ -31,6 +34,7 @@ public class JointAngleController : MonoBehaviour
     public int midFrame;
     public float midFrameIncrement = 1.0f;
     [Range(0.01f, 3.0f)] public float weightExponent = 1.0f;
+    public int transformExponent = 2; // 비선형 보간에 사용되는 지수
 
     [Header("Body Joint Names")]
     private static List<List<Vector3>> jointPositions; // 각 관절의 위치 데이터를 저장. 여러 그래프가 공유하는 데이터
@@ -48,7 +52,7 @@ public class JointAngleController : MonoBehaviour
 
     [Header("Utility")]
     private static Stack<List<List<Vector3>>> undoHistory = new Stack<List<List<Vector3>>>(); // Undo
-    private static int maxUndoSteps = 10; // 최대 실행 취소 단계 수
+    private static int maxUndoSteps = 15; // 최대 실행 취소 단계 수
     public static event System.Action OnJointDataChanged; // 데이터 변경시 모든 그래프에 업데이트를 알리는 이벤트 변수
 
     public List<List<Vector3>> GetJointPositions(){return jointPositions;} // 전체 관절 위치 데이터
@@ -86,6 +90,8 @@ public class JointAngleController : MonoBehaviour
         saveCSVButton.onClick.AddListener(OnSaveCSVButtonClicked);
         
         linearInterpolateButton.onClick.AddListener(OnLinearInterpolateButtonClicked); // 선형 보간 버튼
+        easeInButton.onClick.AddListener(EaseInButtonClicked); // 비선형 보간 버튼
+        easeOutButton.onClick.AddListener(EaseOutButtonClicked); // 비선형 보간 버튼
         OnJointDataChanged += HandleJointDataChanged; // 다중 그래프가 데이터 변경 이벤트를 참조
     }
 
@@ -210,28 +216,28 @@ public class JointAngleController : MonoBehaviour
     /// <summary>
     /// Button (y value increase/decrease)
     /// </summary>
-    private void OnValueChangeButtonClicked(float increment)
+    private void OnValueChangeButtonClicked(float increment) // Mid Frame Increment
     {
         SaveStateForUndo(); // 현재 상태를 저장
 
-        int jointIndex = jointNameToIndex[selectedJoint];
+        int jointIndex = jointNameToIndex[selectedJoint]; // Selected Joint Index
         int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
         int range = endFrame - startFrame;
     
         if (range <= 0) return; // 잘못된 범위 방지
-    
-        // midFrame이 startFrame과 endFrame 사이에 있는지 체크
-        midFrame = Mathf.Clamp(midFrame, startFrame, endFrame);
+        
+        midFrame = Mathf.Clamp(midFrame, startFrame, endFrame); // midFrame이 startFrame과 endFrame 사이에 있는지 체크
     
         // 선택된 범위 내의 모든 프레임의 각도 변경
         for (int frame = startFrame; frame <= endFrame && frame < jointPositions.Count; frame++)
         {
             Vector3 currentPos = jointPositions[frame][jointIndex];
-            float trueIncrement;
+            float trueIncrement; // weight 조절 후 실제로 적용되는 increment 값
     
-            if (useWeightedAdjustment)
+            if (useWeightedAdjustment) // 가중치 조절 사용 여부
             {
                 float normalizedDistance;
+
                 if (frame <= midFrame)
                 {
                     // startFrame에서 midFrame까지 점점 증가 (0 → 1)
@@ -242,7 +248,7 @@ public class JointAngleController : MonoBehaviour
                     // midFrame에서 endFrame까지 점점 감소 (1 → 0)
                     normalizedDistance = Mathf.Clamp01((float)(endFrame - frame) / (endFrame - midFrame));
                 }
-    
+
                 // 가중치를 제곱해서 부드럽게 증가/감소하도록 함
                 float weight = Mathf.Pow(normalizedDistance, weightExponent);
                 trueIncrement = increment * weight;
@@ -251,7 +257,7 @@ public class JointAngleController : MonoBehaviour
             {
                 trueIncrement = increment;
             }
-    
+                
             switch (selectedAxis)
             {
                 case 0: // X
@@ -441,6 +447,134 @@ public class JointAngleController : MonoBehaviour
         // 변경 사항 그래프에 반영
         BroadcastJointDataChanged();
         Debug.Log($"선형 보간 적용됨: {selectedJoint}, 축: {axisDropdown.options[selectedAxis].text}, 프레임: {startFrame}~{endFrame}");
+    }
+
+    /// <summary>
+    /// 비선형 보간을 통해 선택된 축의 값을 수정
+    /// </summary>
+    private void EaseInButtonClicked()
+    {
+        if (jointPositions == null || jointPositions.Count == 0) return;
+        if (startFrame >= endFrame) return;
+        if (startFrame < 0 || endFrame >= jointPositions.Count) return;
+
+        SaveStateForUndo();
+
+        int jointIndex = jointNameToIndex[selectedJoint];
+        int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
+
+        // 시작 프레임과 끝 프레임의 값 가져오기
+        Vector3 startValueVector = jointPositions[startFrame][jointIndex];
+        Vector3 endValueVector = jointPositions[endFrame][jointIndex];
+
+        float startValue = 0f;
+        float endValue = 0f;
+        switch (selectedAxis)
+        {
+            case 0:
+                startValue = startValueVector.x;
+                endValue = endValueVector.x;
+                break;
+            case 1:
+                startValue = startValueVector.y;
+                endValue = endValueVector.y;
+                break;
+            case 2:
+                startValue = startValueVector.z;
+                endValue = endValueVector.z;
+                break;
+        }
+
+        int T = endFrame - startFrame; // 전체 구간 길이
+        float C = (endValue - startValue) / Mathf.Pow(T, transformExponent);
+
+        // startFrame와 endFrame 사이 프레임에 대해 적용
+        for (int frame = startFrame + 1; frame < endFrame; frame++)
+        {
+            int t = frame - startFrame;
+            float newValue = C * Mathf.Pow(t, transformExponent) + startValue;
+            Vector3 currentPos = jointPositions[frame][jointIndex];
+
+            switch (selectedAxis)
+            {
+                case 0:
+                    jointPositions[frame][jointIndex] = new Vector3(newValue, currentPos.y, currentPos.z);
+                    break;
+                case 1:
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, newValue, currentPos.z);
+                    break;
+                case 2:
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, newValue);
+                    break;
+            }
+        }
+
+        BroadcastJointDataChanged();
+        Debug.Log($"Ease in : {selectedJoint}, 축: {axisDropdown.options[selectedAxis].text}, 프레임: {startFrame}~{endFrame}, 지수: {transformExponent}");
+    }
+
+    private void EaseOutButtonClicked()
+    {
+        if (jointPositions == null || jointPositions.Count == 0) return;
+        if (startFrame >= endFrame) return;
+        if (startFrame < 0 || endFrame >= jointPositions.Count) return;
+
+        SaveStateForUndo();
+
+        int jointIndex = jointNameToIndex[selectedJoint];
+        int selectedAxis = axisDropdown.value; // 0: X, 1: Y, 2: Z
+
+        // 시작 프레임과 끝 프레임의 값 가져오기
+        Vector3 startValueVector = jointPositions[startFrame][jointIndex];
+        Vector3 endValueVector = jointPositions[endFrame][jointIndex];
+
+        float startValue = 0f;
+        float endValue = 0f;
+        switch (selectedAxis)
+        {
+            case 0:
+                startValue = startValueVector.x;
+                endValue = endValueVector.x;
+                break;
+            case 1:
+                startValue = startValueVector.y;
+                endValue = endValueVector.y;
+                break;
+            case 2:
+                startValue = startValueVector.z;
+                endValue = endValueVector.z;
+                break;
+        }
+
+        int T = endFrame - startFrame; // 전체 구간 길이
+        float C = (endValue - startValue) / Mathf.Pow(T, transformExponent);
+
+        // startFrame와 endFrame 사이 프레임에 대해 적용
+        for (int frame = startFrame + 1; frame < endFrame; frame++)
+        {
+            int t = frame - startFrame;
+            float ratio = (T - t) / (float)T; // (T - t)/T
+            float powered = Mathf.Pow(ratio, transformExponent);  // ( (T - t)/T )^alpha
+
+            float newValue = endValue + (startValue - endValue) * powered;
+            Vector3 currentPos = jointPositions[frame][jointIndex];
+
+            switch (selectedAxis)
+            {
+                case 0:
+                    jointPositions[frame][jointIndex] = new Vector3(newValue, currentPos.y, currentPos.z);
+                    break;
+                case 1:
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, newValue, currentPos.z);
+                    break;
+                case 2:
+                    jointPositions[frame][jointIndex] = new Vector3(currentPos.x, currentPos.y, newValue);
+                    break;
+            }
+        }
+
+        BroadcastJointDataChanged();
+        Debug.Log($"Ease Out : {selectedJoint}, 축: {axisDropdown.options[selectedAxis].text}, 프레임: {startFrame}~{endFrame}, 지수: {transformExponent}");
     }
 
     // 모든 그래프 인스턴스에 데이터 변경을 알림.
