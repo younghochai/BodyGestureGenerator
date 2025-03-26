@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.IO;
@@ -20,6 +20,10 @@ public class AxisanglePlayer : MonoBehaviour
     public int Pstartframe;
     public int Pendframe;
 
+    private bool isInitPelvisSet = false;
+
+    private float initPelvisY;
+
     private List<List<Vector3>> jointPositions;
 
     private List<string[]> recordedFrames = new List<string[]>();
@@ -31,7 +35,7 @@ public class AxisanglePlayer : MonoBehaviour
     void Start()
     {
         LoadCSV();
-        
+
 
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -75,7 +79,7 @@ public class AxisanglePlayer : MonoBehaviour
                 List<List<Vector3>> jointPositions = jointAngleController.GetJointPositions();
                 if (fixedFrame >= 0 && fixedFrame < jointPositions.Count)
                 {
-                    ApplyExponentialMapDataT(jointAngleController.GetJointPositions()[fixedFrame]); // 최신 값 반영
+                    ApplyExponentialMapDataT(recordedFrames[fixedFrame], jointPositions[fixedFrame]); // 최신 값 반영
                     Debug.Log($"🔒 Frame {fixedFrame}으로 고정됨 (최신 데이터 반영)");
                 }
                 else
@@ -178,6 +182,53 @@ public class AxisanglePlayer : MonoBehaviour
         isPlaying = false;
     }
 
+    IEnumerator PlayExponentialMapDataT()
+    {
+        if (recordedFrames.Count == 0)
+        {
+            Debug.LogError("❌ 저장된 데이터가 없습니다.");
+            yield break;
+        }
+
+        // ✅ jointPositions을 최신 데이터로 가져오기
+        jointPositions = jointAngleController.GetJointPositions();
+        if (jointPositions == null || jointPositions.Count == 0)
+        {
+            Debug.LogError("❌ jointPositions 데이터가 없습니다.");
+            yield break;
+        }
+
+        isPlaying = true;
+        startTime = Time.time;
+        currentFrameIndex = Pstartframe;
+
+        while (currentFrameIndex < Pendframe)
+        {
+            float elapsedTime = (Time.time - startTime) * playbackSpeed;
+
+            while (currentFrameIndex < recordedFrames.Count &&
+                   float.Parse(recordedFrames[currentFrameIndex][1]) <= elapsedTime)
+            {
+                // ✅ 회전 데이터는 jointPositions에서 가져옴
+                if (currentFrameIndex < jointPositions.Count)
+                {
+                    ApplyExponentialMapDataT(recordedFrames[currentFrameIndex], jointPositions[currentFrameIndex]);
+                }
+                else
+                {
+                    Debug.LogWarning($"⚠️ jointPositions 데이터 부족: {currentFrameIndex}/{jointPositions.Count}");
+                }
+
+                currentFrameIndex++;
+            }
+
+            yield return null;
+        }
+
+        Debug.Log("⏹ 재생 완료!");
+        isPlaying = false;
+    }
+
 
     IEnumerator PlayExponentialMapData()
     {
@@ -216,7 +267,7 @@ public class AxisanglePlayer : MonoBehaviour
         {
             if (targetObjects[i] == null) continue;
 
-            string jointName = targetObjects[i].name.ToLower(); // 오브젝트 이름을 소문자로 변환
+            string jointName = targetObjects[i].name.ToLower();
 
             // 🔹 rotation (wx, wy, wz) 컬럼 찾기
             int wxIndex = System.Array.IndexOf(headers, $"{jointName}_wx");
@@ -244,25 +295,43 @@ public class AxisanglePlayer : MonoBehaviour
                 Debug.LogWarning($"⚠️ {jointName}의 rotation 데이터를 찾을 수 없음.");
             }
 
-            if (jointName != "pelvis") continue; // ✅ pelvis가 아니면 position 업데이트 건너뛰기
-
-            // 🔹 position (px, py, pz) 컬럼 찾기
-            int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
-            int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
-            int pzIndex = System.Array.IndexOf(headers, $"{jointName}_pz");
-
-            if (pxIndex >= 0 && pyIndex >= 0 && pzIndex >= 0 && pxIndex < frameData.Length)
+            // 🔹 position (px, py, pz) 컬럼은 pelvis(joint 0)만 반영
+            if (i == 0)
             {
-                targetObjects[i].position = new Vector3(float.Parse(frameData[pxIndex]),
-                                                        float.Parse(frameData[pyIndex]),
-                                                        float.Parse(frameData[pzIndex]));
+                int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
+                int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
+                int pzIndex = System.Array.IndexOf(headers, $"{jointName}_pz");
+
+                if (i == 0 && !isInitPelvisSet)
+                {
+                    initPelvisY = float.Parse(frameData[pyIndex]);
+                    isInitPelvisSet = true;
+                    Debug.Log("Initial pelvis Y: " + initPelvisY);
+
+                }
+
+                if (pxIndex >= 0 && pyIndex >= 0 && pzIndex >= 0 && pxIndex < frameData.Length)
+                {
+                    // 오프셋을 빼서 적용 (다른 joint는 그대로 적용되어야 한다면 조건문 추가)
+                    float newY = float.Parse(frameData[pyIndex]);
+                    if (i == 0)
+                        newY = newY - initPelvisY;
+
+                    targetObjects[i].position = new Vector3(
+                        float.Parse(frameData[pxIndex]),
+                        newY,
+                        float.Parse(frameData[pzIndex])
+                    );
+                }
+                else
+                {
+                    Debug.LogWarning($"⚠️ {jointName}의 position 데이터를 찾을 수 없음.");
+                }
             }
-            else
-            {
-                Debug.LogWarning($"⚠️ {jointName}의 position 데이터를 찾을 수 없음.");
-            }
+            // pelvis가 아닌 다른 joint는 position을 업데이트하지 않음
         }
     }
+
 
     void ApplyExponentialMapDataY(string[] frameData2, List<Vector3> frameData)
     {
@@ -284,84 +353,54 @@ public class AxisanglePlayer : MonoBehaviour
             Quaternion q = new Quaternion(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
             targetObjects[i].rotation = q;
 
-            if (jointName != "pelvis") continue; // ✅ pelvis가 아니면 position 업데이트 건너뛰기
-            
             // ✅ position (px, py, pz) CSV에서 가져오기
-            int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
-            int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
-            int pzIndex = System.Array.IndexOf(headers, $"{jointName}_pz");
-
-            if (pxIndex >= 0 && pyIndex >= 0 && pzIndex >= 0 && pxIndex < frameData2.Length)
+            if (i == 0)
             {
-                targetObjects[i].position = new Vector3(float.Parse(frameData2[pxIndex]),
-                                                        float.Parse(frameData2[pyIndex]),
-                                                        float.Parse(frameData2[pzIndex]));
-            }
-            else
-            {
-                Debug.LogWarning($"⚠️ {jointName}의 position 데이터를 찾을 수 없음.");
-            }
-        }
-    }
+                int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
+                int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
+                int pzIndex = System.Array.IndexOf(headers, $"{jointName}_pz");
 
-
-    IEnumerator PlayExponentialMapDataT()
-    {
-        List<List<Vector3>> jointPositions = jointAngleController.GetJointPositions(); // 최신 데이터 가져오기
-
-        if (jointPositions == null || jointPositions.Count == 0)
-        {
-            Debug.LogError("❌ 저장된 데이터가 없습니다.");
-            yield break;
-        }
-
-        isPlaying = true;
-        startTime = Time.time;
-        currentFrameIndex = Pstartframe;
-
-        float frameDuration = 0.066f; // 기본적으로 15 FPS (1초 / 15프레임)
-        float accumulatedTime = 0f;   // 경과한 시간을 누적하여 관리
-
-        while (currentFrameIndex < Pendframe)
-        {
-            if (fixedFrame == -1)
-            {
-                // ✅ 실제 경과 시간에 배속을 적용하여 누적
-                accumulatedTime += Time.deltaTime * playbackSpeed;
-
-                // ✅ 경과 시간이 프레임 지속 시간보다 길면 여러 프레임을 한 번에 실행
-                while (accumulatedTime >= frameDuration)
+                if (i == 0 && !isInitPelvisSet)
                 {
-                    ApplyExponentialMapDataT(jointPositions[currentFrameIndex]);
-                    currentFrameIndex++;
-                    accumulatedTime -= frameDuration; // ✅ 실행한 프레임의 시간만큼 차감
+                    initPelvisY = float.Parse(frameData2[pyIndex]);
+                    isInitPelvisSet = true;
+                    Debug.Log("Initial pelvis Y: " + initPelvisY);
 
-                    if (currentFrameIndex >= Pendframe) // 프레임 끝나면 종료
-                    {
-                        break;
-                    }
+                }
+
+                if (pxIndex >= 0 && pyIndex >= 0 && pzIndex >= 0 && pxIndex < frameData2.Length)
+                {
+                    // 오프셋을 빼서 적용 (다른 joint는 그대로 적용되어야 한다면 조건문 추가)
+                    float newY = float.Parse(frameData2[pyIndex]);
+                    if (i == 0)
+                        newY = newY - initPelvisY;
+
+                    targetObjects[i].position = new Vector3(
+                        float.Parse(frameData2[pxIndex]),
+                        newY,
+                        float.Parse(frameData2[pzIndex])
+                    );
+                }
+                else
+                {
+                    Debug.LogWarning($"⚠️ {jointName}의 position 데이터를 찾을 수 없음.");
                 }
             }
-            else
-            {
-                ApplyExponentialMapDataT(jointAngleController.GetJointPositions()[fixedFrame]); // 최신 값 반영
-            }
-
-            yield return null; // ✅ 매 프레임마다 실행 (FPS 제한 없음)
         }
-
-        Debug.Log("⏹ 재생 완료!");
-        isPlaying = false;
     }
-    void ApplyExponentialMapDataT(List<Vector3> frameData)
+
+
+
+    void ApplyExponentialMapDataT(string[] frameData2, List<Vector3> frameData)
     {
         for (int i = 0; i < targetObjects.Length; i++)
         {
-            if (targetObjects[i] == null || i >= frameData.Count) continue;
+            if (targetObjects[i] == null) continue;
+            if (i >= frameData.Count) continue; // ✅ frameData가 부족하면 넘어가기
 
             string jointName = targetObjects[i].name.ToLower();
 
-            // 🔹 rotation (wx, wy, wz) 적용
+            // ✅ rotation (wx, wy, wz) 적용
             Vector3 expMap = frameData[i];
             float angle = expMap.magnitude;
             Vector3 axis = angle > 0 ? expMap / angle : Vector3.zero;
@@ -371,6 +410,40 @@ public class AxisanglePlayer : MonoBehaviour
 
             Quaternion q = new Quaternion(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
             targetObjects[i].rotation = q;
+
+            // ✅ position (px, py, pz) CSV에서 가져오기
+            if (i == 0)
+            {
+                int pxIndex = System.Array.IndexOf(headers, $"{jointName}_px");
+                int pyIndex = System.Array.IndexOf(headers, $"{jointName}_py");
+                int pzIndex = System.Array.IndexOf(headers, $"{jointName}_pz");
+
+                if (i == 0 && !isInitPelvisSet)
+                {
+                    initPelvisY = float.Parse(frameData2[pyIndex]);
+                    isInitPelvisSet = true;
+                    Debug.Log("Initial pelvis Y: " + initPelvisY);
+
+                }
+
+                if (pxIndex >= 0 && pyIndex >= 0 && pzIndex >= 0 && pxIndex < frameData2.Length)
+                {
+                    // 오프셋을 빼서 적용 (다른 joint는 그대로 적용되어야 한다면 조건문 추가)
+                    float newY = float.Parse(frameData2[pyIndex]);
+                    if (i == 0)
+                        newY = newY - initPelvisY;
+
+                    targetObjects[i].position = new Vector3(
+                        float.Parse(frameData2[pxIndex]),
+                        newY,
+                        float.Parse(frameData2[pzIndex])
+                    );
+                }
+                else
+                {
+                    Debug.LogWarning($"⚠️ {jointName}의 position 데이터를 찾을 수 없음.");
+                }
+            }
         }
     }
 
@@ -393,3 +466,4 @@ public class AxisanglePlayer : MonoBehaviour
         jointAngleController.chart.DataSource.EndBatch();
     }
 }
+
